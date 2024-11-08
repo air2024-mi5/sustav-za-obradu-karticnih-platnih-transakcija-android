@@ -39,3 +39,19 @@ fun DetailsScreen(navController: NavController) {
         }
     }
 }
+
+
+@Composable
+fun DashboardScreen(navController: NavController) {
+    Text(text = "Dashboard Screen")
+}
+
+@Composable
+fun ReportsScreen(navController: NavController) {
+    Text(text = "Reports Screen")
+}
+
+@Composable
+fun DailyProcessScreen(navController: NavController) {
+    Text(text = "Daily Process Screen")
+}

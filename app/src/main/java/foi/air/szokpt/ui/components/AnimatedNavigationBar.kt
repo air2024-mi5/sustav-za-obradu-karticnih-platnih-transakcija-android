@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ExitToApp
 import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -29,10 +30,15 @@ import foi.air.szokpt.ui.theme.TextGray
  * @param onItemSelected A lambda function that is invoked with the index of the selected item.
  *                        This allows parent composables to respond to navigation item selection.
  */
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import foi.air.szokpt.views.ROUTE_DAILY_PROCESS
+import foi.air.szokpt.views.ROUTE_DASHBOARD
+import foi.air.szokpt.views.ROUTE_REPORTS
+
 @Composable
 fun AnimatedNavigationBar(
-    selectedIndex: Int,
-    onItemSelected: (Int) -> Unit
+    navController: NavController
 ) {
     val selectedColor = Primary
     val unselectedColor = TextGray
@@ -47,7 +53,10 @@ fun AnimatedNavigationBar(
         unselectedTextColor = unselectedColor
     )
 
-    // For the radius at the top (Left & Right) of the NavBar
+    // Track the current back stack entry to know the selected destination
+    val currentBackStackEntry = navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStackEntry.value?.destination?.route
+
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
@@ -58,46 +67,60 @@ fun AnimatedNavigationBar(
             modifier = Modifier.padding(bottom = 8.dp)
         ) {
 
-            // Dashboard Item
+            // Dashboard
             val (homeIconContent, homeLabelContent) = AnimatedNavigationBarItem(
                 icon = Icons.Rounded.Home,
                 label = "Dashboard",
-                isSelected = selectedIndex == 0
+                isSelected = currentDestination == ROUTE_DASHBOARD
             )
             NavigationBarItem(
                 icon = homeIconContent,
                 label = homeLabelContent,
-                selected = selectedIndex == 0,
-                onClick = { onItemSelected(0) },
+                selected = currentDestination == ROUTE_DASHBOARD,
+                onClick = {
+                    if (currentDestination != ROUTE_DASHBOARD) {
+                        navController.navigate(ROUTE_DASHBOARD)
+                    }
+                },
                 colors = itemColors
             )
 
+            // Reports & Transactyions
             val (reportsIconContent, reportsLabelContent) = AnimatedNavigationBarItem(
                 icon = Icons.Rounded.Email,
                 label = "Reports & Trans.",
-                isSelected = selectedIndex == 1
+                isSelected = currentDestination == ROUTE_REPORTS
             )
             NavigationBarItem(
                 icon = reportsIconContent,
                 label = reportsLabelContent,
-                selected = selectedIndex == 1,
-                onClick = { onItemSelected(1) },
+                selected = currentDestination == ROUTE_REPORTS,
+                onClick = {
+                    if (currentDestination != ROUTE_REPORTS) {
+                        navController.navigate(ROUTE_REPORTS)
+                    }
+                },
                 colors = itemColors
             )
 
-            // Daily Process Item
+            // Daily Process
             val (dailyProcessIconContent, dailyProcessLabelContent) = AnimatedNavigationBarItem(
                 icon = Icons.AutoMirrored.Rounded.ExitToApp,
                 label = "Daily Process",
-                isSelected = selectedIndex == 2
+                isSelected = currentDestination == ROUTE_DAILY_PROCESS
             )
             NavigationBarItem(
                 icon = dailyProcessIconContent,
                 label = dailyProcessLabelContent,
-                selected = selectedIndex == 2,
-                onClick = { onItemSelected(2) },
+                selected = currentDestination == ROUTE_DAILY_PROCESS,
+                onClick = {
+                    if (currentDestination != ROUTE_DAILY_PROCESS) {
+                        navController.navigate(ROUTE_DAILY_PROCESS)
+                    }
+                },
                 colors = itemColors
             )
         }
     }
 }
+

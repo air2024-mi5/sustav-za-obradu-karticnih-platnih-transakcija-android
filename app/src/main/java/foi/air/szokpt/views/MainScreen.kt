@@ -1,17 +1,38 @@
 package foi.air.szokpt.views
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import foi.air.szokpt.views.test_views.DetailsScreen
-import foi.air.szokpt.views.test_views.HomeScreen
+import foi.air.szokpt.ui.components.AnimatedNavigationBar
+import foi.air.szokpt.views.test_views.DailyProcessScreen
+import foi.air.szokpt.views.test_views.DashboardScreen
+import foi.air.szokpt.views.test_views.ReportsScreen
+
+const val ROUTE_DASHBOARD = "dashboard"
+const val ROUTE_REPORTS = "reports"
+const val ROUTE_DAILY_PROCESS = "daily_process"
 
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") { HomeScreen(navController) }
-        composable("details") { DetailsScreen(navController) }
+
+    Scaffold(
+        bottomBar = {
+            AnimatedNavigationBar(navController = navController)
+        }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = "dashboard",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable("dashboard") { DashboardScreen(navController) }
+            composable("reports") { ReportsScreen(navController) }
+            composable("daily_process") { DailyProcessScreen(navController) }
+        }
     }
 }
