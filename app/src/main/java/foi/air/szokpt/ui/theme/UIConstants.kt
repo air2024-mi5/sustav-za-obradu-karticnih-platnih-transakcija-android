@@ -20,10 +20,11 @@ enum class TileSizeMode {
     WrapContent
 }
 
+// Background gradient of the app
 val BackgroundColor = Brush.horizontalGradient(           // Lowest Level - Gradient
     colors = listOf(
-        Color(0xFF101010),
-        Color(0xFF222222)
+        BGLevelZeroLow,
+        BGLevelZeroHigh
     )
 )
 
