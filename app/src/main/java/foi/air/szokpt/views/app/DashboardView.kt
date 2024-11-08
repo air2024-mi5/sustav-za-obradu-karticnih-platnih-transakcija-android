@@ -4,12 +4,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import foi.air.szokpt.ui.components.TileSegment
+import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.TileSizeMode
 
 @Composable
 fun DashboardView(navController: NavController){
@@ -22,11 +28,49 @@ fun DashboardView(navController: NavController){
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ){
         item {
-            Text(text = "Dashboard")
+            TileSegment(
+                tileSizeMode = TileSizeMode.WrapContent,
+                minWidth = 200.dp,
+                minHeight = 200.dp,
+                color = BGLevelOne,
+                content = {
+                    Text(
+                        text = "Item 1",
+                        modifier = Modifier.align(Alignment.Center),
+                        color = Color.White
+                    )
+                }
+            )
+        }
+        item {
+            TileSegment(
+                tileSizeMode = TileSizeMode.WrapContent,
+                minWidth = 200.dp,
+                minHeight = 200.dp,
+                color = BGLevelOne,
+                content = {
+                    Text(
+                        text = "Item 2",
+                        modifier = Modifier.align(Alignment.Center),
+                        color = Color.White
+                    )
+                }
+            )
         }
 
-        item {
-            Text(text = "Dashboard")
+        item(span = { GridItemSpan(2) }) {
+            TileSegment(
+                tileSizeMode = TileSizeMode.FillMaxWidth,
+                minHeight = 200.dp,
+                color = BGLevelOne,
+                content = {
+                    Text(
+                        text = "Item 3",
+                        modifier = Modifier.align(Alignment.Center),
+                        color = Color.White
+                    )
+                }
+            )
         }
     }
 }
