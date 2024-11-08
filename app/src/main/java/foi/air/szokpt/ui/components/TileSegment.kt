@@ -10,14 +10,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.SearchBarDefaults.ShadowElevation
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import foi.air.szokpt.ui.theme.AppBorderRadius
 import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.Primary
+import foi.air.szokpt.ui.theme.Secondary
+import foi.air.szokpt.ui.theme.ShadowAmbientColor
+import foi.air.szokpt.ui.theme.ShadowSpotColor
+import foi.air.szokpt.ui.theme.ShadowTileElevation
+import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileElevation
 import foi.air.szokpt.ui.theme.TileSizeMode
 
@@ -57,13 +68,37 @@ fun TileSegment(
     }
 
     Box(
-        modifier = sizeModifier
+        modifier = modifier
             .then(sizeModifier)
             .sizeIn(minWidth = minWidth, minHeight = minHeight)
             .padding(outerMargin)
+            .shadow(
+                elevation = ShadowTileElevation,
+                shape = RoundedCornerShape(28.dp),
+                ambientColor = ShadowAmbientColor,
+                spotColor = ShadowSpotColor
+            )
             .clip(RoundedCornerShape(AppBorderRadius))
             .background(color)
             .padding(innerPadding),
         content = content
+    )
+}
+
+@Preview
+@Composable
+fun TileSegmentPreview() {
+    TileSegment(
+        tileSizeMode = TileSizeMode.WrapContent,
+        minWidth = 200.dp,
+        minHeight = 200.dp,
+        color = BGLevelOne,
+        content = {
+            Text(
+                text = "Test text 1234567890 abecdefghijklmn",
+                modifier = Modifier.align(Alignment.Center),
+                color = Color.White
+            )
+        }
     )
 }
