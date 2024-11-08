@@ -14,10 +14,17 @@ enum class TileElevation(val color: Any) {
 
 // SizeMode indicates the sizing fill of the Tile in a container
 enum class TileSizeMode {
-    FillMaxWidth,
-    FillMaxHeight,
-    FillMaxSize,
-    WrapContent
+    FILL_MAX_WIDTH,
+    FILL_MAX_HEIGHT,
+    FILL_MAX_SIZE,
+    WRAP_CONTENT
+}
+
+enum class TileSize(val rows: Float) {
+    ONE_ROW(1.0f),
+    ONE_AND_HALF(1.5f),
+    TWO_ROWS(2.0f),
+    THREE_ROW(3.0f)
 }
 
 // Background gradient of the app
@@ -35,3 +42,4 @@ val AppBorderRadius: Dp = 30.dp                           // Default radius acro
 val ShadowSpotColor: Color = Secondary
 val ShadowAmbientColor: Color = Color.White
 val ShadowTileElevation: Dp = 16.dp
+

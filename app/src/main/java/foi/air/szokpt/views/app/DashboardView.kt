@@ -30,7 +30,7 @@ fun DashboardView(navController: NavController){
     ){
         item(span = { GridItemSpan(2) }) {
             TileSegment(
-                tileSizeMode = TileSizeMode.FillMaxWidth,
+                tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
                 minHeight = 200.dp,
                 color = BGLevelOne,
                 content = {
@@ -44,7 +44,7 @@ fun DashboardView(navController: NavController){
         }
         item {
             TileSegment(
-                tileSizeMode = TileSizeMode.WrapContent,
+                tileSizeMode = TileSizeMode.WRAP_CONTENT,
                 minWidth = 200.dp,
                 minHeight = 200.dp,
                 color = BGLevelOne,
@@ -59,7 +59,7 @@ fun DashboardView(navController: NavController){
         }
         item {
             TileSegment(
-                tileSizeMode = TileSizeMode.WrapContent,
+                tileSizeMode = TileSizeMode.WRAP_CONTENT,
                 minWidth = 200.dp,
                 minHeight = 200.dp,
                 color = BGLevelOne,
@@ -74,13 +74,28 @@ fun DashboardView(navController: NavController){
         }
         item(span = { GridItemSpan(2) }) {
             TileSegment(
-                tileSizeMode = TileSizeMode.FillMaxWidth,
+                tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
                 // For spanning 2 rows
                 modifier = Modifier.aspectRatio(1f),
                 color = BGLevelOne,
                 content = {
                     Text(
                         text = "Item 4 Span 2 row 2 col",
+                        modifier = Modifier.align(Alignment.Center),
+                        color = Color.White
+                    )
+                }
+            )
+        }
+        item(span = { GridItemSpan(2) }) {
+            TileSegment(
+                tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
+                // For spanning 2 rows
+                modifier = Modifier.aspectRatio(1.5f),
+                color = BGLevelOne,
+                content = {
+                    Text(
+                        text = "Item 4 Span 1.5 row 2 col",
                         modifier = Modifier.align(Alignment.Center),
                         color = Color.White
                     )
