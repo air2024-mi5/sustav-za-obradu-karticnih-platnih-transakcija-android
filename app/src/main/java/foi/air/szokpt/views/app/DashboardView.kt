@@ -1,6 +1,7 @@
 package foi.air.szokpt.views.app
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -27,6 +28,20 @@ fun DashboardView(navController: NavController){
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ){
+        item(span = { GridItemSpan(2) }) {
+            TileSegment(
+                tileSizeMode = TileSizeMode.FillMaxWidth,
+                minHeight = 200.dp,
+                color = BGLevelOne,
+                content = {
+                    Text(
+                        text = "Item 1 Span 1 row 2 col",
+                        modifier = Modifier.align(Alignment.Center),
+                        color = Color.White
+                    )
+                }
+            )
+        }
         item {
             TileSegment(
                 tileSizeMode = TileSizeMode.WrapContent,
@@ -57,15 +72,15 @@ fun DashboardView(navController: NavController){
                 }
             )
         }
-
         item(span = { GridItemSpan(2) }) {
             TileSegment(
                 tileSizeMode = TileSizeMode.FillMaxWidth,
-                minHeight = 200.dp,
+                // For spanning 2 rows
+                modifier = Modifier.aspectRatio(1f),
                 color = BGLevelOne,
                 content = {
                     Text(
-                        text = "Item 3",
+                        text = "Item 4 Span 2 row 2 col",
                         modifier = Modifier.align(Alignment.Center),
                         color = Color.White
                     )
