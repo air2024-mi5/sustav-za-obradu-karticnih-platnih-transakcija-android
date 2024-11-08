@@ -1,4 +1,4 @@
-package foi.air.szokpt
+package foi.air.szokpt.views
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
