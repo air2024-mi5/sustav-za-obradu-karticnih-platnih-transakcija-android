@@ -21,6 +21,23 @@ import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.TileElevation
 import foi.air.szokpt.ui.theme.TileSizeMode
 
+/**
+ * A composable function that creates a customizable tile with configurable size, padding, margin,
+ * and color. The tile's size behavior can be controlled using the `tileSizeMode` parameter, allowing
+ * it to fill available space or wrap content as needed.
+ *
+ * @param modifier The Modifier to be applied to the tile, allowing further customization from the
+ *                  caller.
+ * @param tileSizeMode Defines the size behavior of the tile (e.g., FillMaxWidth, FillMaxHeight,
+ *                  FillMaxSize, WrapContent).
+ * @param innerPadding The padding inside the tile, applied around the content.
+ * @param outerMargin The margin around the outside of the tile, creating space between it and
+ *                  other UI elements.
+ * @param minWidth The minimum width of the tile, ensuring it won't be smaller than this value.
+ * @param minHeight The minimum height of the tile, ensuring it won't be smaller than this value.
+ * @param color The background color of the tile.
+ * @param content The composable content displayed within the tile, aligned within the `Box`'s scope.
+ */
 @Composable
 fun TileSegment(
     modifier: Modifier = Modifier,
