@@ -39,7 +39,7 @@ val BackgroundColor = Brush.horizontalGradient(           // Lowest Level - Grad
 val AppBorderRadius: Dp = 30.dp                           // Default radius across the app
 
 // Drop shadow constants
-val ShadowSpotColor: Color = Secondary
-val ShadowAmbientColor: Color = Color.White
+val ShadowSpotColor: Color = Color.Black
+val ShadowAmbientColor: Color = Color.LightGray
 val ShadowTileElevation: Dp = 16.dp
 

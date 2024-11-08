@@ -71,7 +71,7 @@ fun TileSegment(
             .shadow(
                 elevation = ShadowTileElevation,
                 shape = RoundedCornerShape(28.dp),
-                ambientColor = ShadowAmbientColor,
+                //ambientColor = ShadowAmbientColor,
                 spotColor = ShadowSpotColor
             )
             .clip(RoundedCornerShape(AppBorderRadius))
