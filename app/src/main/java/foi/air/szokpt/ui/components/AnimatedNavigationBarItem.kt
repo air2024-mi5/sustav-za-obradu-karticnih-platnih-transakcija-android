@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
  *         and the second is the label content.
  */
 @Composable
-fun AnimatedNavigationBarItemContent(
+fun AnimatedNavigationBarItem(
     icon: ImageVector,
     label: String,
     isSelected: Boolean
