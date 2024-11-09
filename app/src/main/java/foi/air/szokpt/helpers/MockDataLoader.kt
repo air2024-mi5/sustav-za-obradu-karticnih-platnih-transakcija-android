@@ -1,6 +1,7 @@
 package foi.air.szokpt.helpers
 
 import foi.air.szokpt.models.Transaction
+import foi.air.szokpt.models.TransactionType
 import kotlin.random.Random
 
 /**
@@ -19,9 +20,9 @@ fun loadTransactions(): List<Transaction> {
             val randomValue = Random.nextInt(0, 6)
 
             val type = when (randomValue % 3) {
-                0 -> "MasterCard"
-                1 -> "Visa"
-                else -> "American Express"
+                0 -> TransactionType.MasterCard
+                1 -> TransactionType.Visa
+                else -> TransactionType.AmericanExpress
             }
 
             val description = when (randomValue % 5) {

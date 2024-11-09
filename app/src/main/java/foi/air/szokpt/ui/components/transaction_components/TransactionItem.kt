@@ -36,13 +36,13 @@ fun TransactionItem(transaction: Transaction) {
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ){
-        TransactionIcon(transaction.type.first().toString())
+        TransactionIcon(transaction.type.name.first().toString())
 
         Spacer(modifier = Modifier.width(12.dp))
 
         Column {
             Text(
-                text = transaction.type,
+                text = transaction.type.name,
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
