@@ -12,13 +12,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import foi.air.szokpt.ui.theme.Primary
 
+/**
+ * TransactionIcon is an icon shown on TransactionItem.
+ * TransactionIcon is a blue box that contains the first letter of transaction type.
+ */
 @Composable
-fun CircleIcon(initial: String) {
+fun TransactionIcon(initial: String) {
     Box(
         modifier = Modifier
             .size(40.dp)
-            .background(Color(0xFF007AFF), shape = MaterialTheme.shapes.medium),
+            .background(Primary, shape = MaterialTheme.shapes.medium),
         contentAlignment = Alignment.Center
     ) {
         Text(

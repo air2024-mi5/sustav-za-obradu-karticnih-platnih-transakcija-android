@@ -19,6 +19,10 @@ import androidx.compose.ui.unit.sp
 import foi.air.szokpt.models.Transaction
 import foi.air.szokpt.ui.theme.BGLevelOne
 
+/**
+ * TransactionItem is an element which represents a single transaction.
+ * @param transaction is an object that provides the transaction data needed to display
+ */
 @Composable
 fun TransactionItem(transaction: Transaction) {
     Row(
@@ -32,7 +36,7 @@ fun TransactionItem(transaction: Transaction) {
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ){
-        CircleIcon(transaction.type.first().toString())
+        TransactionIcon(transaction.type.first().toString())
 
         Spacer(modifier = Modifier.width(12.dp))
 
