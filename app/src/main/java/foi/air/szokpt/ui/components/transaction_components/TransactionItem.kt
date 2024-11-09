@@ -1,4 +1,4 @@
-package foi.air.szokpt.ui.components
+package foi.air.szokpt.ui.components.transaction_components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -24,12 +24,12 @@ fun TransactionItem(transaction: Transaction) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp, horizontal = 8.dp) // Add padding around each item
+            .padding(vertical = 4.dp, horizontal = 8.dp)
             .background(
                 color = BGLevelOne,
-                shape = RoundedCornerShape(8.dp) // Round corners of each item
+                shape = RoundedCornerShape(8.dp)
             )
-            .padding(12.dp), // Inner padding for content
+            .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ){
         CircleIcon(transaction.type.first().toString())

@@ -1,4 +1,4 @@
-package foi.air.szokpt.ui.components
+package foi.air.szokpt.ui.components.transaction_components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
