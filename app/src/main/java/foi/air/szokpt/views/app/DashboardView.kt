@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -32,6 +34,7 @@ import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
+import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
@@ -218,41 +221,20 @@ fun AllTransactionsTile() {
                     .size(110.dp)
                     .padding(4.dp)
             ) {
-                CircularProgressIndicator(
-                    progress = { 1f },
+                CustomCircularProgressBar(
+                    progress = 0.86f,
                     modifier = Modifier
-                        .fillMaxSize(),
-                    color = Secondary,
-                    strokeWidth = 8.dp,
-                    strokeCap = StrokeCap.Round,
+                        .padding(8.dp), // So that both ProgressBars are visible
+                    backgroundColor = Alternative.copy(alpha = 0.5f),
+                    progressColor = Alternative,
+                    strokeWidth = 8.dp
                 )
-                CircularProgressIndicator(
-                    progress = { 1f },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp),
-                    color = Alternative.copy(alpha = 0.3f),
-                    strokeWidth = 8.dp,
-                    strokeCap = StrokeCap.Round,
-                )
-
-                CircularProgressIndicator(
-                    progress = {
-                        0.86f
-                    },
-                    modifier = Modifier.fillMaxSize(),
-                    color = Primary,
-                    strokeWidth = 8.dp,
-                    strokeCap = StrokeCap.Round
-                )
-                CircularProgressIndicator(
-                    progress = { 0.66f },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp),
-                    color = Alternative,
-                    strokeWidth = 8.dp,
-                    strokeCap = StrokeCap.Round
+                CustomCircularProgressBar(
+                    progress = 0.66f,
+                    modifier = Modifier,
+                    backgroundColor = Primary,
+                    progressColor = Secondary,
+                    strokeWidth = 8.dp
                 )
                 Text(
                     text = "+13.5%",
@@ -281,6 +263,42 @@ fun TextRow(label: String, value: String, color: Color) {
             color = color,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+
+@Composable
+fun CustomCircularProgressBar(
+    progress: Float,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = Color.Gray,
+    progressColor: Color = Color.White,
+    strokeWidth: Dp = 8.dp,
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .size(110.dp)
+    ) {
+        CircularProgressIndicator(
+            progress = {
+                1f
+            },
+            modifier = Modifier.fillMaxSize(),
+            color = backgroundColor,
+            strokeWidth = strokeWidth,
+            strokeCap = StrokeCap.Round,
+        )
+
+        CircularProgressIndicator(
+            progress = {
+                progress
+            },
+            modifier = Modifier.fillMaxSize(),
+            color = progressColor,
+            strokeWidth = strokeWidth,
+            strokeCap = StrokeCap.Round,
         )
     }
 }
