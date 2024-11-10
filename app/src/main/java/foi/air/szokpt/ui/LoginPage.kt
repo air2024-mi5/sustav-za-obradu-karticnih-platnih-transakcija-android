@@ -36,12 +36,14 @@ import foi.air.szokpt.ui.components.LoginTextField
 import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.BackgroundColor
 import foi.air.szokpt.ui.theme.Primary
+import foi.air.szokpt.ui.theme.danger
 
 @Composable
 fun LoginPage() {
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val errorMessage = ""
 
     Box(
         modifier = Modifier
@@ -76,6 +78,8 @@ fun LoginPage() {
                     modifier = Modifier.padding(16.dp, vertical = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Spacer(modifier = Modifier.height(15.dp))
+
                     // polje za username
                     LoginTextField(
                         label = "Username",
@@ -115,7 +119,16 @@ fun LoginPage() {
                         fontSize = 14.sp,
                         modifier = Modifier
                             .clickable { /* TODO: Dodati logiku za help */ }
-                            .padding(8.dp)
+                            .padding(top = 8.dp)
+                    )
+
+                    // tekst za ispis greške
+                    Text(
+                        text = errorMessage,
+                        color = danger,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .padding(top = 8.dp)
                     )
                 }
             }
