@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
@@ -31,14 +32,8 @@ import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
-<<<<<<< HEAD
-<<<<<<< HEAD
 import foi.air.szokpt.ui.theme.BGLevelThree
-=======
-=======
->>>>>>> parent of cf593e4 (Dodani je CardTypesTile)
 import foi.air.szokpt.ui.theme.BGLevelTwo
->>>>>>> parent of cf593e4 (Dodani je CardTypesTile)
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextGray
@@ -64,40 +59,7 @@ fun DashboardView(navController: NavController){
             ValueTile()
         }
         item {
-<<<<<<< HEAD
-=======
-            TileSegment(
-                tileSizeMode = TileSizeMode.WRAP_CONTENT,
-                minWidth = 200.dp,
-                minHeight = 200.dp,
-                color = BGLevelOne,
-                content = {
-                    Text(
-                        text = "Item 2",
-                        modifier = Modifier.align(Alignment.Center),
-                        color = Color.White
-                    )
-                }
-            )
-        }
-        item(span = { GridItemSpan(2) }) {
-            TransactionsListTile()
-        }
-        item(span = { GridItemSpan(2) }) {
->>>>>>> parent of cf593e4 (Dodani je CardTypesTile)
-            TileSegment(
-                tileSizeMode = TileSizeMode.WRAP_CONTENT,
-                minWidth = 200.dp,
-                minHeight = 200.dp,
-                color = BGLevelOne,
-                content = {
-                    Text(
-                        text = "Item 2",
-                        modifier = Modifier.align(Alignment.Center),
-                        color = Color.White
-                    )
-                }
-            )
+            CardTypesTile()
         }
         item(span = { GridItemSpan(2) }) {
             TransactionsListTile()
@@ -388,8 +350,6 @@ fun TransactionItem(
     }
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 @Composable
 fun CardTypesTile() {
     TileSegment(
@@ -452,7 +412,6 @@ fun BarComponent(
     }
 }
 
-
 @Composable
 fun TransactionsByDayTile() {
     TileSegment(
@@ -497,7 +456,3 @@ fun TransactionsByDayTile() {
         }
     }
 }
-=======
->>>>>>> parent of cf593e4 (Dodani je CardTypesTile)
-=======
->>>>>>> parent of cf593e4 (Dodani je CardTypesTile)
