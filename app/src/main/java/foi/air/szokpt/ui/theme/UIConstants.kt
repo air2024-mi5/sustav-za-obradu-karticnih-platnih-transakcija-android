@@ -41,5 +41,5 @@ val AppBorderRadius: Dp = 30.dp                           // Default radius acro
 // Drop shadow constants
 val ShadowSpotColor: Color = Color.Black
 val ShadowAmbientColor: Color = Color.LightGray
-val ShadowTileElevation: Dp = 16.dp
+val ShadowTileElevation: Dp = 15.dp
 
