@@ -1,6 +1,7 @@
 package foi.air.szokpt.views.app
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -106,7 +107,7 @@ fun DashboardView(navController: NavController){
 @Composable
 fun ValueTile() {
     TileSegment(
-        tileSizeMode = TileSizeMode.FILL_MAX_HEIGHT,
+        tileSizeMode = TileSizeMode.FILL_MAX_SIZE,
         innerPadding = 4.dp,
         outerMargin = 8.dp,
         minWidth = 150.dp,
@@ -120,32 +121,28 @@ fun ValueTile() {
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(horizontalAlignment = Alignment.Start) {
+            Text(
+                text = "Value",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ){
                 Text(
-                    text = "Value",
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    text = "€1 002 123",
+                    color = success,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ){
-                    Text(
-                        text = "€1 002 123",
-                        color = success,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-
-
             }
 
             Spacer(modifier = Modifier.height(8.dp))
