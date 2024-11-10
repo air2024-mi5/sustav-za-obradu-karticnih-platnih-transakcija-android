@@ -222,7 +222,7 @@ fun AllTransactionsTile() {
                     .padding(4.dp)
             ) {
                 CustomCircularProgressBar(
-                    progress = 0.86f,
+                    progress = 0.45f,
                     modifier = Modifier
                         .padding(8.dp), // So that both ProgressBars are visible
                     backgroundColor = Alternative.copy(alpha = 0.5f),
@@ -232,8 +232,8 @@ fun AllTransactionsTile() {
                 CustomCircularProgressBar(
                     progress = 0.66f,
                     modifier = Modifier,
-                    backgroundColor = Primary,
-                    progressColor = Secondary,
+                    backgroundColor = Secondary,
+                    progressColor = Primary,
                     strokeWidth = 8.dp
                 )
                 Text(
