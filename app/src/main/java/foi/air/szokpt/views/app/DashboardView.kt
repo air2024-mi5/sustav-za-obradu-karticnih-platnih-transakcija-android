@@ -10,21 +10,28 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.TileSegment
+import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.Primary
+import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
@@ -40,18 +47,7 @@ fun DashboardView(navController: NavController){
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ){
         item(span = { GridItemSpan(2) }) {
-            TileSegment(
-                tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
-                minHeight = 200.dp,
-                color = BGLevelOne,
-                content = {
-                    Text(
-                        text = "Item 1 Span 1 row 2 col",
-                        modifier = Modifier.align(Alignment.Center),
-                        color = Color.White
-                    )
-                }
-            )
+            AllTransactionsTile()
         }
         item {
             ValueTile()
@@ -182,5 +178,109 @@ fun ValueTile() {
                 )
             }
         }
+    }
+}
+
+@Composable
+fun AllTransactionsTile() {
+    TileSegment(
+        tileSizeMode = TileSizeMode.WRAP_CONTENT,
+        innerPadding = 16.dp,
+        outerMargin = 8.dp,
+        minWidth = 250.dp,
+        minHeight = 20.dp,
+        color = BGLevelOne
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "All Transactions",
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextRow(label = "This week:", value = "9890", color = Primary)
+                Spacer(modifier = Modifier.height(4.dp))
+                TextRow(label = "Last Week:", value = "8540", color = Alternative)
+            }
+
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(110.dp)
+                    .padding(4.dp)
+            ) {
+                CircularProgressIndicator(
+                    progress = { 1f },
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    color = Secondary,
+                    strokeWidth = 8.dp,
+                    strokeCap = StrokeCap.Round,
+                )
+                CircularProgressIndicator(
+                    progress = { 1f },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                    color = Alternative.copy(alpha = 0.3f),
+                    strokeWidth = 8.dp,
+                    strokeCap = StrokeCap.Round,
+                )
+
+                CircularProgressIndicator(
+                    progress = {
+                        0.86f
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                    color = Primary,
+                    strokeWidth = 8.dp,
+                    strokeCap = StrokeCap.Round
+                )
+                CircularProgressIndicator(
+                    progress = { 0.66f },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                    color = Alternative,
+                    strokeWidth = 8.dp,
+                    strokeCap = StrokeCap.Round
+                )
+                Text(
+                    text = "+13.5%",
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun TextRow(label: String, value: String, color: Color) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            color = Color.White,
+            fontSize = 14.sp
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(
+            text = value,
+            color = color,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
