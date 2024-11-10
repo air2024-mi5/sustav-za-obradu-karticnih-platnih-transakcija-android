@@ -38,6 +38,14 @@ fun LoginTextField(
         keyboardOptions = keyboardOptions,
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedTextColor = Color.White,
+            unfocusedPlaceholderColor = Color.Gray,
+            focusedTrailingIconColor = Primary,
+            cursorColor = Primary,
+            unfocusedBorderColor = Color.LightGray,
+            unfocusedLabelColor = Color.LightGray,
+            focusedBorderColor = Primary,
+            focusedLabelColor = Primary,
+            focusedTextColor = Color.White
 
         ),
         visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None,
