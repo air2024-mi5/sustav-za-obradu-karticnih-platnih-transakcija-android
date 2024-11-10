@@ -1,5 +1,6 @@
 package foi.air.szokpt.views.app
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
@@ -32,9 +35,11 @@ import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextGray
+import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
@@ -71,19 +76,7 @@ fun DashboardView(navController: NavController){
             )
         }
         item(span = { GridItemSpan(2) }) {
-            TileSegment(
-                tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
-                // For spanning 2 rows
-                modifier = Modifier.aspectRatio(1f),
-                color = BGLevelOne,
-                content = {
-                    Text(
-                        text = "Item 4 Span 2 row 2 col",
-                        modifier = Modifier.align(Alignment.Center),
-                        color = Color.White
-                    )
-                }
-            )
+            TransactionsListTile()
         }
         item(span = { GridItemSpan(2) }) {
             TileSegment(
@@ -123,7 +116,7 @@ fun ValueTile() {
             Text(
                 text = "Value",
                 color = Color.White,
-                fontSize = 16.sp,
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
 
@@ -206,7 +199,7 @@ fun AllTransactionsTile() {
                 Text(
                     text = "All Transactions",
                     color = Color.White,
-                    fontSize = 16.sp,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -302,3 +295,84 @@ fun CustomCircularProgressBar(
         )
     }
 }
+
+
+@Composable
+fun TransactionsListTile() {
+    TileSegment(
+        tileSizeMode = TileSizeMode.WRAP_CONTENT,
+        innerPadding = 16.dp,
+        outerMargin = 8.dp,
+        minWidth = 250.dp,
+        minHeight = 20.dp,
+        color = BGLevelOne
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+
+            Text(
+                text = "Transactions list",
+                color = TextWhite,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
+            TransactionItem(initial = "F", cardType = "MasterCard", transactionLabel = "FOI")
+            Spacer(modifier = Modifier.height(2.dp))
+            TransactionItem(initial = "S", cardType = "Visa", transactionLabel = "Sjever")
+            Spacer(modifier = Modifier.height(2.dp))
+            TransactionItem(initial = "F", cardType = "MasterCard", transactionLabel = "FER")
+        }
+    }
+}
+
+@Composable
+fun TransactionItem(
+    initial: String,
+    cardType: String,
+    transactionLabel: String,
+    backgroundColor: Color = BGLevelTwo,
+    iconColor: Color = Secondary
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .background(backgroundColor, shape = RoundedCornerShape(8.dp))
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(iconColor, shape = RoundedCornerShape(6.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = initial,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column {
+            Text(
+                text = cardType,
+                color = TextGray,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = transactionLabel,
+                color = TextWhite,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
+
