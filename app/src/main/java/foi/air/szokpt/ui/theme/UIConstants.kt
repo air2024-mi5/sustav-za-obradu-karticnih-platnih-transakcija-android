@@ -14,10 +14,17 @@ enum class TileElevation(val color: Any) {
 
 // SizeMode indicates the sizing fill of the Tile in a container
 enum class TileSizeMode {
-    FillMaxWidth,
-    FillMaxHeight,
-    FillMaxSize,
-    WrapContent
+    FILL_MAX_WIDTH,
+    FILL_MAX_HEIGHT,
+    FILL_MAX_SIZE,
+    WRAP_CONTENT
+}
+
+enum class TileSize(val rows: Float) {
+    ONE_ROW(1.0f),
+    ONE_AND_HALF(1.5f),
+    TWO_ROWS(2.0f),
+    THREE_ROW(3.0f)
 }
 
 // Background gradient of the app
@@ -32,6 +39,7 @@ val BackgroundColor = Brush.horizontalGradient(           // Lowest Level - Grad
 val AppBorderRadius: Dp = 30.dp                           // Default radius across the app
 
 // Drop shadow constants
-val ShadowColor: Color = Color.Black.copy(alpha = 0.3f)  // Semitransparent black
-val ShadowElevation: Dp = 4.dp                            // Shadow depth
-val ShadowBlurRadius: Dp = 8.dp                           // Blur of the shadow
+val ShadowSpotColor: Color = Color.Black
+val ShadowAmbientColor: Color = Color.LightGray
+val ShadowTileElevation: Dp = 15.dp
+
