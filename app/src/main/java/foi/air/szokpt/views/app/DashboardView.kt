@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,10 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,14 +25,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
+<<<<<<< HEAD
+<<<<<<< HEAD
+import foi.air.szokpt.ui.theme.BGLevelThree
+=======
+=======
+>>>>>>> parent of cf593e4 (Dodani je CardTypesTile)
 import foi.air.szokpt.ui.theme.BGLevelTwo
+>>>>>>> parent of cf593e4 (Dodani je CardTypesTile)
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextGray
@@ -61,6 +64,8 @@ fun DashboardView(navController: NavController){
             ValueTile()
         }
         item {
+<<<<<<< HEAD
+=======
             TileSegment(
                 tileSizeMode = TileSizeMode.WRAP_CONTENT,
                 minWidth = 200.dp,
@@ -79,19 +84,26 @@ fun DashboardView(navController: NavController){
             TransactionsListTile()
         }
         item(span = { GridItemSpan(2) }) {
+>>>>>>> parent of cf593e4 (Dodani je CardTypesTile)
             TileSegment(
-                tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
-                // For spanning 2 rows
-                modifier = Modifier.aspectRatio(1.5f),
+                tileSizeMode = TileSizeMode.WRAP_CONTENT,
+                minWidth = 200.dp,
+                minHeight = 200.dp,
                 color = BGLevelOne,
                 content = {
                     Text(
-                        text = "Item 4 Span 1.5 row 2 col",
+                        text = "Item 2",
                         modifier = Modifier.align(Alignment.Center),
                         color = Color.White
                     )
                 }
             )
+        }
+        item(span = { GridItemSpan(2) }) {
+            TransactionsListTile()
+        }
+        item(span = { GridItemSpan(2) }) {
+            TransactionsByDayTile()
         }
     }
 }
@@ -376,3 +388,116 @@ fun TransactionItem(
     }
 }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+@Composable
+fun CardTypesTile() {
+    TileSegment(
+        tileSizeMode = TileSizeMode.WRAP_CONTENT,
+        innerPadding = 16.dp,
+        outerMargin = 8.dp,
+        minWidth = 150.dp,
+        minHeight = 200.dp,
+        color = BGLevelOne
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Top
+        ) {
+            Text(
+                text = "Card Types",
+                color = Color.White,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                BarComponent(40.dp, TextGray, "Other")
+                BarComponent(80.dp, Secondary, "Visa")
+                BarComponent(65.dp, Primary, "Master")
+            }
+        }
+    }
+}
+
+@Composable
+fun BarComponent(
+    height: Dp,
+    color: Color = Primary,
+    label: String
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .width(15.dp)
+                .height(height)
+                .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
+                .background(color)
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = label,
+            color = TextWhite,
+            fontSize = 12.sp
+        )
+    }
+}
+
+
+@Composable
+fun TransactionsByDayTile() {
+    TileSegment(
+        tileSizeMode = TileSizeMode.WRAP_CONTENT,
+        innerPadding = 16.dp,
+        outerMargin = 8.dp,
+        minWidth = 250.dp,
+        minHeight = 200.dp,
+        color = BGLevelOne
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Top
+        ) {
+            Text(
+                text = "Transaction types",
+                color = Color.White,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                val transactions = listOf(60.dp, 25.dp, 30.dp, 35.dp, 55.dp, 80.dp, 15.dp)
+                val days = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
+                transactions.forEachIndexed { index, height ->
+                    BarComponent(
+                        height = height,
+                        color = Primary,
+                        label = days[index]
+                    )
+                }
+            }
+        }
+    }
+}
+=======
+>>>>>>> parent of cf593e4 (Dodani je CardTypesTile)
+=======
+>>>>>>> parent of cf593e4 (Dodani je CardTypesTile)
