@@ -9,8 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
 import foi.air.szokpt.views.app.DashboardView
+import foi.air.szokpt.views.app.ReportsView
 import foi.air.szokpt.views.test_views.DailyProcessScreen
-import foi.air.szokpt.views.test_views.ReportsScreen
 
 const val ROUTE_DASHBOARD = "dashboard"
 const val ROUTE_REPORTS = "reports"
@@ -31,7 +31,7 @@ fun MainScreen() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("dashboard") { DashboardView(navController) }
-            composable("reports") { ReportsScreen(navController) }
+            composable("reports") { ReportsView(navController) }
             composable("daily_process") { DailyProcessScreen(navController) }
         }
     }
