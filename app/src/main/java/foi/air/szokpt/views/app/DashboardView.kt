@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotApplyResult
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,6 +64,9 @@ fun DashboardView(navController: NavController){
         }
         item(span = { GridItemSpan(2) }) {
             TransactionsListTile()
+        }
+        item(span = { GridItemSpan(2) }) {
+            TransactionOutcomes()
         }
         item(span = { GridItemSpan(2) }) {
             TransactionsByDayTile()
@@ -429,7 +433,7 @@ fun TransactionsByDayTile() {
         ) {
             Text(
                 text = "Transaction types",
-                color = Color.White,
+                color = TextWhite,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -452,6 +456,42 @@ fun TransactionsByDayTile() {
                         label = days[index]
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun TransactionOutcomes(){
+    TileSegment(
+        tileSizeMode = TileSizeMode.WRAP_CONTENT,
+        innerPadding = 16.dp,
+        outerMargin = 8.dp,
+        minWidth = 150.dp,
+        minHeight = 200.dp,
+        color = BGLevelOne
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Top
+        ) {
+            Text(
+                text = "Transaction outcomes",
+                color = TextWhite,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                BarComponent(80.dp, success, "Successful")
+                BarComponent(30.dp, danger, "Canceled")
+                BarComponent(15.dp, TextGray, "Rejected")
             }
         }
     }
