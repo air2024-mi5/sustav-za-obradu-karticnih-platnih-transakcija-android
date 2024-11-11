@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foi.air.szokpt.R
+import foi.air.szokpt.helpers.LoginHandler
 import foi.air.szokpt.ui.components.LoginTextField
 import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.BackgroundColor
@@ -39,11 +40,23 @@ import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.danger
 
 @Composable
-fun LoginPage() {
+fun LoginPage(
+    onSuccessfulLogin: (username: String) -> Unit
+) {
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val errorMessage = ""
+    var errorMessage by remember { mutableStateOf("") }
+
+    var isAwaitingResponse by remember { mutableStateOf(false) }
+
+    val loginHandler = LoginHandler(
+        onSuccessfulLogin = { onSuccessfulLogin(username) },
+        onFailure = { message ->
+            errorMessage = message },
+        setAwaitingResponse = { awaiting ->
+            isAwaitingResponse = awaiting }
+    )
 
     Box(
         modifier = Modifier
@@ -102,11 +115,12 @@ fun LoginPage() {
 
                     // gumb za prijavu
                     Button(
-                        onClick = { /* TODO: Dodati logiku za prijavu */ },
+                        onClick = { loginHandler.login(username, password) },
                         colors = ButtonDefaults.buttonColors(containerColor = Primary),
                         shape = RoundedCornerShape(50.dp),
                         modifier = Modifier
-                            .width(150.dp)
+                            .width(150.dp),
+                        enabled = !isAwaitingResponse
                     ) {
                         Text(text = "Login", color = Color.White, fontWeight = FontWeight.Bold)
                     }
@@ -139,5 +153,5 @@ fun LoginPage() {
 @Preview(showBackground = true)
 @Composable
 fun LoginPagePreview() {
-    LoginPage()
+    LoginPage({})
 }
