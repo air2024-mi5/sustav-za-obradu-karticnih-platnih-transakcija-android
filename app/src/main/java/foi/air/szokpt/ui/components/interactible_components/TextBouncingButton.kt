@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,6 +38,7 @@ import foi.air.szokpt.ui.theme.Primary
  * @param inputText Text to display on the button
  * @param inputIcon Icon to display beside the button text
  * @param buttonColor Color applied to the text and icon
+ * @param showUnderline Shows an underline beneath the text content
  * @param onClick Action to perform when the button is clicked
  */
 @Composable
@@ -45,6 +47,7 @@ fun TextBouncingButton(
     inputText: String = "Button",
     inputIcon: ImageVector = Icons.Filled.FavoriteBorder,
     buttonColor: Color = Primary,
+    showUnderline: Boolean = false,
     onClick: () -> Unit
 ) {
     var isPressed by remember { mutableStateOf(false) }
@@ -90,6 +93,7 @@ fun TextBouncingButton(
                 text = inputText,
                 color = buttonColor,
                 fontSize = 16.sp,
+                textDecoration = if (showUnderline) TextDecoration.Underline else TextDecoration.None,
                 modifier = Modifier
             )
         }

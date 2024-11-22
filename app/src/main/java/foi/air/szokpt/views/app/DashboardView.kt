@@ -31,6 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.TileSegment
+import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
+import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
+import foi.air.szokpt.ui.components.interactible_components.TextBouncingButton
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.BGLevelThree
@@ -493,6 +496,10 @@ fun TransactionOutcomes(){
                 BarComponent(30.dp, danger, "Canceled")
                 BarComponent(15.dp, TextGray, "Rejected")
             }
+
+            OutlineBouncingButton {  }
+            TextBouncingButton {  }
+            FillBouncingButton {  }
         }
     }
 }
