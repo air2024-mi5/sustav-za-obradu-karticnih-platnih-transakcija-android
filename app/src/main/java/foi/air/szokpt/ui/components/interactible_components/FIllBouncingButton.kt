@@ -23,6 +23,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 
+
+/**
+ * A custom bouncing button component that provides animated effects for scaling
+ * the button, icon, and spacer when pressed.
+ *
+ * @param modifier Modifier to be applied to the outer Box container
+ * @param inputText Text to display on the button
+ * @param inputIcon Icon to display beside the button text
+ * @param buttonColor Background color of the button
+ * @param contentColor Color of the button's content (text and icon)
+ * @param useSpacerAnimation If true, applies a bounce effect to the spacer width
+ * @param useIconAnimation If true, applies a bounce effect to the icon scaling
+ * @param onClick Action to perform when the button is clicked
+ */
 @Composable
 fun FillBouncingButton(
     modifier: Modifier = Modifier,
