@@ -29,6 +29,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foi.air.szokpt.ui.theme.Primary
 
+/**
+ * A custom text button with bouncing animation effects for scaling
+ * the button and its icon when pressed.
+ *
+ * @param modifier Modifier to apply to the outer Box container
+ * @param inputText Text to display on the button
+ * @param inputIcon Icon to display beside the button text
+ * @param buttonColor Color applied to the text and icon
+ * @param onClick Action to perform when the button is clicked
+ */
 @Composable
 fun TextBouncingButton(
     modifier: Modifier = Modifier,
