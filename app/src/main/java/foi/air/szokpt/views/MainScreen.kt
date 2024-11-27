@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -26,6 +28,13 @@ fun MainScreen() {
 
     val isAuthenticated = remember { mutableStateOf(false) }
 
+    // For the top status bar to be white on a back background of the app
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        val window = (view.context as android.app.Activity).window
+        val windowInsetsController = WindowCompat.getInsetsController(window, view)
+        windowInsetsController.isAppearanceLightStatusBars = false
+    }
     Scaffold(
         bottomBar = {
             if(isAuthenticated.value)
