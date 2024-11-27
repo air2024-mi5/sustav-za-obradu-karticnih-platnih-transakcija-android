@@ -1,4 +1,4 @@
-package foi.air.szokpt.network
+package foi.air.szokpt.network.models
 
 data class LoginBody(
     val username: String,

@@ -1,9 +1,16 @@
 package foi.air.szokpt.helpers
 
-import foi.air.szokpt.network.LoginBody
+import NetworkService
+import com.google.gson.Gson
+import foi.air.szokpt.context.Auth
+import foi.air.szokpt.network.models.JwtData
+import foi.air.szokpt.network.models.LoginBody
+import foi.air.szokpt.network.models.LoginResponse
+import foi.air.szokpt.network.models.LoginUserData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class LoginHandler(
     private val onSuccessfulLogin:(String) -> Unit,
@@ -16,20 +23,25 @@ class LoginHandler(
         val service = NetworkService.authenticationService
         val serviceCall = service.login(LoginBody(username, password))
 
-        serviceCall.enqueue(object : Callback<String> {
+        serviceCall.enqueue(object : Callback<LoginResponse> {
             override fun onResponse(
-                call: Call<String>,
-                response: Response<String>
+                call: Call<LoginResponse>,
+                response: Response<LoginResponse>
             ) {
                 if (response.isSuccessful) {
-                    onSuccessfulLogin(username)
+                    val responseBody = response.body()
+                    if (responseBody == null) {
+                        onFailure("Neuspješna prijava")
+                    }else{
+                        onSuccessfulLogin(username)
+                    }
                 } else {
-                    onFailure("Neuspješna prijava")
+                    onFailure(response.message())
                 }
                 setAwaitingResponse(false)
             }
 
-            override fun onFailure(call: Call<String>, t: Throwable) {
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 onFailure("Nešto je pošlo po zlu")
                 setAwaitingResponse(false)
             }
