@@ -1,9 +1,9 @@
 package foi.air.szokpt.helpers
 
 import NetworkService
+import android.util.Log
 import com.google.gson.Gson
 import foi.air.szokpt.context.Auth
-import foi.air.szokpt.network.models.JwtData
 import foi.air.szokpt.network.models.LoginBody
 import foi.air.szokpt.network.models.LoginResponse
 import foi.air.szokpt.network.models.LoginUserData
@@ -44,7 +44,14 @@ class LoginHandler(
                         onSuccessfulLogin(username)
                     }
                 } else {
-                    onFailure(response.message())
+                    val errorBody = response.errorBody()?.string() ?: "Unknown error occurred"
+                    val errorMessage = try {
+                        Gson().fromJson(errorBody, LoginResponse::class.java)?.message
+                            ?: "Invalid response from server"
+                    } catch (e: Exception) {
+                        "Error parsing server response"
+                    }
+                    onFailure(errorMessage)
                 }
                 setAwaitingResponse(false)
             }
