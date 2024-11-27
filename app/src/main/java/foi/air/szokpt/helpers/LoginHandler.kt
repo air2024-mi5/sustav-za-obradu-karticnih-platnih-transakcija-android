@@ -33,6 +33,8 @@ class LoginHandler(
                     if (responseBody == null) {
                         onFailure("Neuspješna prijava")
                     }else{
+                        val payload = JwtUtils.decodeJwtPayload(responseBody.token)
+
                         onSuccessfulLogin(username)
                     }
                 } else {
