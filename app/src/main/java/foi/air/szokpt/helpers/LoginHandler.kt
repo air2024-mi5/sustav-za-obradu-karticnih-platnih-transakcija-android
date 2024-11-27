@@ -35,6 +35,12 @@ class LoginHandler(
                     }else{
                         val payload = JwtUtils.decodeJwtPayload(responseBody.token)
 
+                        Auth.logedInUserData = LoginUserData(
+                            payload.username,
+                            payload.role,
+                            responseBody.token?:""
+                        )
+
                         onSuccessfulLogin(username)
                     }
                 } else {
