@@ -32,8 +32,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import foi.air.szokpt.ui.components.LoginTextField
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
+import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.BGLevelZeroLow
 import foi.air.szokpt.ui.theme.Primary
@@ -48,6 +50,13 @@ import foi.air.szokpt.views.ROUTE_REGISTRATION
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationView(navController: NavController, userType: String) {
+
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -87,56 +96,87 @@ fun RegistrationView(navController: NavController, userType: String) {
                         var selectedIndex by remember {
                             mutableStateOf(
                                 options.indexOf(userType).coerceAtLeast(0)
-                            ) // Default to "User" if not found
+                            )
                         }
-
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            SingleChoiceSegmentedButtonRow {
-                                options.forEachIndexed { index, label ->
-                                    val isSelected = index == selectedIndex
-                                    SegmentedButton(
-                                        shape = SegmentedButtonDefaults.itemShape(
-                                            index = index,
-                                            count = options.size
-                                        ),
-                                        onClick = { selectedIndex = index },
-                                        selected = isSelected,
-                                        modifier = Modifier,
-                                        colors = SegmentedButtonDefaults.colors(
-                                            activeContainerColor = Secondary,
-                                            activeContentColor = TextWhite,
-                                            activeBorderColor = Primary,
-                                            inactiveContainerColor = BGLevelZeroLow,
-                                            inactiveContentColor = TextGray,
-                                            inactiveBorderColor = TextGray,
-                                        )
-                                    ) {
-                                        Text(
-                                            label,
-                                            color = if (isSelected) Color.White else Color.Gray,
-                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-                                        )
-                                    }
+                        SingleChoiceSegmentedButtonRow {
+                            options.forEachIndexed { index, label ->
+                                val isSelected = index == selectedIndex
+                                SegmentedButton(
+                                    shape = SegmentedButtonDefaults.itemShape(
+                                        index = index,
+                                        count = options.size
+                                    ),
+                                    onClick = { selectedIndex = index },
+                                    selected = isSelected,
+                                    modifier = Modifier,
+                                    colors = SegmentedButtonDefaults.colors(
+                                        activeContainerColor = Secondary,
+                                        activeContentColor = TextWhite,
+                                        activeBorderColor = Primary,
+                                        inactiveContainerColor = BGLevelZeroLow,
+                                        inactiveContentColor = TextGray,
+                                        inactiveBorderColor = TextGray,
+                                    )
+                                ) {
+                                    Text(
+                                        label,
+                                        color = if (isSelected) Color.White else Color.Gray,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                    )
                                 }
                             }
+                        }
 
-                            FillBouncingButton(
-                                modifier = Modifier,
-                                inputText = "Register new ${options[selectedIndex]}",
-                                inputIcon = Icons.Rounded.CheckCircle,
-                                buttonColor = success,
-                                contentColor = TextBlack,
-                                useSpacerAnimation = true,
-                                useIconAnimation = true
-                            ) {
-                                navController.navigate(ROUTE_REGISTRATION + "/${options[selectedIndex]}")
-                            }
+                        val spacerHeight = 12.dp
+                        Spacer(modifier = Modifier.height(spacerHeight))
+                        LoginTextField(
+                            label = "Username",
+                            value = username,
+                            onValueChange = { username = it },
+                            isPasswordField = false,
+                        )
+                        Spacer(modifier = Modifier.height(spacerHeight))
+                        LoginTextField(
+                            label = "Password",
+                            value = password,
+                            onValueChange = { password = it },
+                            isPasswordField = true,
+                        )
+                        Spacer(modifier = Modifier.height(spacerHeight))
+                        LoginTextField(
+                            label = "Name",
+                            value = name,
+                            onValueChange = { name = it },
+                            isPasswordField = false,
+                        )
+                        Spacer(modifier = Modifier.height(spacerHeight))
+                        LoginTextField(
+                            label = "Last Name",
+                            value = lastName,
+                            onValueChange = { lastName = it },
+                            isPasswordField = false,
+                        )
+                        Spacer(modifier = Modifier.height(spacerHeight))
+                        LoginTextField(
+                            label = "E-mail",
+                            value = email,
+                            onValueChange = { email = it },
+                            isPasswordField = false,
+                        )
+                        Spacer(modifier = Modifier.height(spacerHeight))
+
+                        // Register user
+                        OutlineBouncingButton(
+                            modifier = Modifier,
+                            inputText = "Register new ${options[selectedIndex]}",
+                            inputIcon = Icons.Rounded.CheckCircle,
+                            contentColor = success,
+                            borderColor = success
+                        ) {
+                            // Register user
                         }
                     }
+
                 }
             }
         }
