@@ -46,6 +46,9 @@ import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
+import foi.air.szokpt.views.ROUTE_ACCOUNT
+import foi.air.szokpt.views.ROUTE_DAILY_PROCESS
+import foi.air.szokpt.views.ROUTE_REGISTRATION
 
 @Composable
 fun AccountView(navController: NavController){
@@ -71,29 +74,21 @@ fun AccountView(navController: NavController){
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ){
             item(span = { GridItemSpan(2) }) {
-                RegisterNewAccount()
-            }
-            item {
-                ValueTile()
-            }
-            item {
-                CardTypesTile()
+                // Search
             }
             item(span = { GridItemSpan(2) }) {
-                TransactionsListTile()
+                RegisterNewAccount(navController)
             }
             item(span = { GridItemSpan(2) }) {
-                TransactionOutcomes()
+                // All accounts list
             }
-            item(span = { GridItemSpan(2) }) {
-                TransactionsByDayTile()
-            }
+
         }
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterNewAccount() {
+fun RegisterNewAccount(navController: NavController) {
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 12.dp,
@@ -107,7 +102,7 @@ fun RegisterNewAccount() {
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = "Register new Account",
+                text = "New Account",
                 color = TextWhite,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.SemiBold
@@ -117,7 +112,7 @@ fun RegisterNewAccount() {
                 modifier = Modifier
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally // Centering here
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -156,7 +151,9 @@ fun RegisterNewAccount() {
                     contentColor = TextWhite,
                     useSpacerAnimation = true,
                     useIconAnimation = true
-                ) {  }
+                ) {
+                    navController.navigate(ROUTE_REGISTRATION + "/${options[selectedIndex]}")
+                }
             }
         }
     }
