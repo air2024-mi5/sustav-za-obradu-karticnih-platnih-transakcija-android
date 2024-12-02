@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "SZOKPT"
 include(":app")
- 
+include(":core")
