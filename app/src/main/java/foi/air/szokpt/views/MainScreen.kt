@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import foi.air.szokpt.helpers.LoginHandler
 import foi.air.szokpt.ui.LoginPage
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
+import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.ReportsView
 import foi.air.szokpt.views.test_views.DailyProcessScreen
@@ -21,6 +22,9 @@ import foi.air.szokpt.views.test_views.DailyProcessScreen
 const val ROUTE_DASHBOARD = "dashboard"
 const val ROUTE_REPORTS = "reports"
 const val ROUTE_DAILY_PROCESS = "daily_process"
+const val ROUTE_ACCOUNT = "account"
+const val ROUTE_REGISTRATION = "registration"
+
 
 @Composable
 fun MainScreen() {
@@ -37,13 +41,13 @@ fun MainScreen() {
     }
     Scaffold(
         bottomBar = {
-            if(isAuthenticated.value)
-                AnimatedNavigationBar(navController = navController)
+           // if(isAuthenticated.value)
+               AnimatedNavigationBar(navController = navController)
         }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "login",
+            startDestination = "dashboard",
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("login") { LoginPage(
@@ -57,6 +61,7 @@ fun MainScreen() {
             composable("dashboard") { DashboardView(navController) }
             composable("reports") { ReportsView(navController) }
             composable("daily_process") { DailyProcessScreen(navController) }
+            composable("account") { AccountView(navController) }
         }
     }
 }

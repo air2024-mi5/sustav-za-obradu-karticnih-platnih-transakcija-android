@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ExitToApp
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.Icon
@@ -32,6 +33,7 @@ import foi.air.szokpt.ui.theme.TextGray
  */
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import foi.air.szokpt.views.ROUTE_ACCOUNT
 import foi.air.szokpt.views.ROUTE_DAILY_PROCESS
 import foi.air.szokpt.views.ROUTE_DASHBOARD
 import foi.air.szokpt.views.ROUTE_REPORTS
@@ -88,7 +90,7 @@ fun AnimatedNavigationBar(
             // Reports & Transactyions
             val (reportsIconContent, reportsLabelContent) = AnimatedNavigationBarItem(
                 icon = Icons.Rounded.Email,
-                label = "Reports & Trans.",
+                label = "Transactions",
                 isSelected = currentDestination == ROUTE_REPORTS
             )
             NavigationBarItem(
@@ -116,6 +118,24 @@ fun AnimatedNavigationBar(
                 onClick = {
                     if (currentDestination != ROUTE_DAILY_PROCESS) {
                         navController.navigate(ROUTE_DAILY_PROCESS)
+                    }
+                },
+                colors = itemColors
+            )
+
+            // Account
+            val (accountIconContent, accountLableContent) = AnimatedNavigationBarItem(
+                icon = Icons.Rounded.AccountCircle,
+                label = "Account",
+                isSelected = currentDestination == ROUTE_ACCOUNT
+            )
+            NavigationBarItem(
+                icon = accountIconContent,
+                label = accountLableContent,
+                selected = currentDestination == ROUTE_ACCOUNT,
+                onClick = {
+                    if (currentDestination != ROUTE_ACCOUNT) {
+                        navController.navigate(ROUTE_ACCOUNT)
                     }
                 },
                 colors = itemColors
