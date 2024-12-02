@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -34,9 +35,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.LoginTextField
 import foi.air.szokpt.ui.components.TileSegment
+import foi.air.szokpt.ui.components.dialog_components.DialogComponent
 import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.BGLevelThree
+import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.BGLevelZeroLow
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
@@ -56,6 +60,8 @@ fun RegistrationView(navController: NavController, userType: String) {
     var name by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+
+    val openDialog = remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -173,10 +179,29 @@ fun RegistrationView(navController: NavController, userType: String) {
                             contentColor = success,
                             borderColor = success
                         ) {
-                            // Register user
+                            openDialog.value = true
+                        }
+                        if (openDialog.value) {
+                            DialogComponent(
+                                onDismissRequest = { openDialog.value = false },
+                                onConfirmation = {
+                                    openDialog.value = false
+                                    println("Registered new ${options[selectedIndex]}")
+
+                                    // Here goes the registration to the next layer, frontend done.
+                                },
+                                dialogTitle = "Register new ${options[selectedIndex]}",
+                                dialogText =
+                                    "" +
+                                    "Are you sure you want to register ${name}, " +
+                                    "${lastName} as role: ${options[selectedIndex]}?" +
+                                    "",
+                                iconTop = Icons.Rounded.CheckCircle,
+                                highlightColor = success,
+                                containerColor = BGLevelTwo
+                            )
                         }
                     }
-
                 }
             }
         }
