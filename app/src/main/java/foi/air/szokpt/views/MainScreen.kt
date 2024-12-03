@@ -8,19 +8,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import foi.air.szokpt.helpers.LoginHandler
 import foi.air.szokpt.ui.LoginPage
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
+import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DashboardView
+import foi.air.szokpt.views.app.RegistrationView
 import foi.air.szokpt.views.app.ReportsView
 import foi.air.szokpt.views.test_views.DailyProcessScreen
 
 const val ROUTE_DASHBOARD = "dashboard"
 const val ROUTE_REPORTS = "reports"
 const val ROUTE_DAILY_PROCESS = "daily_process"
+const val ROUTE_ACCOUNT = "account"
+const val ROUTE_REGISTRATION = "registration"
+
 
 @Composable
 fun MainScreen() {
@@ -37,8 +44,8 @@ fun MainScreen() {
     }
     Scaffold(
         bottomBar = {
-            if(isAuthenticated.value)
-                AnimatedNavigationBar(navController = navController)
+           if(isAuthenticated.value)
+               AnimatedNavigationBar(navController = navController)
         }
     ) { innerPadding ->
         NavHost(
@@ -57,6 +64,14 @@ fun MainScreen() {
             composable("dashboard") { DashboardView(navController) }
             composable("reports") { ReportsView(navController) }
             composable("daily_process") { DailyProcessScreen(navController) }
+            composable("account") { AccountView(navController) }
+            composable(
+                route = "registration/{userType}",
+                arguments = listOf(navArgument("userType") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val userType = backStackEntry.arguments?.getString("userType") ?: "Unknown"
+                RegistrationView(navController = navController, userType = userType)
+            }
         }
     }
 }
