@@ -2,7 +2,7 @@ package foi.air.szokpt.helpers
 
 import android.util.Base64
 import com.google.gson.Gson
-import foi.air.szokpt.network.models.JwtData
+import hr.foi.air.szokpt.ws.models.JwtData
 
 object JwtUtils {
     fun decodeJwtPayload(token: String?): JwtData {

@@ -1,4 +1,4 @@
-package foi.air.szokpt.network.models
+package hr.foi.air.core.login
 
 data class LoginUserData(
     val username: String,

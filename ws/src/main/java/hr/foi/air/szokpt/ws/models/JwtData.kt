@@ -1,4 +1,4 @@
-package foi.air.szokpt.network.models
+package hr.foi.air.szokpt.ws.models
 
 import com.google.gson.annotations.SerializedName
 
