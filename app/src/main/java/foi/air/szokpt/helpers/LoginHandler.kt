@@ -1,65 +1,47 @@
 package foi.air.szokpt.helpers
 
-import NetworkService
 import android.util.Log
-import com.google.gson.Gson
 import foi.air.szokpt.context.Auth
-import foi.air.szokpt.network.models.LoginBody
-import foi.air.szokpt.network.models.LoginResponse
-import foi.air.szokpt.network.models.LoginUserData
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import hr.foi.air.core.network.ResponseListener
+import hr.foi.air.core.network.models.ErrorResponseBody
+import hr.foi.air.core.network.models.SuccessfulResponseBody
+import hr.foi.air.core.login.LoginBody
+import hr.foi.air.core.login.LoginOutcomeListener
+import hr.foi.air.szokpt.ws.models.LoginResponse
+import hr.foi.air.core.login.LoginUserData
+import hr.foi.air.szokpt.ws.request_handlers.LoginRequestHandler
 
 
-class LoginHandler(
-    private val onSuccessfulLogin:(String) -> Unit,
-    private val onFailure:(String) -> Unit,
-    private val setAwaitingResponse:(Boolean) -> Unit
-) {
-    fun login(username: String, password: String) {
-        setAwaitingResponse(true)
+class LoginHandler() {
+    fun login(loginBody: LoginBody, loginListener: LoginOutcomeListener) {
+        val loginRequestHandler = LoginRequestHandler(loginBody)
 
-        val service = NetworkService.authenticationService
-        val serviceCall = service.login(LoginBody(username, password))
+        loginRequestHandler.sendRequest(
+            object : ResponseListener<LoginResponse> {
+                override fun onSuccessfulResponse(response: SuccessfulResponseBody<LoginResponse>) {
 
-        serviceCall.enqueue(object : Callback<LoginResponse> {
-            override fun onResponse(
-                call: Call<LoginResponse>,
-                response: Response<LoginResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody == null) {
-                        onFailure("Neuspješna prijava")
-                    }else{
-                        val payload = JwtUtils.decodeJwtPayload(responseBody.token)
+                    val loginResponse = response.data!![0]
 
-                        Auth.logedInUserData = LoginUserData(
+                    val payload = JwtUtils.decodeJwtPayload(loginResponse.token)
+
+                    loginListener.onSuccessfulLogin(
+                        LoginUserData(
                             payload.username,
                             payload.role,
-                            responseBody.token?:""
+                            loginResponse.token?:""
                         )
-
-                        onSuccessfulLogin(username)
-                    }
-                } else {
-                    val errorBody = response.errorBody()?.string() ?: "Unknown error occurred"
-                    val errorMessage = try {
-                        Gson().fromJson(errorBody, LoginResponse::class.java)?.message
-                            ?: "Invalid response from server"
-                    } catch (e: Exception) {
-                        "Error parsing server response"
-                    }
-                    onFailure(errorMessage)
+                    )
                 }
-                setAwaitingResponse(false)
-            }
 
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                onFailure("Nešto je pošlo po zlu")
-                setAwaitingResponse(false)
+                override fun onErrorResponse(response: ErrorResponseBody) {
+                    loginListener.onFailedLogin(response.message)
+                }
+
+                override fun onNetworkFailure(t: Throwable) {
+                    loginListener.onFailedLogin( "Could not connect to network.")
+                }
             }
-        })
+        )
+
     }
 }
