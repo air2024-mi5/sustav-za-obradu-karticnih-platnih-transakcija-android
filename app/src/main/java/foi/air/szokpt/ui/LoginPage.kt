@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import foi.air.szokpt.R
 import foi.air.szokpt.helpers.LoginHandler
 import foi.air.szokpt.ui.components.LoginTextField
@@ -38,26 +39,22 @@ import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.BackgroundColor
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.danger
+import foi.air.szokpt.viewmodels.LoginViewModel
+import androidx.compose.runtime.livedata.observeAsState
+import hr.foi.air.core.login.LoginBody
+
 
 @Composable
 fun LoginPage(
+    viewModel: LoginViewModel = viewModel(),
     onSuccessfulLogin: (username: String) -> Unit
 ) {
-
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") }
-
+    val username = viewModel.username.observeAsState().value ?: ""
+    val password = viewModel.password.observeAsState().value ?: ""
+    val errorMessage = viewModel.errorMessage.observeAsState().value ?: ""
     var isAwaitingResponse by remember { mutableStateOf(false) }
 
-    val loginHandler = LoginHandler(
-        onSuccessfulLogin = { onSuccessfulLogin(username) },
-        onFailure = { message ->
-            errorMessage = message },
-        setAwaitingResponse = { awaiting ->
-            isAwaitingResponse = awaiting }
-    )
-
+    val loginHandler = LoginHandler()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -97,7 +94,7 @@ fun LoginPage(
                     LoginTextField(
                         label = "Username",
                         value = username,
-                        onValueChange = { username = it },
+                        onValueChange = { viewModel.username.value = it },
                         isPasswordField = false,
                     )
 
@@ -107,7 +104,7 @@ fun LoginPage(
                     LoginTextField(
                         label = "Password",
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = { viewModel.password.value = it },
                         isPasswordField = true
                     )
 
@@ -115,7 +112,21 @@ fun LoginPage(
 
                     // gumb za prijavu
                     Button(
-                        onClick = { loginHandler.login(username, password) },
+                        onClick = {
+                            val loginData = LoginBody(username, password)
+                            isAwaitingResponse = true
+                            viewModel.login(
+                                loginHandler,
+                                loginData,
+                                onSuccessfulLogin = {
+                                    isAwaitingResponse = false
+                                    onSuccessfulLogin(username)
+                                },
+                                onFailedLogin = {
+                                    isAwaitingResponse = false
+                                }
+                            )
+                        },
                         colors = ButtonDefaults.buttonColors(containerColor = Primary),
                         shape = RoundedCornerShape(50.dp),
                         modifier = Modifier
@@ -153,5 +164,5 @@ fun LoginPage(
 @Preview(showBackground = true)
 @Composable
 fun LoginPagePreview() {
-    LoginPage({})
+    LoginPage(onSuccessfulLogin = {})
 }

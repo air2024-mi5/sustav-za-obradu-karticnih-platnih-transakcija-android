@@ -1,38 +1,47 @@
 package foi.air.szokpt.helpers
 
-import foi.air.szokpt.network.LoginBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import android.util.Log
+import foi.air.szokpt.context.Auth
+import hr.foi.air.core.network.ResponseListener
+import hr.foi.air.core.network.models.ErrorResponseBody
+import hr.foi.air.core.network.models.SuccessfulResponseBody
+import hr.foi.air.core.login.LoginBody
+import hr.foi.air.core.login.LoginOutcomeListener
+import hr.foi.air.szokpt.ws.models.LoginResponse
+import hr.foi.air.core.login.LoginUserData
+import hr.foi.air.szokpt.ws.request_handlers.LoginRequestHandler
 
-class LoginHandler(
-    private val onSuccessfulLogin:(String) -> Unit,
-    private val onFailure:(String) -> Unit,
-    private val setAwaitingResponse:(Boolean) -> Unit
-) {
-    fun login(username: String, password: String) {
-        setAwaitingResponse(true)
 
-        val service = NetworkService.authenticationService
-        val serviceCall = service.login(LoginBody(username, password))
+class LoginHandler() {
+    fun login(loginBody: LoginBody, loginListener: LoginOutcomeListener) {
+        val loginRequestHandler = LoginRequestHandler(loginBody)
 
-        serviceCall.enqueue(object : Callback<String> {
-            override fun onResponse(
-                call: Call<String>,
-                response: Response<String>
-            ) {
-                if (response.isSuccessful) {
-                    onSuccessfulLogin(username)
-                } else {
-                    onFailure("Neuspješna prijava")
+        loginRequestHandler.sendRequest(
+            object : ResponseListener<LoginResponse> {
+                override fun onSuccessfulResponse(response: SuccessfulResponseBody<LoginResponse>) {
+
+                    val loginResponse = response.data!![0]
+
+                    val payload = JwtUtils.decodeJwtPayload(loginResponse.token)
+
+                    loginListener.onSuccessfulLogin(
+                        LoginUserData(
+                            payload.username,
+                            payload.role,
+                            loginResponse.token?:""
+                        )
+                    )
                 }
-                setAwaitingResponse(false)
-            }
 
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                onFailure("Nešto je pošlo po zlu")
-                setAwaitingResponse(false)
+                override fun onErrorResponse(response: ErrorResponseBody) {
+                    loginListener.onFailedLogin(response.message)
+                }
+
+                override fun onNetworkFailure(t: Throwable) {
+                    loginListener.onFailedLogin( "Could not connect to network.")
+                }
             }
-        })
+        )
+
     }
 }

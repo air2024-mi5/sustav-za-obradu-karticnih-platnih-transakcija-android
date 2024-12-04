@@ -41,6 +41,10 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":core"))
+    implementation(project(":ws"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -62,4 +66,7 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.2.0")
     implementation ("com.squareup.retrofit2:retrofit:2.2.0")
+
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.runtime.livedata)
 }
