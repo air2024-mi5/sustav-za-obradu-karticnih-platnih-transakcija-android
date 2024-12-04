@@ -11,21 +11,21 @@ class RegistrationHandler(
     private val onFailure:(String) -> Unit,
     private val setAwaitingResponse:(Boolean) -> Unit
 ) {
-    fun register(username: String, password: String, firstName: String, lastName: String, email: String) {
+    fun register(username: String, password: String, firstName: String, lastName: String, email: String, role: String) {
         setAwaitingResponse(true)
 
         val service = NetworkService.authenticationService
-        val serviceCall = service.register(RegistrationBody(username, password, firstName, lastName, email))
+        val serviceCall = service.register(RegistrationBody(username, password, firstName, lastName, email, role))
 
         serviceCall.enqueue(object: Callback<String> {
             override fun onResponse(call: Call<String>?, response: Response<String>?) {
                 if (response != null) {
                     if (response.isSuccessful) {
-                        onSuccessful("Uspješna registracija")
+                        onSuccessful("Uspješna registracija!")
                         //val message = response.body()
                         //println("Uspjeh: $message")
                     } else {
-                        onFailure("Neuspješna registracija")
+                        onFailure("Neuspješna registracija!")
                         //println("Greska: ${response.errorBody()?.string()}")
                     }
                     setAwaitingResponse(false)
@@ -33,7 +33,7 @@ class RegistrationHandler(
             }
 
             override fun onFailure(call: Call<String>?, t: Throwable?) {
-                onFailure("Došlo je do greške")
+                onFailure("Došlo je do greške.")
             }
         })
     }
