@@ -1,6 +1,6 @@
 package hr.foi.air.core.login
 
-data class LoginBody(
+data class RegistrationBody(
     val username: String,
     val password: String,
     val firstName: String,

@@ -2,7 +2,9 @@ package hr.foi.air.szokpt.ws.network
 
 import hr.foi.air.core.network.models.SuccessfulResponseBody
 import hr.foi.air.core.login.LoginBody
+import hr.foi.air.core.login.RegistrationBody
 import hr.foi.air.szokpt.ws.models.LoginResponse
+import hr.foi.air.szokpt.ws.models.RegistrationResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
