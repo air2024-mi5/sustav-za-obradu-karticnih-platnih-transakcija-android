@@ -10,4 +10,7 @@ import retrofit2.http.POST
 interface AuthenticationService {
     @POST("/login")
     fun login(@Body loginBody: LoginBody): Call<SuccessfulResponseBody<LoginResponse>>
+
+    @POST("/register")
+    fun register(@Body registrationBody: RegistrationBody): Call<SuccessfulResponseBody<RegistrationResponse>>
 }
