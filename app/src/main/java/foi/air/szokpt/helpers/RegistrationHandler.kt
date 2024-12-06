@@ -1,6 +1,7 @@
 package foi.air.szokpt.helpers
 
-import hr.foi.air.core.login.RegistrationBody
+import android.util.Log
+import hr.foi.air.core.register.RegistrationBody
 import hr.foi.air.core.network.ResponseListener
 import hr.foi.air.core.network.models.ErrorResponseBody
 import hr.foi.air.core.network.models.SuccessfulResponseBody
@@ -9,9 +10,8 @@ import hr.foi.air.szokpt.ws.models.RegistrationResponse
 import hr.foi.air.szokpt.ws.request_handlers.RegistrationRequestHandler
 
 class RegistrationHandler() {
-    fun register(registrationBody: RegistrationBody, registrationListener: RegistrationOutcomeListener) {
-        val registrationRequestHandler = RegistrationRequestHandler(registrationBody)
-
+    fun register(jwtToken: String, registrationBody: RegistrationBody, registrationListener: RegistrationOutcomeListener) {
+        val registrationRequestHandler = RegistrationRequestHandler(jwtToken, registrationBody)
         registrationRequestHandler.sendRequest(
             object : ResponseListener<RegistrationResponse> {
                 override fun onSuccessfulResponse(response: SuccessfulResponseBody<RegistrationResponse>) {
@@ -19,7 +19,7 @@ class RegistrationHandler() {
                 }
 
                 override fun onErrorResponse(response: ErrorResponseBody) {
-                    registrationListener.onFailedRegistration(response.message)
+                    registrationListener.onFailedRegistration(response.message  ?: "Registration error occurred")
                 }
 
                 override fun onNetworkFailure(t: Throwable) {
