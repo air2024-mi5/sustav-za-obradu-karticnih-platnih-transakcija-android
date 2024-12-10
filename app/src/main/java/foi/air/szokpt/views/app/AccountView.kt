@@ -219,7 +219,6 @@ fun AccountList(navController: NavController) {
                     contentColor = Primary,
                     borderColor = Secondary,
                 ) {
-                    navController.navigate(ROUTE_ACCOUNT)
                 }
             }
             SearchBarForAccount()
