@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -18,11 +20,16 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -164,8 +171,10 @@ fun RegisterNewAccount(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountList(navController: NavController) {
+
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 10.dp,
@@ -174,6 +183,8 @@ fun AccountList(navController: NavController) {
         minHeight = 20.dp,
         color = BGLevelOne
     ) {
+        var active by remember { mutableStateOf(false) }
+
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.SpaceBetween
@@ -184,7 +195,7 @@ fun AccountList(navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "List of Accounts",
+                    text = "All Accounts",
                     color = TextWhite,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold
@@ -199,21 +210,78 @@ fun AccountList(navController: NavController) {
                     navController.navigate(ROUTE_ACCOUNT)
                 }
             }
-            TileSegment(
-                tileSizeMode = TileSizeMode.FILL_MAX_SIZE,
-                innerPadding = 12.dp,
-                outerMargin = 4.dp,
-                minWidth = 250.dp,
-                minHeight = 20.dp,
-                color = BGLevelTwo
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight() // Prevent height overflow
             ) {
-                Text(
-                    text = "Accounts",
-                    color = TextWhite,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium
-                )
+                SearchBarForAccount()
             }
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBarForAccount() {
+    var searchQuery by remember { mutableStateOf("") }
+    var active by remember { mutableStateOf(false) }
+    val allAccounts = listOf("Alice", "Antonio", "Matija", "Bob")
+    val filteredAccounts = allAccounts.filter { it.contains(searchQuery, ignoreCase = true) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 56.dp, max = 500.dp)
+    ) {
+        SearchBar(
+            query = searchQuery,
+            onQueryChange = { searchQuery = it },
+            onSearch = { /* Handle search submission logic --HERE-- */},
+            active = active,
+            onActiveChange = { active = it },
+            placeholder = { Text("Search accounts...") },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            trailingIcon = {
+                if (searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { searchQuery = "" }) {
+                        Icon(Icons.Default.Close, contentDescription = null)
+                    }
+                }
+            },
+            colors = SearchBarDefaults.colors(
+                containerColor = BGLevelTwo,
+                dividerColor = Color.Transparent
+            ),
+            modifier = Modifier
+                .fillMaxWidth() // Ensure it spans the full width - Else ERROR
+        ) {
+            // Results displayed only when the SearchBar is active
+            if (active) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    if (filteredAccounts.isNotEmpty()) {
+                        filteredAccounts.forEach { account ->
+                            Text(
+                                text = account,
+                                color = TextWhite,
+                                fontSize = 14.sp,
+                                modifier = Modifier.padding(vertical = 4.dp)
+                            )
+                        }
+                    } else {
+                        Text(
+                            text = "No results found.",
+                            color = TextWhite.copy(alpha = 0.6f),
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
