@@ -49,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import foi.air.szokpt.models.AccountListRole
 import foi.air.szokpt.models.ListedAccountInformation
 import foi.air.szokpt.models.Transaction
 import foi.air.szokpt.ui.components.TileSegment
@@ -233,8 +234,21 @@ fun AccountList(navController: NavController) {
 fun SearchBarForAccount() {
     var searchQuery by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
-    val allAccounts = listOf("Alice", "Antonio", "Matija", "Bob")
-    val filteredAccounts = allAccounts.filter { it.contains(searchQuery, ignoreCase = true) }
+    val allAccounts = listOf(
+        ListedAccountInformation("Alice", "Bob", "abob", AccountListRole.User),
+        ListedAccountInformation("Antonio", "Testic", "test", AccountListRole.Admin),
+        ListedAccountInformation("Matija", "Rosevelt", "mmatija", AccountListRole.User),
+        ListedAccountInformation("Bob", "Taylor", "btaylor", AccountListRole.User),
+        ListedAccountInformation("Alice", "Bob", "abob", AccountListRole.User),
+        ListedAccountInformation("Antonio", "Testic", "test", AccountListRole.Admin),
+        ListedAccountInformation("Matija", "Rosevelt", "mmatija", AccountListRole.User),
+        ListedAccountInformation("Bob", "Taylor", "btaylor", AccountListRole.User)
+    )
+    val filteredAccounts = allAccounts.filter {
+        it.name.contains(searchQuery, ignoreCase = true) ||
+                it.lastName.contains(searchQuery, ignoreCase = true) ||
+                it.userName.contains(searchQuery, ignoreCase = true)
+    }
 
     Box(
         modifier = Modifier
@@ -263,7 +277,7 @@ fun SearchBarForAccount() {
             modifier = Modifier
                 .fillMaxWidth() // Ensure it spans the full width - Else ERROR
         ) {
-            // Results displayed only when the SearchBar is active
+            // Display results using AccountListItem composable
             if (active) {
                 Column(
                     modifier = Modifier
@@ -272,14 +286,7 @@ fun SearchBarForAccount() {
                 ) {
                     if (filteredAccounts.isNotEmpty()) {
                         filteredAccounts.forEach { account ->
-                            Text(
-                                text = account,
-                                color = TextWhite,
-                                fontSize = 14.sp,
-                                modifier = Modifier
-                                    .padding(vertical = 4.dp)
-                                    .clickable { println("Selected account: $account") }
-                            )
+                            AccountListItem(account = account)
                         }
                     } else {
                         Text(
@@ -304,7 +311,7 @@ fun AccountListItem(account: ListedAccountInformation) {
                 color = BGLevelThree,
                 shape = RoundedCornerShape(10.dp)
             )
-            .padding(12.dp),
+            .padding(6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
@@ -316,7 +323,7 @@ fun AccountListItem(account: ListedAccountInformation) {
             )
             Text(
                 text = "${account.name} ${account.lastName}",
-                color = Color.Gray,
+                color = TextWhite,
                 fontSize = 16.sp
             )
         }
