@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -273,20 +274,27 @@ fun SearchBarForAccount() {
         ) {
             // Display results using AccountListItem composable
             if (active) {
-                Column(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .heightIn(max = 300.dp)
                 ) {
+                    
                     if (filteredAccounts.isNotEmpty()) {
-                        filteredAccounts.forEach { account ->
-                            AccountListItem(account = account)
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(8.dp)
+                        ) {
+                            items(filteredAccounts) { account ->
+                                AccountListItem(account = account)
+                            }
                         }
                     } else {
                         Text(
                             text = "No results found :(",
                             color = TextGray,
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(8.dp)
                         )
                     }
                 }
