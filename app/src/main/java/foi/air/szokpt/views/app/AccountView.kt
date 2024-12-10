@@ -218,13 +218,7 @@ fun AccountList(navController: NavController) {
                     navController.navigate(ROUTE_ACCOUNT)
                 }
             }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight() // Prevent height overflow
-            ) {
-                SearchBarForAccount()
-            }
+            SearchBarForAccount()
         }
     }
 }
@@ -290,8 +284,8 @@ fun SearchBarForAccount() {
                         }
                     } else {
                         Text(
-                            text = "No results found.",
-                            color = TextWhite.copy(alpha = 0.6f),
+                            text = "No results found :(",
+                            color = TextGray,
                             fontSize = 14.sp
                         )
                     }
@@ -311,6 +305,7 @@ fun AccountListItem(account: ListedAccountInformation) {
                 color = BGLevelThree,
                 shape = RoundedCornerShape(10.dp)
             )
+            .clickable { println("Selected account: $account") } // Forward HERE
             .padding(6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
