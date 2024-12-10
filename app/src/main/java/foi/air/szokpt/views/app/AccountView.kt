@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.filled.Close
@@ -47,11 +49,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import foi.air.szokpt.models.ListedAccountInformation
+import foi.air.szokpt.models.Transaction
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
+import foi.air.szokpt.ui.components.transaction_components.TransactionIcon
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.BGLevelThree
 import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.BGLevelZeroLow
 import foi.air.szokpt.ui.theme.Primary
@@ -252,7 +258,7 @@ fun SearchBarForAccount() {
             },
             colors = SearchBarDefaults.colors(
                 containerColor = BGLevelTwo,
-                dividerColor = Color.Transparent
+                dividerColor = BGLevelThree
             ),
             modifier = Modifier
                 .fillMaxWidth() // Ensure it spans the full width - Else ERROR
@@ -288,4 +294,32 @@ fun SearchBarForAccount() {
     }
 }
 
+@Composable
+fun AccountListItem(account: ListedAccountInformation) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp, horizontal = 6.dp)
+            .background(
+                color = BGLevelThree,
+                shape = RoundedCornerShape(10.dp)
+            )
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            Text(
+                text = account.role.name + " @" + account.userName,
+                color = TextGray,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = "${account.name} ${account.lastName}",
+                color = Color.Gray,
+                fontSize = 16.sp
+            )
+        }
+    }
+}
 
