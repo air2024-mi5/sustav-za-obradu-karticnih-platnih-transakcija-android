@@ -23,7 +23,7 @@ class RegistrationHandler() {
                 }
 
                 override fun onNetworkFailure(t: Throwable) {
-                    registrationListener.onFailedRegistration("Could not connect to network.")
+                    registrationListener.onFailedRegistration(t.message ?: "An unknown network error occurred.")
                 }
             }
         )

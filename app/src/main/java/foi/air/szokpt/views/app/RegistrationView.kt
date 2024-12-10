@@ -76,6 +76,16 @@ fun RegistrationView(navController: NavController, userType: String) {
         }
     }
 
+    fun validateInput():String {
+        return if (username.isBlank() || password.isBlank() || name.isBlank() || lastName.isBlank() || email.isBlank()) {
+            "Ispunite sva polja!"
+        } else if(password.length < 3) {
+            "Lozinka mora sadržavati najmanje 3 znaka."
+        } else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            "E-mail mora biti u ispravnom formatu."
+        } else ""
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -192,7 +202,12 @@ fun RegistrationView(navController: NavController, userType: String) {
                             contentColor = success,
                             borderColor = success
                         ) {
-                            openDialog.value = true
+                            if(validateInput() == "")
+                                openDialog.value = true
+                            else {
+                                openDialog.value = false
+                                viewModel.message.value = validateInput()
+                            }
                         }
                         if (openDialog.value) {
                             DialogComponent(
@@ -253,6 +268,5 @@ fun RegistrationView(navController: NavController, userType: String) {
                 }
             }
         }
-
     }
 }
