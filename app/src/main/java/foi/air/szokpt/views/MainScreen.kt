@@ -44,13 +44,13 @@ fun MainScreen() {
     }
     Scaffold(
         bottomBar = {
-           if(isAuthenticated.value)
-               AnimatedNavigationBar(navController = navController)
+          // if(isAuthenticated.value)
+              AnimatedNavigationBar(navController = navController)
         }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "login",
+            startDestination = "dashboard",
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("login") { LoginPage(
