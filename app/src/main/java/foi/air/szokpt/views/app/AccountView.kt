@@ -210,6 +210,8 @@ fun AccountList(navController: NavController) {
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold
                 )
+                // TODO: Implement a route to just show a newly created singular account list view
+                //       Called AcccountListView. Where i can only view and search all accounts.
                 OutlineBouncingButton(
                     modifier = Modifier,
                     inputText = "",
