@@ -17,9 +17,12 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -38,8 +41,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
+import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.BGLevelZeroLow
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
@@ -80,7 +85,7 @@ fun AccountView(navController: NavController){
                 RegisterNewAccount(navController)
             }
             item(span = { GridItemSpan(2) }) {
-                // All accounts list
+                AccountList(navController)
             }
 
         }
@@ -154,6 +159,60 @@ fun RegisterNewAccount(navController: NavController) {
                 ) {
                     navController.navigate(ROUTE_REGISTRATION + "/${options[selectedIndex]}")
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun AccountList(navController: NavController) {
+    TileSegment(
+        tileSizeMode = TileSizeMode.WRAP_CONTENT,
+        innerPadding = 10.dp,
+        outerMargin = 4.dp,
+        minWidth = 250.dp,
+        minHeight = 20.dp,
+        color = BGLevelOne
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "List of Accounts",
+                    color = TextWhite,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                OutlineBouncingButton(
+                    modifier = Modifier,
+                    inputText = "",
+                    inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
+                    contentColor = Primary,
+                    borderColor = Secondary,
+                ) {
+                    navController.navigate(ROUTE_ACCOUNT)
+                }
+            }
+            TileSegment(
+                tileSizeMode = TileSizeMode.FILL_MAX_SIZE,
+                innerPadding = 12.dp,
+                outerMargin = 4.dp,
+                minWidth = 250.dp,
+                minHeight = 20.dp,
+                color = BGLevelTwo
+            ) {
+                Text(
+                    text = "Accounts",
+                    color = TextWhite,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium
+                )
             }
         }
     }
