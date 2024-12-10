@@ -1,6 +1,7 @@
 package foi.air.szokpt.views.app
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -232,12 +233,12 @@ fun SearchBarForAccount() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 56.dp, max = 500.dp)
+            .heightIn(min = 56.dp, max = 400.dp)
     ) {
         SearchBar(
             query = searchQuery,
             onQueryChange = { searchQuery = it },
-            onSearch = { /* Handle search submission logic --HERE-- */},
+            onSearch = { /* Handle search submission logic --HERE-- */ },
             active = active,
             onActiveChange = { active = it },
             placeholder = { Text("Search accounts...") },
@@ -269,7 +270,9 @@ fun SearchBarForAccount() {
                                 text = account,
                                 color = TextWhite,
                                 fontSize = 14.sp,
-                                modifier = Modifier.padding(vertical = 4.dp)
+                                modifier = Modifier
+                                    .padding(vertical = 4.dp)
+                                    .clickable { println("Selected account: $account") }
                             )
                         }
                     } else {
@@ -284,4 +287,5 @@ fun SearchBarForAccount() {
         }
     }
 }
+
 
