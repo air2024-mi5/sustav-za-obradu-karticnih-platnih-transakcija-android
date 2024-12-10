@@ -1,67 +1,90 @@
 package foi.air.szokpt.views.app
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotApplyResult
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import foi.air.szokpt.helpers.RegistrationHandler
 import foi.air.szokpt.ui.components.LoginTextField
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dialog_components.DialogComponent
-import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
-import foi.air.szokpt.ui.theme.BGLevelThree
 import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.BGLevelZeroLow
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
-import foi.air.szokpt.ui.theme.TextBlack
 import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.success
-import foi.air.szokpt.views.ROUTE_REGISTRATION
+import foi.air.szokpt.viewmodels.RegistrationViewModel
+import hr.foi.air.core.register.RegistrationBody
+import hr.foi.air.core.register.Role
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationView(navController: NavController, userType: String) {
 
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
+    val viewModel: RegistrationViewModel = viewModel()
+
+    val username = viewModel.username.observeAsState().value ?: ""
+    val password = viewModel.password.observeAsState().value ?: ""
+    val name = viewModel.firstName.observeAsState().value ?: ""
+    val lastName = viewModel.lastName.observeAsState().value ?: ""
+    val email = viewModel.email.observeAsState().value ?: ""
+    val role = viewModel.role.observeAsState().value ?: ""
+    val message by viewModel.message.observeAsState("")
+    var showMessage by remember { mutableStateOf(false) }
+
+    val registrationHandler = RegistrationHandler()
+    var isAwaitingResponse by remember { mutableStateOf(false) }
 
     val openDialog = remember { mutableStateOf(false) }
+
+    LaunchedEffect(message) {
+        if (message.isNotEmpty()) {
+            showMessage = true
+        }
+    }
+
+    fun validateInput():String {
+        return if (username.isBlank() || password.isBlank() || name.isBlank() || lastName.isBlank() || email.isBlank()) {
+            "Ispunite sva polja!"
+        } else if(password.length < 3) {
+            "Lozinka mora sadržavati najmanje 3 znaka."
+        } else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            "E-mail mora biti u ispravnom formatu."
+        } else ""
+    }
 
     Column(
         modifier = Modifier
@@ -98,7 +121,7 @@ fun RegistrationView(navController: NavController, userType: String) {
                             .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        val options = listOf("User", "Admin")
+                        val options = listOf("user", "admin")
                         var selectedIndex by remember {
                             mutableStateOf(
                                 options.indexOf(userType).coerceAtLeast(0)
@@ -138,35 +161,35 @@ fun RegistrationView(navController: NavController, userType: String) {
                         LoginTextField(
                             label = "Username",
                             value = username,
-                            onValueChange = { username = it },
+                            onValueChange = { viewModel.username.value = it },
                             isPasswordField = false,
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
                         LoginTextField(
                             label = "Password",
                             value = password,
-                            onValueChange = { password = it },
+                            onValueChange = { viewModel.password.value = it },
                             isPasswordField = true,
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
                         LoginTextField(
                             label = "Name",
                             value = name,
-                            onValueChange = { name = it },
+                            onValueChange = { viewModel.firstName.value = it },
                             isPasswordField = false,
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
                         LoginTextField(
                             label = "Last Name",
                             value = lastName,
-                            onValueChange = { lastName = it },
+                            onValueChange = { viewModel.lastName.value = it },
                             isPasswordField = false,
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
                         LoginTextField(
                             label = "E-mail",
                             value = email,
-                            onValueChange = { email = it },
+                            onValueChange = { viewModel.email.value = it },
                             isPasswordField = false,
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
@@ -179,16 +202,46 @@ fun RegistrationView(navController: NavController, userType: String) {
                             contentColor = success,
                             borderColor = success
                         ) {
-                            openDialog.value = true
+                            if(validateInput() == "")
+                                openDialog.value = true
+                            else {
+                                openDialog.value = false
+                                viewModel.message.value = validateInput()
+                            }
                         }
                         if (openDialog.value) {
                             DialogComponent(
                                 onDismissRequest = { openDialog.value = false },
                                 onConfirmation = {
-                                    openDialog.value = false
-                                    println("Registered new ${options[selectedIndex]}")
+                                    try {
+                                        viewModel.role.value = Role(options[selectedIndex])
+                                        val userData = RegistrationBody(username, password, name, lastName, email, viewModel.role.value!!)
 
-                                    // Here goes the registration to the next layer, frontend done.
+                                        isAwaitingResponse = true
+
+                                        viewModel.register(
+                                            registrationHandler,
+                                            userData,
+                                            onSuccessfulRegistration = {
+                                                isAwaitingResponse = false
+                                                openDialog.value = false
+                                                viewModel.username.value = ""
+                                                viewModel.password.value = ""
+                                                viewModel.firstName.value = ""
+                                                viewModel.lastName.value = ""
+                                                viewModel.email.value = ""
+                                            },
+                                            onFailedRegistration = {
+                                                isAwaitingResponse = false
+                                                openDialog.value = false
+                                            }
+                                        )
+                                        println("Registered new ${options[selectedIndex]}")
+                                        // Here goes the registration to the next layer, frontend done.
+                                    } catch (e: Exception) {
+                                        Log.e("RegistrationError", "Error during registration: ${e.message}")
+                                        isAwaitingResponse = false
+                                    }
                                 },
                                 dialogTitle = "Register new ${options[selectedIndex]}",
                                 dialogText =
@@ -201,10 +254,19 @@ fun RegistrationView(navController: NavController, userType: String) {
                                 containerColor = BGLevelTwo
                             )
                         }
+                        if (showMessage) {
+                            Text(
+                                text = message,
+                                color = if (message.contains("success")) Color.Green else Color.Red,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            )
+                        }
                     }
                 }
             }
         }
-
     }
 }

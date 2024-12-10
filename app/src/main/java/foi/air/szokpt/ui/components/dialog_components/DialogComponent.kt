@@ -54,7 +54,7 @@ fun DialogComponent(
                 inputText = confirmationText,
                 inputIcon = iconConfirm,
                 buttonColor = highlightColor,
-                onClick = { onDismissRequest() }
+                onClick = { onConfirmation() }
             )
 
         },
