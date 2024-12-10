@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
@@ -45,6 +46,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -58,6 +60,7 @@ import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.components.transaction_components.TransactionIcon
 import foi.air.szokpt.ui.theme.Alternative
+import foi.air.szokpt.ui.theme.AppBorderRadius
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.BGLevelThree
 import foi.air.szokpt.ui.theme.BGLevelTwo
@@ -192,8 +195,6 @@ fun AccountList(navController: NavController) {
         minHeight = 20.dp,
         color = BGLevelOne
     ) {
-        var active by remember { mutableStateOf(false) }
-
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.SpaceBetween
@@ -248,7 +249,9 @@ fun SearchBarForAccount() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 56.dp, max = 400.dp)
+            .clip(RoundedCornerShape(AppBorderRadius))
+            .heightIn(min = 56.dp, max = 400.dp),
+        contentAlignment = Alignment.TopStart // Align everything to the top
     ) {
         SearchBar(
             query = searchQuery,
@@ -279,7 +282,6 @@ fun SearchBarForAccount() {
                         .fillMaxWidth()
                         .heightIn(max = 300.dp)
                 ) {
-                    
                     if (filteredAccounts.isNotEmpty()) {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
