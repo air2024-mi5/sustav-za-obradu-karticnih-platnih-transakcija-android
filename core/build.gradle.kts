@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "hr.foi.air.core"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
