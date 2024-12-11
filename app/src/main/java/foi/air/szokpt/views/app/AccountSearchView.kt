@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,15 +53,28 @@ import foi.air.szokpt.ui.theme.TileSizeMode
 
 @Composable
 fun AccountSearchView(navController: NavController){
-    TileSegment(
-        tileSizeMode = TileSizeMode.WRAP_CONTENT,
-        innerPadding = 10.dp,
-        outerMargin = 4.dp,
-        minWidth = 250.dp,
-        minHeight = 20.dp,
-        color = BGLevelOne
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        SearchBarForAccount()
+        Text(
+            modifier = Modifier
+                .padding(16.dp),
+            text = "Search All Accounts",
+            color = TextWhite,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+        )
+        TileSegment(
+            tileSizeMode = TileSizeMode.WRAP_CONTENT,
+            innerPadding = 0.dp,
+            outerMargin = 8.dp,
+            minWidth = 250.dp,
+            minHeight = 90.dp,
+            color = BGLevelOne
+        ) {
+            SearchBarForAccount()
+        }
     }
 }
 
@@ -81,15 +95,15 @@ fun SearchBarForAccount() {
     )
     val filteredAccounts = allAccounts.filter {
         it.name.contains(searchQuery, ignoreCase = true) ||
-                it.lastName.contains(searchQuery, ignoreCase = true) ||
-                it.userName.contains(searchQuery, ignoreCase = true)
+            it.lastName.contains(searchQuery, ignoreCase = true) ||
+            it.userName.contains(searchQuery, ignoreCase = true)
     }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(AppBorderRadius))
-            .heightIn(min = 56.dp, max = 400.dp),
+            .heightIn(min = 56.dp, max = 900.dp),
         contentAlignment = Alignment.TopStart // Align everything to the top
     ) {
         SearchBar(
@@ -108,8 +122,8 @@ fun SearchBarForAccount() {
                 }
             },
             colors = SearchBarDefaults.colors(
-                containerColor = BGLevelTwo,
-                dividerColor = BGLevelThree
+                containerColor = BGLevelOne,
+                dividerColor = BGLevelTwo
             ),
             modifier = Modifier
                 .fillMaxWidth() // Ensure it spans the full width - Else ERROR
@@ -119,7 +133,7 @@ fun SearchBarForAccount() {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = 300.dp)
+                        .heightIn(max = 900.dp)
                 ) {
                     if (filteredAccounts.isNotEmpty()) {
                         LazyColumn(

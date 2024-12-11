@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowForward
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -72,6 +73,7 @@ import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.views.ROUTE_ACCOUNT
+import foi.air.szokpt.views.ROUTE_ALL_ACCOUNT_SEARCH
 import foi.air.szokpt.views.ROUTE_DAILY_PROCESS
 import foi.air.szokpt.views.ROUTE_REGISTRATION
 
@@ -99,15 +101,11 @@ fun AccountView(navController: NavController){
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ){
             item(span = { GridItemSpan(2) }) {
-                // Search
-            }
-            item(span = { GridItemSpan(2) }) {
                 RegisterNewAccount(navController)
             }
             item(span = { GridItemSpan(2) }) {
                 AccountList(navController)
             }
-
         }
     }
 }
@@ -215,11 +213,11 @@ fun AccountList(navController: NavController) {
                 OutlineBouncingButton(
                     modifier = Modifier,
                     inputText = "",
-                    inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
+                    inputIcon = Icons.Rounded.Search,
                     contentColor = Primary,
                     borderColor = Secondary,
                 ) {
-                    navController.navigate(ROUTE_DAILY_PROCESS)
+                    navController.navigate(ROUTE_ALL_ACCOUNT_SEARCH)
                 }
             }
         }
