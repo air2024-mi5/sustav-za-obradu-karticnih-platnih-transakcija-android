@@ -187,7 +187,6 @@ fun RegisterNewAccount(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountList(navController: NavController) {
-
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 10.dp,
@@ -220,89 +219,10 @@ fun AccountList(navController: NavController) {
                     contentColor = Primary,
                     borderColor = Secondary,
                 ) {
-                }
-            }
-            SearchBarForAccount()
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SearchBarForAccount() {
-    var searchQuery by remember { mutableStateOf("") }
-    var active by remember { mutableStateOf(false) }
-    val allAccounts = listOf(
-        ListedAccountInformation("Alice", "Bob", "abob", AccountListRole.User),
-        ListedAccountInformation("Antonio", "Testic", "test", AccountListRole.Admin),
-        ListedAccountInformation("Matija", "Rosevelt", "mmatija", AccountListRole.User),
-        ListedAccountInformation("Bob", "Taylor", "btaylor", AccountListRole.User),
-        ListedAccountInformation("Alice", "Bob", "abob", AccountListRole.User),
-        ListedAccountInformation("Antonio", "Testic", "test", AccountListRole.Admin),
-        ListedAccountInformation("Matija", "Rosevelt", "mmatija", AccountListRole.User),
-        ListedAccountInformation("Bob", "Taylor", "btaylor", AccountListRole.User)
-    )
-    val filteredAccounts = allAccounts.filter {
-        it.name.contains(searchQuery, ignoreCase = true) ||
-                it.lastName.contains(searchQuery, ignoreCase = true) ||
-                it.userName.contains(searchQuery, ignoreCase = true)
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(AppBorderRadius))
-            .heightIn(min = 56.dp, max = 400.dp),
-        contentAlignment = Alignment.TopStart // Align everything to the top
-    ) {
-        SearchBar(
-            query = searchQuery,
-            onQueryChange = { searchQuery = it },
-            onSearch = { /* Handle search submission logic --HERE-- */ },
-            active = active,
-            onActiveChange = { active = it },
-            placeholder = { Text("Search accounts...") },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            trailingIcon = {
-                if (searchQuery.isNotEmpty()) {
-                    IconButton(onClick = { searchQuery = "" }) {
-                        Icon(Icons.Default.Close, contentDescription = null)
-                    }
-                }
-            },
-            colors = SearchBarDefaults.colors(
-                containerColor = BGLevelTwo,
-                dividerColor = BGLevelThree
-            ),
-            modifier = Modifier
-                .fillMaxWidth() // Ensure it spans the full width - Else ERROR
-        ) {
-            // Display results using AccountListItem composable
-            if (active) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 300.dp)
-                ) {
-                    if (filteredAccounts.isNotEmpty()) {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(8.dp)
-                        ) {
-                            items(filteredAccounts) { account ->
-                                AccountListItem(account = account)
-                            }
-                        }
-                    } else {
-                        Text(
-                            text = "No results found :(",
-                            color = TextGray,
-                            fontSize = 14.sp,
-                            modifier = Modifier.padding(8.dp)
-                        )
-                    }
+                    navController.navigate(ROUTE_DAILY_PROCESS)
                 }
             }
         }
     }
 }
+
