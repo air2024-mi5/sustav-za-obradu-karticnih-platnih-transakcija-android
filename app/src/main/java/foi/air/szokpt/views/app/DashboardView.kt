@@ -1,6 +1,5 @@
 package foi.air.szokpt.views.app
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,32 +16,22 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotApplyResult
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.TileSegment
-import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
-import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
-import foi.air.szokpt.ui.components.interactible_components.TextBouncingButton
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
-import foi.air.szokpt.ui.theme.BGLevelThree
-import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextGray
@@ -50,10 +39,9 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
-import kotlin.coroutines.coroutineContext
 
 @Composable
-fun DashboardView(navController: NavController){
+fun DashboardView(navController: NavController) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
@@ -61,7 +49,7 @@ fun DashboardView(navController: NavController){
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
-    ){
+    ) {
         item(span = { GridItemSpan(2) }) {
             AllTransactionsTile()
         }
@@ -109,13 +97,13 @@ fun ValueTile() {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
-            ){
+            ) {
                 Text(
                     text = "€1 002 123",
                     color = success,
@@ -305,60 +293,6 @@ fun TransactionsListTile() {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
-
-            TransactionItem(initial = "F", cardType = "MasterCard", transactionLabel = "FOI")
-            Spacer(modifier = Modifier.height(2.dp))
-            TransactionItem(initial = "S", cardType = "Visa", transactionLabel = "Sjever")
-            Spacer(modifier = Modifier.height(2.dp))
-            TransactionItem(initial = "F", cardType = "MasterCard", transactionLabel = "FER")
-        }
-    }
-}
-
-@Composable
-fun TransactionItem(
-    initial: String,
-    cardType: String,
-    transactionLabel: String,
-    backgroundColor: Color = BGLevelTwo,
-    iconColor: Color = Secondary
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)
-            .background(backgroundColor, shape = RoundedCornerShape(8.dp))
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(iconColor, shape = RoundedCornerShape(6.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = initial,
-                color = Color.White,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column {
-            Text(
-                text = cardType,
-                color = TextGray,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = transactionLabel,
-                color = TextWhite,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
         }
     }
 }
@@ -471,7 +405,7 @@ fun TransactionsByDayTile() {
 }
 
 @Composable
-fun TransactionOutcomes(){
+fun TransactionOutcomes() {
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 16.dp,

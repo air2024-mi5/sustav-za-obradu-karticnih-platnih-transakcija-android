@@ -13,13 +13,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import foi.air.szokpt.helpers.LoginHandler
 import foi.air.szokpt.ui.LoginPage
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
 import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.RegistrationView
-import foi.air.szokpt.views.app.ReportsView
+import foi.air.szokpt.views.app.TransactionsView
 import foi.air.szokpt.views.test_views.DailyProcessScreen
 
 const val ROUTE_DASHBOARD = "dashboard"
@@ -44,25 +43,27 @@ fun MainScreen() {
     }
     Scaffold(
         bottomBar = {
-           if(isAuthenticated.value)
-               AnimatedNavigationBar(navController = navController)
+            if (isAuthenticated.value)
+                AnimatedNavigationBar(navController = navController)
         }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "login",
+            startDestination = "reports",
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("login") { LoginPage(
-                onSuccessfulLogin = {
-                    isAuthenticated.value = true
-                    navController.navigate("dashboard"){
-                        popUpTo("login") { inclusive = true }
+            composable("login") {
+                LoginPage(
+                    onSuccessfulLogin = {
+                        isAuthenticated.value = true
+                        navController.navigate("dashboard") {
+                            popUpTo("login") { inclusive = true }
+                        }
                     }
-                }
-            ) }
+                )
+            }
             composable("dashboard") { DashboardView(navController) }
-            composable("reports") { ReportsView(navController) }
+            composable("reports") { TransactionsView(navController) }
             composable("daily_process") { DailyProcessScreen(navController) }
             composable("account") { AccountView(navController) }
             composable(
