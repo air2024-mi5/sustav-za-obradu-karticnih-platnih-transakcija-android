@@ -3,21 +3,23 @@ package foi.air.szokpt.ui.components.transaction_components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import foi.air.szokpt.models.Transaction
-import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.BGLevelZeroHigh
+import hr.foi.air.szokpt.ws.models.responses.Transaction
 
 /**
  * TransactionItem is an element which represents a single transaction.
@@ -25,32 +27,87 @@ import foi.air.szokpt.ui.theme.BGLevelOne
  */
 @Composable
 fun TransactionItem(transaction: Transaction) {
+    val currencyColor = when (transaction.currency) {
+        "840" -> Color.Green
+        "978" -> Color.Yellow
+        else -> Color.White
+    }
+
+    val currencySymbol = when (transaction.currency) {
+        "840" -> "$"
+        "978" -> "€"
+        else -> ""
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp, horizontal = 8.dp)
-            .background(
-                color = BGLevelOne,
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(12.dp),
+            .padding(8.dp)
+            .background(color = BGLevelZeroHigh, shape = RoundedCornerShape(8.dp))
+            .drawBehind {
+                val strokeWidth = 4.dp.toPx()
+                val borderColor =
+                    if (transaction.responseCode == "00" || transaction.responseCode == "11") {
+                        Color.Green
+                    } else {
+                        Color.Red
+                    }
+                drawRect(
+                    color = borderColor,
+                    topLeft = Offset(size.width - strokeWidth, 0f),
+                    size = Size(strokeWidth, size.height)
+                )
+            }
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
-    ){
-        TransactionIcon(transaction.type.name.first().toString())
-
-        Spacer(modifier = Modifier.width(12.dp))
-
-        Column {
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = transaction.type.name,
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold
+                text = transaction.cardBrand,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
             )
             Text(
-                text = transaction.description,
-                color = Color.Gray,
-                fontSize = 14.sp
+                text = transaction.maskedPan,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White
+            )
+            Text(
+                text = "Installments: ${transaction.installmentsNumber}",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White
+            )
+        }
+
+        Column(
+            modifier = Modifier.weight(1.5f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = currencySymbol,
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                    color = currencyColor,
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+                Text(
+                    text = "${transaction.amount}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
+            Text(
+                text = transaction.transactionTimestamp,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = transaction.trxType,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White
             )
         }
     }
