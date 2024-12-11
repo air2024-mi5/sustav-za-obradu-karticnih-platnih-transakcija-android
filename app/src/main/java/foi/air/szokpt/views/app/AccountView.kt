@@ -58,6 +58,7 @@ import foi.air.szokpt.models.Transaction
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
+import foi.air.szokpt.ui.components.list_components.AccountListItem
 import foi.air.szokpt.ui.components.transaction_components.TransactionIcon
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.AppBorderRadius
@@ -305,34 +306,3 @@ fun SearchBarForAccount() {
         }
     }
 }
-
-@Composable
-fun AccountListItem(account: ListedAccountInformation) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp, horizontal = 6.dp)
-            .background(
-                color = BGLevelThree,
-                shape = RoundedCornerShape(10.dp)
-            )
-            .clickable { println("Selected account: $account") } // Forward HERE
-            .padding(6.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column {
-            Text(
-                text = account.role.name + " @" + account.userName,
-                color = TextGray,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = "${account.name} ${account.lastName}",
-                color = TextWhite,
-                fontSize = 16.sp
-            )
-        }
-    }
-}
-
