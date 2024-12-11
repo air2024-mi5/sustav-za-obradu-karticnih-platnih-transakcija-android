@@ -11,11 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foi.air.szokpt.models.ListedAccountInformation
 import foi.air.szokpt.ui.theme.BGLevelThree
+import foi.air.szokpt.ui.theme.Primary
+import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 
@@ -36,7 +39,7 @@ fun AccountListItem(account: ListedAccountInformation) {
         Column {
             Text(
                 text = account.role.name + " @" + account.userName,
-                color = TextGray,
+                color = Primary,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold
             )
