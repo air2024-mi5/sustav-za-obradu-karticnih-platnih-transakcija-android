@@ -48,7 +48,7 @@ fun MainScreen() {
         val windowInsetsController = WindowCompat.getInsetsController(window, view)
         windowInsetsController.isAppearanceLightStatusBars = false
     }
-    
+
     Scaffold(
         bottomBar = {
             //if(isAuthenticated.value)
@@ -79,8 +79,8 @@ fun MainScreen() {
                 val userType = backStackEntry.arguments?.getString("userType") ?: "Unknown"
                 RegistrationView(navController = navController, userType = userType)
             }
-            composable("all_account_search") { AccountSearchView(navController) }
-            composable(route = "user_account",) {
+            composable("all_account_search") { AccountSearchView(navController, sharedAccountViewModel) }
+            composable(route = "user_account") {
                 UserAccountView(
                     navController = navController,
                     sharedViewModel = sharedAccountViewModel

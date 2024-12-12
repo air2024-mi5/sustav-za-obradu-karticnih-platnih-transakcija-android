@@ -23,7 +23,7 @@ import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 
 @Composable
-fun AccountListItem(account: ListedAccountInformation) {
+fun AccountListItem(account: ListedAccountInformation, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -32,7 +32,10 @@ fun AccountListItem(account: ListedAccountInformation) {
                 color = BGLevelThree,
                 shape = RoundedCornerShape(10.dp)
             )
-            .clickable { println("Selected account: $account") } // Forward HERE
+            .clickable {
+                println("Selected account: $account")
+                onClick()
+            } // Forward HERE
             .padding(6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

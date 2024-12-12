@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import foi.air.szokpt.helpers.SharedAccountViewModel
 import foi.air.szokpt.models.AccountListRole
 import foi.air.szokpt.models.ListedAccountInformation
 import foi.air.szokpt.ui.components.TileSegment
@@ -49,10 +50,11 @@ import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
+import foi.air.szokpt.views.ROUTE_USER_ACCOUNT_OVERVIEW
 
 
 @Composable
-fun AccountSearchView(navController: NavController){
+fun AccountSearchView(navController: NavController, sharedViewModel: SharedAccountViewModel){
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -73,14 +75,17 @@ fun AccountSearchView(navController: NavController){
             minHeight = 90.dp,
             color = BGLevelOne
         ) {
-            SearchBarForAccount()
+            SearchBarForAccount(
+                navController,
+                sharedViewModel
+            )
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarForAccount() {
+fun SearchBarForAccount(navControler: NavController, sharedViewModel: SharedAccountViewModel) {
     var searchQuery by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
     val allAccounts = listOf(
@@ -141,7 +146,10 @@ fun SearchBarForAccount() {
                             contentPadding = PaddingValues(8.dp)
                         ) {
                             items(filteredAccounts) { account ->
-                                AccountListItem(account = account)
+                                AccountListItem(account = account) {
+                                    sharedViewModel.selectedAccount = account
+                                    navControler.navigate(ROUTE_USER_ACCOUNT_OVERVIEW)
+                                }
                             }
                         }
                     } else {
