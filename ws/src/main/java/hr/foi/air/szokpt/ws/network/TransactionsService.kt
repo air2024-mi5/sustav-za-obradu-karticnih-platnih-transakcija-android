@@ -6,6 +6,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface TransactionsService {
-    @GET("/reports/success")
+    @GET("/reports/successful-transactions")
     fun getTransactionsSuccess(): Call<SuccessfulResponseBody<TransactionsSuccessResponse>>
 }
