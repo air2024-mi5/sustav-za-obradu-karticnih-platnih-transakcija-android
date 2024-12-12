@@ -1,6 +1,5 @@
 package foi.air.szokpt.viewmodels
 
-import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.helpers.TransactionsSuccessHandler
@@ -12,11 +11,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class TransactionsViewModel : ViewModel() {
-    private val _barData = MutableStateFlow(listOf<BarData>())
-    val barData: StateFlow<List<BarData>> get() = _barData
-
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> get() = _isLoading
+    private val _pieChartData = MutableStateFlow(listOf<PieChartModel>())
+    val pieChartData: StateFlow<List<PieChartModel>> get() = _pieChartData
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> get() = _errorMessage
@@ -24,7 +20,6 @@ class TransactionsViewModel : ViewModel() {
     private val transactionsHandler = TransactionsSuccessHandler()
 
     fun fetchTransactions() {
-        _isLoading.value = true
         _errorMessage.value = null
 
         transactionsHandler.getTransactionsSuccess(object :
@@ -35,37 +30,25 @@ class TransactionsViewModel : ViewModel() {
                 rejectedTransactions: Int,
                 canceledTransactions: Int
             ) {
-                _isLoading.value = false
-
-                val maxHeight = 200
-                val maxValue = listOf(
-                    totalTransactions,
-                    successfulTransactions,
-                    rejectedTransactions,
-                    canceledTransactions
-                ).maxOrNull() ?: 1
-
+                val total = (successfulTransactions + canceledTransactions + rejectedTransactions).toFloat()
                 val data = listOf(
-                    BarData("Successful", (successfulTransactions / maxValue.toFloat()) * maxHeight, success, successfulTransactions),
-                    BarData("Canceled", (canceledTransactions / maxValue.toFloat()) * maxHeight, danger, canceledTransactions),
-                    BarData("Rejected", (rejectedTransactions / maxValue.toFloat()) * maxHeight, TextGray, rejectedTransactions)
+                    PieChartModel("Successful",successfulTransactions, (successfulTransactions.toFloat() / total) * 100, success),
+                    PieChartModel("Canceled", canceledTransactions,(canceledTransactions / total) * 100, danger),
+                    PieChartModel("Rejected", rejectedTransactions, (rejectedTransactions / total) * 100, TextGray)
                 )
-                _barData.value = data
-                Log.d("VM - ONSUCCESSFUL", "_barData.value je: " + _barData.value)
+                _pieChartData.value = data
             }
 
             override fun onFailedTransactionsFetch(failureMessage: String) {
-                _isLoading.value = false
                 _errorMessage.value = failureMessage
-                Log.d("VM - ONSFAILED", "failure message je: " + _errorMessage.value)
             }
         })
     }
 }
 
-data class BarData(
+data class PieChartModel(
     val label: String,
-    val height: Float,
+    val value: Int,
+    val scaledValue: Float,
     val color: Color,
-    val value: Int
 )

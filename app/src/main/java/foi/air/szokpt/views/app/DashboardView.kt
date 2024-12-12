@@ -1,6 +1,7 @@
 package foi.air.szokpt.views.app
 
 import android.widget.Toast
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +33,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -54,6 +57,7 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
+import foi.air.szokpt.viewmodels.PieChartModel
 import foi.air.szokpt.viewmodels.TransactionsViewModel
 import kotlin.coroutines.coroutineContext
 
@@ -439,6 +443,73 @@ fun BarComponent(
 }
 
 @Composable
+private fun ChartCirclePie(
+    charts: List<PieChartModel>,
+    size: Dp,
+    strokeWidth: Dp
+) {
+    Canvas(modifier = Modifier
+        .size(size)
+        .padding(5.dp),
+
+        onDraw = {
+            var startAngle = 0f
+            var sweepAngle = 0f
+            charts.forEach {
+                sweepAngle = (it.scaledValue / 100) * 360
+                drawArc(
+                    color = it.color,
+                    startAngle = startAngle,
+                    sweepAngle = sweepAngle,
+                    useCenter = false,
+                    style = Stroke(
+                        width = strokeWidth.toPx(),
+                        cap = StrokeCap.Butt,
+                        join = StrokeJoin.Bevel
+                    )
+                )
+                startAngle += sweepAngle
+            }
+        })
+}
+
+@Composable
+fun ChartWithLegend(
+    charts: List<PieChartModel>,
+    size: Dp = 130.dp,
+    strokeWidth: Dp = 18.dp
+) {
+    Row(modifier = Modifier.padding(16.dp)) {
+        ChartCirclePie(charts = charts, size = size, strokeWidth = strokeWidth)
+
+        Spacer(modifier = Modifier.width(30.dp))
+
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.align(Alignment.CenterVertically)
+        ) {
+            charts.forEach { chart ->
+                LegendItem(label = chart.label, value = chart.value.toInt(), color = chart.color)
+            }
+        }
+    }
+}
+
+@Composable
+fun LegendItem(label: String, value: Int, color: Color) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(vertical = 4.dp)
+    ) {
+        Canvas(modifier = Modifier.size(10.dp)) {
+            drawCircle(color = color)
+        }
+        Spacer(modifier = Modifier.width(7.dp))
+        Text(text = "$label: $value", style = MaterialTheme.typography.bodyMedium, color = color)
+    }
+}
+
+@Composable
 fun TransactionsByDayTile() {
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
@@ -470,7 +541,7 @@ fun TransactionsByDayTile() {
             ) {
                 val transactions = listOf(60.dp, 25.dp, 30.dp, 35.dp, 55.dp, 80.dp, 15.dp)
                 val days = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-
+                
                 transactions.forEachIndexed { index, height ->
                     BarComponent(
                         height = height,
@@ -487,8 +558,7 @@ fun TransactionsByDayTile() {
 @Composable
 fun TransactionOutcomes(){
     val viewModel: TransactionsViewModel = viewModel()
-    val barData by viewModel.barData.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    val pieChartData by viewModel.pieChartData.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
     TileSegment(
@@ -512,20 +582,25 @@ fun TransactionOutcomes(){
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                viewModel.fetchTransactions()
-                barData.forEach { data ->
-                    BarComponent(
-                        height = data.height.dp,
-                        color = data.color,
-                        label = data.label,
-                        value = data.value.toString()
-                    )
+            viewModel.fetchTransactions()
+            if(errorMessage == null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    ChartWithLegend(pieChartData)
                 }
+            }
+            else {
+                Text(
+                    text = errorMessage.toString(),
+                    color = TextWhite,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .align(alignment = Alignment.CenterHorizontally)
+                )
             }
         }
     }
