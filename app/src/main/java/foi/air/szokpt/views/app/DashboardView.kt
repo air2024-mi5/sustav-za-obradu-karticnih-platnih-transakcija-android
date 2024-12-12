@@ -19,19 +19,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.TileSegment
+import foi.air.szokpt.ui.components.dashboard_components.BarComponent
+import foi.air.szokpt.ui.components.dashboard_components.ChartWithLegend
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextGray
@@ -39,6 +44,7 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
+import foi.air.szokpt.viewmodels.ReportsViewModel
 
 @Composable
 fun DashboardView(navController: NavController) {
@@ -325,37 +331,11 @@ fun CardTypesTile() {
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                BarComponent(40.dp, TextGray, "Other")
-                BarComponent(80.dp, Secondary, "Visa")
-                BarComponent(65.dp, Primary, "Master")
+                BarComponent(40.dp, TextGray, "Other", "")
+                BarComponent(80.dp, Secondary, "Visa", "")
+                BarComponent(65.dp, Primary, "Master", "")
             }
         }
-    }
-}
-
-@Composable
-fun BarComponent(
-    height: Dp,
-    color: Color = Primary,
-    label: String
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .width(15.dp)
-                .height(height)
-                .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
-                .background(color)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(
-            text = label,
-            color = TextWhite,
-            fontSize = 12.sp
-        )
     }
 }
 
@@ -391,12 +371,13 @@ fun TransactionsByDayTile() {
             ) {
                 val transactions = listOf(60.dp, 25.dp, 30.dp, 35.dp, 55.dp, 80.dp, 15.dp)
                 val days = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-
+                
                 transactions.forEachIndexed { index, height ->
                     BarComponent(
                         height = height,
                         color = Primary,
-                        label = days[index]
+                        label = days[index],
+                        value = ""
                     )
                 }
             }
@@ -405,8 +386,12 @@ fun TransactionsByDayTile() {
 }
 
 @Composable
-fun TransactionOutcomes() {
-    TileSegment(
+fun TransactionOutcomes(){
+    val viewModel: ReportsViewModel = viewModel()
+    val pieChartData by viewModel.pieChartData.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
+  TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 16.dp,
         outerMargin = 8.dp,
@@ -427,14 +412,27 @@ fun TransactionOutcomes() {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                BarComponent(80.dp, success, "Successful")
-                BarComponent(30.dp, danger, "Canceled")
-                BarComponent(15.dp, TextGray, "Rejected")
+            viewModel.fetchTransactionsSuccess()
+            when (errorMessage) {
+                null -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        ChartWithLegend(pieChartData)
+                    }
+                }
+                else -> {
+                    Text(
+                        text = errorMessage.toString(),
+                        color = TextWhite,
+                        fontSize = 12.sp,
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .align(alignment = Alignment.CenterHorizontally)
+                    )
+                }
             }
         }
     }
