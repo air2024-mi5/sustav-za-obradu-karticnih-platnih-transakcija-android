@@ -10,6 +10,9 @@ import hr.foi.air.szokpt.ws.models.TransactionPageResponse
 import hr.foi.air.szokpt.ws.request_handlers.TransactionsRequestHandler
 
 class TransactionsViewModel() : ViewModel() {
+    private val _loading = MutableLiveData(false)
+    val loading: LiveData<Boolean> = _loading
+
     private val _transactionPage: MutableLiveData<TransactionPageResponse?> = MutableLiveData(null)
     private val _currentPage: MutableLiveData<Int?> = MutableLiveData(1)
     private val _totalPages: MutableLiveData<Int?> = MutableLiveData(1)
@@ -19,6 +22,7 @@ class TransactionsViewModel() : ViewModel() {
     val totalPages: LiveData<Int?> = _totalPages
 
     fun fetchTransactions(page: Int) {
+        _loading.value = true
         val transactionsRequestHandler = TransactionsRequestHandler(page)
 
         transactionsRequestHandler.sendRequest(object : ResponseListener<TransactionPageResponse> {
@@ -27,6 +31,7 @@ class TransactionsViewModel() : ViewModel() {
                 _transactionPage.value = transactionPage?.first()
                 _currentPage.value = _transactionPage.value?.currentPage
                 _totalPages.value = _transactionPage.value?.totalPages
+                _loading.value = false
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {

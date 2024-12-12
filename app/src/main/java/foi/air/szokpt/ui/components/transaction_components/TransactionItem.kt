@@ -1,10 +1,12 @@
 package foi.air.szokpt.ui.components.transaction_components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,9 +17,11 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import foi.air.szokpt.R
 import foi.air.szokpt.ui.theme.BGLevelZeroHigh
 import hr.foi.air.szokpt.ws.models.responses.Transaction
 
@@ -32,12 +36,21 @@ fun TransactionItem(transaction: Transaction) {
         "978" -> Color.Yellow
         else -> Color.White
     }
-
     val currencySymbol = when (transaction.currency) {
         "840" -> "$"
         "978" -> "€"
         else -> ""
     }
+
+    val cardBrandDrawable = when (transaction.cardBrand) {
+        "Maestro" -> R.drawable.maestro
+        "Visa" -> R.drawable.visa
+        "MasterCard" -> R.drawable.mastercard
+        "Diners" -> R.drawable.diners
+        "Discover" -> R.drawable.discover
+        else -> R.drawable.logo
+    }
+
 
     Row(
         modifier = Modifier
@@ -62,11 +75,12 @@ fun TransactionItem(transaction: Transaction) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = transaction.cardBrand,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
+            Image(
+                painter = painterResource(id = cardBrandDrawable),
+                contentDescription = "Card Brand",
+                modifier = Modifier
+                    .size(60.dp) // Smanjuje veličinu slike na 48x48 dp
+                    .padding(bottom = 8.dp)
             )
             Text(
                 text = transaction.maskedPan,
