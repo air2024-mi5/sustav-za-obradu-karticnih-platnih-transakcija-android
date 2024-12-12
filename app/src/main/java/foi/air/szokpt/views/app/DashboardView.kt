@@ -1,7 +1,5 @@
 package foi.air.szokpt.views.app
 
-import android.widget.Toast
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,24 +16,15 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshots.SnapshotApplyResult
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -43,12 +32,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.TileSegment
-import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
-import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
-import foi.air.szokpt.ui.components.interactible_components.TextBouncingButton
+import foi.air.szokpt.ui.components.dashboard_components.BarComponent
+import foi.air.szokpt.ui.components.dashboard_components.ChartWithLegend
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
-import foi.air.szokpt.ui.theme.BGLevelThree
 import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
@@ -57,9 +44,7 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
-import foi.air.szokpt.viewmodels.PieChartModel
-import foi.air.szokpt.viewmodels.TransactionsViewModel
-import kotlin.coroutines.coroutineContext
+import foi.air.szokpt.viewmodels.ReportsViewModel
 
 @Composable
 fun DashboardView(navController: NavController){
@@ -409,107 +394,6 @@ fun CardTypesTile() {
 }
 
 @Composable
-fun BarComponent(
-    height: Dp,
-    color: Color = Primary,
-    label: String,
-    value: String
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = value.toString(),
-            style = MaterialTheme.typography.bodySmall,
-            color = color,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-        Box(
-            modifier = Modifier
-                .width(15.dp)
-                .height(height)
-                .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
-                .background(color)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(
-            text = label,
-            color = TextWhite,
-            fontSize = 12.sp
-        )
-    }
-}
-
-@Composable
-private fun ChartCirclePie(
-    charts: List<PieChartModel>,
-    size: Dp,
-    strokeWidth: Dp
-) {
-    Canvas(modifier = Modifier
-        .size(size)
-        .padding(5.dp),
-
-        onDraw = {
-            var startAngle = 0f
-            var sweepAngle = 0f
-            charts.forEach {
-                sweepAngle = (it.scaledValue / 100) * 360
-                drawArc(
-                    color = it.color,
-                    startAngle = startAngle,
-                    sweepAngle = sweepAngle,
-                    useCenter = false,
-                    style = Stroke(
-                        width = strokeWidth.toPx(),
-                        cap = StrokeCap.Butt,
-                        join = StrokeJoin.Bevel
-                    )
-                )
-                startAngle += sweepAngle
-            }
-        })
-}
-
-@Composable
-fun ChartWithLegend(
-    charts: List<PieChartModel>,
-    size: Dp = 130.dp,
-    strokeWidth: Dp = 18.dp
-) {
-    Row(modifier = Modifier.padding(16.dp)) {
-        ChartCirclePie(charts = charts, size = size, strokeWidth = strokeWidth)
-
-        Spacer(modifier = Modifier.width(30.dp))
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.align(Alignment.CenterVertically)
-        ) {
-            charts.forEach { chart ->
-                LegendItem(label = chart.label, value = chart.value.toInt(), color = chart.color)
-            }
-        }
-    }
-}
-
-@Composable
-fun LegendItem(label: String, value: Int, color: Color) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = 4.dp)
-    ) {
-        Canvas(modifier = Modifier.size(10.dp)) {
-            drawCircle(color = color)
-        }
-        Spacer(modifier = Modifier.width(7.dp))
-        Text(text = "$label: $value", style = MaterialTheme.typography.bodyMedium, color = color)
-    }
-}
-
-@Composable
 fun TransactionsByDayTile() {
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
@@ -557,7 +441,7 @@ fun TransactionsByDayTile() {
 
 @Composable
 fun TransactionOutcomes(){
-    val viewModel: TransactionsViewModel = viewModel()
+    val viewModel: ReportsViewModel = viewModel()
     val pieChartData by viewModel.pieChartData.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
@@ -582,25 +466,27 @@ fun TransactionOutcomes(){
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            viewModel.fetchTransactions()
-            if(errorMessage == null) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    ChartWithLegend(pieChartData)
+            viewModel.fetchTransactionsSuccess()
+            when (errorMessage) {
+                null -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        ChartWithLegend(pieChartData)
+                    }
                 }
-            }
-            else {
-                Text(
-                    text = errorMessage.toString(),
-                    color = TextWhite,
-                    fontSize = 12.sp,
-                    modifier = Modifier
-                        .padding(5.dp)
-                        .align(alignment = Alignment.CenterHorizontally)
-                )
+                else -> {
+                    Text(
+                        text = errorMessage.toString(),
+                        color = TextWhite,
+                        fontSize = 12.sp,
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .align(alignment = Alignment.CenterHorizontally)
+                    )
+                }
             }
         }
     }

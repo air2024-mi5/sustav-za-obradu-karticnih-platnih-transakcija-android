@@ -10,7 +10,7 @@ import hr.foi.air.core.transactions.TransactionsSuccessOutcomeListener
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class TransactionsViewModel : ViewModel() {
+class ReportsViewModel : ViewModel() {
     private val _pieChartData = MutableStateFlow(listOf<PieChartModel>())
     val pieChartData: StateFlow<List<PieChartModel>> get() = _pieChartData
 
@@ -19,27 +19,35 @@ class TransactionsViewModel : ViewModel() {
 
     private val transactionsHandler = TransactionsSuccessHandler()
 
-    fun fetchTransactions() {
+    fun fetchTransactionsSuccess() {
         _errorMessage.value = null
 
         transactionsHandler.getTransactionsSuccess(object :
             TransactionsSuccessOutcomeListener {
-            override fun onSuccessfulTransactionsFetch(
+            override fun onSuccessfulTransactionsSuccessFetch(
                 totalTransactions: Int,
                 successfulTransactions: Int,
                 rejectedTransactions: Int,
                 canceledTransactions: Int
             ) {
                 val total = (successfulTransactions + canceledTransactions + rejectedTransactions).toFloat()
-                val data = listOf(
-                    PieChartModel("Successful",successfulTransactions, (successfulTransactions.toFloat() / total) * 100, success),
-                    PieChartModel("Canceled", canceledTransactions,(canceledTransactions / total) * 100, danger),
-                    PieChartModel("Rejected", rejectedTransactions, (rejectedTransactions / total) * 100, TextGray)
-                )
+                val data: List<PieChartModel> = if (total == 0f) {
+                    listOf(
+                        PieChartModel("Successful", 0, 0f, success),
+                        PieChartModel("Canceled", 0, 0f, danger),
+                        PieChartModel("Rejected", 0, 0f, TextGray)
+                    )
+                } else {
+                    listOf(
+                        PieChartModel("Successful", successfulTransactions, (successfulTransactions.toFloat() / total) * 100, success),
+                        PieChartModel("Canceled", canceledTransactions, (canceledTransactions.toFloat() / total) * 100, danger),
+                        PieChartModel("Rejected", rejectedTransactions, (rejectedTransactions.toFloat() / total) * 100, TextGray)
+                    )
+                }
                 _pieChartData.value = data
             }
 
-            override fun onFailedTransactionsFetch(failureMessage: String) {
+            override fun onFailedTransactionsSuccessFetch(failureMessage: String) {
                 _errorMessage.value = failureMessage
             }
         })

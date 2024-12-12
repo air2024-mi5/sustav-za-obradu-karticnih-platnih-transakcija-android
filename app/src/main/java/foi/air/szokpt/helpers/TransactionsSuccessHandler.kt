@@ -18,25 +18,25 @@ class TransactionsSuccessHandler {
 
                     if (!transactionsArray.isNullOrEmpty()) {
                         val transactionsData = transactionsArray[0]
-                        transactionsListener.onSuccessfulTransactionsFetch(
+                        transactionsListener.onSuccessfulTransactionsSuccessFetch(
                             totalTransactions = transactionsData.totalTransactions,
                             successfulTransactions = transactionsData.successfulTransactions,
                             rejectedTransactions = transactionsData.rejectedTransactions,
                             canceledTransactions = transactionsData.canceledTransactions
                         )
                     } else {
-                        transactionsListener.onFailedTransactionsFetch("No transaction data available.")
+                        transactionsListener.onFailedTransactionsSuccessFetch("No transaction data available.")
                     }
                 }
 
                 override fun onErrorResponse(response: ErrorResponseBody) {
-                    transactionsListener.onFailedTransactionsFetch(
+                    transactionsListener.onFailedTransactionsSuccessFetch(
                         response.message ?: "An error occurred while fetching transactions."
                     )
                 }
 
                 override fun onNetworkFailure(t: Throwable) {
-                    transactionsListener.onFailedTransactionsFetch(
+                    transactionsListener.onFailedTransactionsSuccessFetch(
                         t.message ?: "A network error occurred."
                     )
                 }
