@@ -9,7 +9,7 @@ import hr.foi.air.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.ws.models.TransactionPageResponse
 import hr.foi.air.szokpt.ws.request_handlers.TransactionsRequestHandler
 
-class TransactionViewModel() : ViewModel() {
+class TransactionsViewModel() : ViewModel() {
     private val _transactionPage: MutableLiveData<TransactionPageResponse?> = MutableLiveData(null)
     private val _currentPage: MutableLiveData<Int?> = MutableLiveData(1)
     private val _totalPages: MutableLiveData<Int?> = MutableLiveData(1)

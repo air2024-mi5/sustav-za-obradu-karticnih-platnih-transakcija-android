@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -20,19 +22,27 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.pagination_components.Pagination
 import foi.air.szokpt.ui.components.transaction_components.TransactionItem
-import foi.air.szokpt.viewmodels.TransactionViewModel
+import foi.air.szokpt.viewmodels.TransactionsViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun TransactionsView(navController: NavController) {
-    val viewModel: TransactionViewModel = viewModel()
+    val viewModel: TransactionsViewModel = viewModel()
     val transactionPage by viewModel.transactionPage.observeAsState()
     val currentPage by viewModel.currentPage.observeAsState()
     val totalPages by viewModel.totalPages.observeAsState()
+
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(currentPage) {
         if (transactionPage == null) {
             viewModel.fetchTransactions(1)
         }
+    }
+
+    coroutineScope.launch {
+        listState.scrollToItem(0)
     }
 
     Column(
@@ -49,7 +59,10 @@ fun TransactionsView(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn(Modifier.weight(3f)) {
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.weight(3f)
+        ) {
             transactionPage?.transactions?.forEach { transaction ->
                 item {
                     TransactionItem(transaction = transaction)
@@ -60,7 +73,12 @@ fun TransactionsView(navController: NavController) {
         Pagination(
             currentPage = currentPage,
             totalPages = totalPages,
-            onPageSelected = { page -> viewModel.fetchTransactions(page) }
+            onPageSelected = { page ->
+                viewModel.fetchTransactions(page)
+                coroutineScope.launch {
+                    listState.scrollToItem(0)
+                }
+            }
         )
     }
 }
