@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import foi.air.szokpt.ui.components.pagination_components.Pagination
 import foi.air.szokpt.ui.components.transaction_components.TransactionItem
 import foi.air.szokpt.viewmodels.TransactionViewModel
 
@@ -24,7 +26,15 @@ import foi.air.szokpt.viewmodels.TransactionViewModel
 fun TransactionsView(navController: NavController) {
     val viewModel: TransactionViewModel = viewModel()
     val transactionPage by viewModel.transactionPage.observeAsState()
-    viewModel.fetchTransactions(1)
+    val currentPage by viewModel.currentPage.observeAsState()
+    val totalPages by viewModel.totalPages.observeAsState()
+
+    LaunchedEffect(currentPage) {
+        if (transactionPage == null) {
+            viewModel.fetchTransactions(1)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,13 +49,19 @@ fun TransactionsView(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn {
+        LazyColumn(Modifier.weight(3f)) {
             transactionPage?.transactions?.forEach { transaction ->
                 item {
                     TransactionItem(transaction = transaction)
                 }
             }
         }
+
+        Pagination(
+            currentPage = currentPage,
+            totalPages = totalPages,
+            onPageSelected = { page -> viewModel.fetchTransactions(page) }
+        )
     }
 }
 
