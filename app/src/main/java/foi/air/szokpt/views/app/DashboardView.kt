@@ -21,8 +21,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotApplyResult
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
@@ -50,6 +54,7 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
+import foi.air.szokpt.viewmodels.TransactionsViewModel
 import kotlin.coroutines.coroutineContext
 
 @Composable
@@ -391,9 +396,9 @@ fun CardTypesTile() {
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                BarComponent(40.dp, TextGray, "Other")
-                BarComponent(80.dp, Secondary, "Visa")
-                BarComponent(65.dp, Primary, "Master")
+                BarComponent(40.dp, TextGray, "Other", "")
+                BarComponent(80.dp, Secondary, "Visa", "")
+                BarComponent(65.dp, Primary, "Master", "")
             }
         }
     }
@@ -403,11 +408,19 @@ fun CardTypesTile() {
 fun BarComponent(
     height: Dp,
     color: Color = Primary,
-    label: String
+    label: String,
+    value: String
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
+        Text(
+            text = value.toString(),
+            style = MaterialTheme.typography.bodySmall,
+            color = color,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
         Box(
             modifier = Modifier
                 .width(15.dp)
@@ -462,7 +475,8 @@ fun TransactionsByDayTile() {
                     BarComponent(
                         height = height,
                         color = Primary,
-                        label = days[index]
+                        label = days[index],
+                        value = ""
                     )
                 }
             }
@@ -472,6 +486,11 @@ fun TransactionsByDayTile() {
 
 @Composable
 fun TransactionOutcomes(){
+    val viewModel: TransactionsViewModel = viewModel()
+    val barData by viewModel.barData.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 16.dp,
@@ -498,9 +517,15 @@ fun TransactionOutcomes(){
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                BarComponent(80.dp, success, "Successful")
-                BarComponent(30.dp, danger, "Canceled")
-                BarComponent(15.dp, TextGray, "Rejected")
+                viewModel.fetchTransactions()
+                barData.forEach { data ->
+                    BarComponent(
+                        height = data.height.dp,
+                        color = data.color,
+                        label = data.label,
+                        value = data.value.toString()
+                    )
+                }
             }
         }
     }
