@@ -39,10 +39,9 @@ fun TransactionsView(navController: NavController) {
         if (transactionPage == null) {
             viewModel.fetchTransactions(1)
         }
-    }
-
-    coroutineScope.launch {
-        listState.scrollToItem(0)
+        coroutineScope.launch {
+            listState.scrollToItem(0)
+        }
     }
 
     Column(
