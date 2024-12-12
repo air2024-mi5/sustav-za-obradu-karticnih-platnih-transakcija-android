@@ -40,90 +40,74 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
         Column(
             modifier = Modifier
                 .fillMaxSize()
+
         ) {
             Text(
                 modifier = Modifier
                     .padding(16.dp),
-                text = "Search All Accounts",
+                text = "Account Overview",
                 color = TextWhite,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
             )
-            TileSegment(
-                tileSizeMode = TileSizeMode.WRAP_CONTENT,
-                innerPadding = 0.dp,
-                outerMargin = 8.dp,
-                minWidth = 250.dp,
-                minHeight = 90.dp,
-                color = BGLevelOne
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                SearchBarForAccount(
-                    navController,
-                    sharedViewModel
-                )
-            }
-        }
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp) // Space between items
-        ) {
-            // TileSegment for Account Details
-            item {
-                TileSegment(
-                    tileSizeMode = TileSizeMode.WRAP_CONTENT,
-                    innerPadding = 16.dp, // Add padding inside the TileSegment
-                    outerMargin = 6.dp,
-                    minWidth = 250.dp,
-                    minHeight = 90.dp,
-                    color = BGLevelOne
-                ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp), // Space between Text elements
-                        modifier = Modifier.fillMaxWidth()
+                item {
+                    TileSegment(
+                        tileSizeMode = TileSizeMode.WRAP_CONTENT,
+                        innerPadding = 16.dp,
+                        outerMargin = 6.dp,
+                        minWidth = 250.dp,
+                        minHeight = 90.dp,
+                        color = BGLevelOne
                     ) {
-                        Text("Name: ${account.name}", color = TextWhite)
-                        Text("Last Name: ${account.lastName}", color = TextWhite)
-                        Text("Username: ${account.userName}", color = TextWhite)
-                        Text("Role: ${account.role}", color = TextWhite)
-                        OutlineBouncingButton(
-                            onClick = { navController.popBackStack() },
-                            inputText = "Back"
-                        )
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Name: ${account.name}", color = TextWhite)
+                            Text("Last Name: ${account.lastName}", color = TextWhite)
+                            Text("Username: ${account.userName}", color = TextWhite)
+                            Text("Role: ${account.role}", color = TextWhite)
+                        }
                     }
                 }
-            }
-            item {
-                TileSegment(
-                    tileSizeMode = TileSizeMode.WRAP_CONTENT,
-                    innerPadding = 2.dp,
-                    outerMargin = 6.dp,
-                    minWidth = 250.dp,
-                    minHeight = 90.dp,
-                    color = BGLevelOne
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(paddingValues = vertica)
+                item {
+                    TileSegment(
+                        tileSizeMode = TileSizeMode.WRAP_CONTENT,
+                        innerPadding = 2.dp,
+                        outerMargin = 6.dp,
+                        minWidth = 250.dp,
+                        minHeight = 90.dp,
+                        color = BGLevelOne
                     ) {
-                        OutlineBouncingButton(
-                            onClick = { /* Navigate to another screen */ },
-                            inputText = "Delete Account",
-                            contentColor = danger,
-                            borderColor = danger,
-                            inputIcon = Icons.Rounded.Delete,
-                        )
-                        OutlineBouncingButton(
-                            onClick = { /* Trigger account deletion */ },
-                            inputText = "Block",
-                            contentColor = warning,
-                            borderColor = warning,
-                            inputIcon = Icons.Rounded.Clear,
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(top = 2.dp),
+                                horizontalArrangement = Arrangement.Center
+                        ) {
+                            OutlineBouncingButton(
+                                onClick = { /* Trigger account blocking */ },
+                                inputText = "Delete Acc.",
+                                contentColor = danger,
+                                borderColor = danger,
+                                inputIcon = Icons.Rounded.Delete,
+                            )
+                            OutlineBouncingButton(
+                                onClick = { /* Trigger account blocking */ },
+                                inputText = "Block",
+                                contentColor = warning,
+                                borderColor = warning,
+                                inputIcon = Icons.Rounded.Clear,
+                            )
+                        }
                     }
                 }
             }
         }
+
     }
     else {
         Text("No account selected", color = TextWhite)
