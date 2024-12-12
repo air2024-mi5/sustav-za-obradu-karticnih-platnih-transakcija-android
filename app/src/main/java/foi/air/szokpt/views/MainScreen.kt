@@ -24,6 +24,7 @@ import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.RegistrationView
 import foi.air.szokpt.views.app.ReportsView
 import foi.air.szokpt.views.app.UserAccountView
+import foi.air.szokpt.views.app.TransactionsView
 import foi.air.szokpt.views.test_views.DailyProcessScreen
 
 const val ROUTE_DASHBOARD = "dashboard"
@@ -60,16 +61,18 @@ fun MainScreen() {
             startDestination = "login",
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("login") { LoginPage(
-                onSuccessfulLogin = {
-                    isAuthenticated.value = true
-                    navController.navigate("dashboard"){
-                        popUpTo("login") { inclusive = true }
+            composable("login") {
+                LoginPage(
+                    onSuccessfulLogin = {
+                        isAuthenticated.value = true
+                        navController.navigate("dashboard") {
+                            popUpTo("login") { inclusive = true }
+                        }
                     }
-                }
-            ) }
+                )
+            }
             composable("dashboard") { DashboardView(navController) }
-            composable("reports") { ReportsView(navController) }
+            composable("reports") { TransactionsView(navController) }
             composable("daily_process") { DailyProcessScreen(navController) }
             composable("account") { AccountView(navController) }
             composable(
