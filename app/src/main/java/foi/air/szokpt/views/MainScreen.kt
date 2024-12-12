@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import foi.air.szokpt.ui.LoginPage
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
+import foi.air.szokpt.views.app.AccountSearchView
 import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.RegistrationView
@@ -26,7 +27,7 @@ const val ROUTE_REPORTS = "reports"
 const val ROUTE_DAILY_PROCESS = "daily_process"
 const val ROUTE_ACCOUNT = "account"
 const val ROUTE_REGISTRATION = "registration"
-
+const val ROUTE_ALL_ACCOUNT_SEARCH = "all_account_search"
 
 @Composable
 fun MainScreen() {
@@ -43,7 +44,7 @@ fun MainScreen() {
     }
     Scaffold(
         bottomBar = {
-            if (isAuthenticated.value)
+            if(isAuthenticated.value)
                 AnimatedNavigationBar(navController = navController)
         }
     ) { innerPadding ->
@@ -73,6 +74,7 @@ fun MainScreen() {
                 val userType = backStackEntry.arguments?.getString("userType") ?: "Unknown"
                 RegistrationView(navController = navController, userType = userType)
             }
+            composable("all_account_search") { AccountSearchView(navController) }
         }
     }
 }
