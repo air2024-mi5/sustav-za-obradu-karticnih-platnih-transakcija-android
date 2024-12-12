@@ -47,7 +47,7 @@ import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.ReportsViewModel
 
 @Composable
-fun DashboardView(navController: NavController){
+fun DashboardView(navController: NavController) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
@@ -55,7 +55,7 @@ fun DashboardView(navController: NavController){
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
-    ){
+    ) {
         item(span = { GridItemSpan(2) }) {
             AllTransactionsTile()
         }
@@ -103,13 +103,13 @@ fun ValueTile() {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
-            ){
+            ) {
                 Text(
                     text = "€1 002 123",
                     color = success,
@@ -299,60 +299,6 @@ fun TransactionsListTile() {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
-
-            TransactionItem(initial = "F", cardType = "MasterCard", transactionLabel = "FOI")
-            Spacer(modifier = Modifier.height(2.dp))
-            TransactionItem(initial = "S", cardType = "Visa", transactionLabel = "Sjever")
-            Spacer(modifier = Modifier.height(2.dp))
-            TransactionItem(initial = "F", cardType = "MasterCard", transactionLabel = "FER")
-        }
-    }
-}
-
-@Composable
-fun TransactionItem(
-    initial: String,
-    cardType: String,
-    transactionLabel: String,
-    backgroundColor: Color = BGLevelTwo,
-    iconColor: Color = Secondary
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)
-            .background(backgroundColor, shape = RoundedCornerShape(8.dp))
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(iconColor, shape = RoundedCornerShape(6.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = initial,
-                color = Color.White,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column {
-            Text(
-                text = cardType,
-                color = TextGray,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = transactionLabel,
-                color = TextWhite,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
         }
     }
 }
@@ -445,7 +391,7 @@ fun TransactionOutcomes(){
     val pieChartData by viewModel.pieChartData.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
-    TileSegment(
+  TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 16.dp,
         outerMargin = 8.dp,
