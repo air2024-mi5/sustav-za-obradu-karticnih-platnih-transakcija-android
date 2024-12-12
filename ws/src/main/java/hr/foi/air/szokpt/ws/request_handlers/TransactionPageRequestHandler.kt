@@ -5,12 +5,12 @@ import hr.foi.air.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.ws.models.TransactionPageResponse
 import retrofit2.Call
 
-class TransactionsRequestHandler(
+class TransactionPageRequestHandler(
     private val page: Int
 ) :
     TemplateRequestHandler<TransactionPageResponse>() {
     override fun getServiceCall(): Call<SuccessfulResponseBody<TransactionPageResponse>> {
         val service = NetworkService.transactionsService
-        return service.getTransactions(page = page)
+        return service.getTransactionPage(page = page)
     }
 }

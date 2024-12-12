@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 interface TransactionsService {
     @GET("transactions")
-    fun getTransactions(
+    fun getTransactionPage(
         @Query("page") page: Int,
     ): Call<SuccessfulResponseBody<TransactionPageResponse>>
 }

@@ -42,6 +42,15 @@ fun TransactionItem(transaction: Transaction) {
         else -> ""
     }
 
+    val trxTypeMap = mapOf(
+        "sale" to "Sale",
+        "refund" to "Refund",
+        "void_sale" to "Void sale",
+        "void_refund" to "Void refund",
+        "reversal_sale" to "Reversal sale",
+        "reversal_refund" to "Reversal refund"
+    )
+
     val cardBrandDrawable = when (transaction.cardBrand) {
         "Maestro" -> R.drawable.maestro
         "Visa" -> R.drawable.visa
@@ -79,7 +88,7 @@ fun TransactionItem(transaction: Transaction) {
                 painter = painterResource(id = cardBrandDrawable),
                 contentDescription = "Card Brand",
                 modifier = Modifier
-                    .size(60.dp) // Smanjuje veličinu slike na 48x48 dp
+                    .size(60.dp)
                     .padding(bottom = 8.dp)
             )
             Text(
@@ -119,7 +128,7 @@ fun TransactionItem(transaction: Transaction) {
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = transaction.trxType,
+                text = trxTypeMap[transaction.trxType]!!,
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.White
             )

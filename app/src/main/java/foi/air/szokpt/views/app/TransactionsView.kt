@@ -41,7 +41,7 @@ fun TransactionsView(navController: NavController) {
 
     LaunchedEffect(currentPage) {
         if (transactionPage == null) {
-            viewModel.fetchTransactions(1)
+            viewModel.fetchTransactionPage(1)
         }
         coroutineScope.launch {
             listState.scrollToItem(0)
@@ -79,7 +79,7 @@ fun TransactionsView(navController: NavController) {
                     .fillMaxSize()
             ) {
                 CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center), // Centriranje loadera
+                    modifier = Modifier.align(Alignment.Center),
                     color = Color.White
                 )
             }
@@ -89,7 +89,7 @@ fun TransactionsView(navController: NavController) {
             currentPage = currentPage,
             totalPages = totalPages,
             onPageSelected = { page ->
-                viewModel.fetchTransactions(page)
+                viewModel.fetchTransactionPage(page)
                 coroutineScope.launch {
                     listState.scrollToItem(0)
                 }
