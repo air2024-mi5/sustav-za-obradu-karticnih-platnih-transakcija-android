@@ -3,6 +3,7 @@ package foi.air.szokpt.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import foi.air.szokpt.context.Auth
 import hr.foi.air.core.network.ResponseListener
 import hr.foi.air.core.network.models.ErrorResponseBody
 import hr.foi.air.core.network.models.SuccessfulResponseBody
@@ -22,7 +23,8 @@ class TransactionsViewModel() : ViewModel() {
     val totalPages: LiveData<Int?> = _totalPages
 
     fun fetchTransactionPage(page: Int) {
-        val transactionsRequestHandler = TransactionPageRequestHandler(page)
+        val jwtToken = Auth.logedInUserData?.token ?: return
+        val transactionsRequestHandler = TransactionPageRequestHandler(jwtToken, page)
         transactionsRequestHandler.sendRequest(object : ResponseListener<TransactionPageResponse> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<TransactionPageResponse>) {
                 _loading.value = true
