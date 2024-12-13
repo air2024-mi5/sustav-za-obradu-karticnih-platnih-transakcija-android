@@ -187,8 +187,8 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                                             dialogTitle = "Change user data?",
                                             dialogText =
                                             "" +
-                                                    "Are you sure you want to change ${name}, " +
-                                                    "${lastName} data?" +
+                                                    "Are you sure you want to change ${name} " +
+                                                    "${lastName}s data?" +
                                                     "",
                                             iconTop = Icons.Rounded.CheckCircle,
                                             highlightColor = success,
@@ -226,7 +226,7 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                             minWidth = 250.dp,
                             minHeight = 400.dp,
                             color = BGLevelOne,
-                            modifier = Modifier.height((scale * 460).dp)
+                            modifier = Modifier.height((scale * 400).dp)
                         ) {
                             Column(
                                 modifier = Modifier
