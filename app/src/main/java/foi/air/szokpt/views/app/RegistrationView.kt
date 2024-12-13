@@ -76,13 +76,13 @@ fun RegistrationView(navController: NavController, userType: String) {
         }
     }
 
-    fun validateInput():String {
+    fun validateInput(): String {
         return if (username.isBlank() || password.isBlank() || name.isBlank() || lastName.isBlank() || email.isBlank()) {
-            "Ispunite sva polja!"
-        } else if(password.length < 3) {
-            "Lozinka mora sadržavati najmanje 3 znaka."
-        } else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            "E-mail mora biti u ispravnom formatu."
+            "All fields must be filled!"
+        } else if (password.length < 3) {
+            "Password must contain at least 3 characters."
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            "The email must be in the correct format."
         } else ""
     }
 
@@ -105,7 +105,7 @@ fun RegistrationView(navController: NavController, userType: String) {
                 .padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ){
+        ) {
             item(span = { GridItemSpan(2) }) {
                 TileSegment(
                     tileSizeMode = TileSizeMode.WRAP_CONTENT,
@@ -202,7 +202,7 @@ fun RegistrationView(navController: NavController, userType: String) {
                             contentColor = success,
                             borderColor = success
                         ) {
-                            if(validateInput() == "")
+                            if (validateInput() == "")
                                 openDialog.value = true
                             else {
                                 openDialog.value = false
@@ -215,7 +215,14 @@ fun RegistrationView(navController: NavController, userType: String) {
                                 onConfirmation = {
                                     try {
                                         viewModel.role.value = Role(options[selectedIndex])
-                                        val userData = RegistrationBody(username, password, name, lastName, email, viewModel.role.value!!)
+                                        val userData = RegistrationBody(
+                                            username,
+                                            password,
+                                            name,
+                                            lastName,
+                                            email,
+                                            viewModel.role.value!!
+                                        )
 
                                         isAwaitingResponse = true
 
@@ -239,16 +246,19 @@ fun RegistrationView(navController: NavController, userType: String) {
                                         println("Registered new ${options[selectedIndex]}")
                                         // Here goes the registration to the next layer, frontend done.
                                     } catch (e: Exception) {
-                                        Log.e("RegistrationError", "Error during registration: ${e.message}")
+                                        Log.e(
+                                            "RegistrationError",
+                                            "Error during registration: ${e.message}"
+                                        )
                                         isAwaitingResponse = false
                                     }
                                 },
                                 dialogTitle = "Register new ${options[selectedIndex]}",
                                 dialogText =
-                                    "" +
-                                    "Are you sure you want to register ${name}, " +
-                                    "${lastName} as role: ${options[selectedIndex]}?" +
-                                    "",
+                                "" +
+                                        "Are you sure you want to register ${name}, " +
+                                        "${lastName} as role: ${options[selectedIndex]}?" +
+                                        "",
                                 iconTop = Icons.Rounded.CheckCircle,
                                 highlightColor = success,
                                 containerColor = BGLevelTwo
