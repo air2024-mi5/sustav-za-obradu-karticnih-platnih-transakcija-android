@@ -281,8 +281,8 @@ fun UserAccountView(navController: NavController, sharedViewModel: AccountViewMo
                                 )
                                 LoginTextField(
                                     label = "New Password",
-                                    value = "",
-                                    onValueChange = { viewModel.username.value = it },
+                                    value = password,
+                                    onValueChange = { viewModel.password.value = it },
                                     isPasswordField = true,
                                 )
                                 Spacer(modifier = Modifier.height(12.dp))
