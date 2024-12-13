@@ -89,14 +89,43 @@ fun SearchBarForAccount(navControler: NavController, sharedViewModel: SharedAcco
     var searchQuery by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
     val allAccounts = listOf(
-        ListedAccountInformation("Alice", "Bob", "abob", AccountListRole.User),
-        ListedAccountInformation("Antonio", "Testic", "test", AccountListRole.Admin),
-        ListedAccountInformation("Matija", "Rosevelt", "mmatija", AccountListRole.User),
-        ListedAccountInformation("Bob", "Taylor", "btaylor", AccountListRole.User),
-        ListedAccountInformation("Alice", "Bob", "abob", AccountListRole.User),
-        ListedAccountInformation("Antonio", "Testic", "test", AccountListRole.Admin),
-        ListedAccountInformation("Matija", "Rosevelt", "mmatija", AccountListRole.User),
-        ListedAccountInformation("Bob", "Taylor", "btaylor", AccountListRole.User)
+        ListedAccountInformation(
+            "Alice", "Bob", "abob", AccountListRole.User,
+            password = "TempPassword",
+            email = "a@b.com",
+            phone = "092123212"
+        ),
+        ListedAccountInformation(
+            "Antonio", "Testic", "test", AccountListRole.Admin,
+            password = "TempPassword",
+            email = "a@b.com",
+            phone = "092123212"
+        ),
+        ListedAccountInformation(
+            "Matija", "Rosevelt", "mmatija", AccountListRole.User,
+            password = "TempPassword",
+            email = "a@b.com",
+            phone = "092123212"
+        ),
+        ListedAccountInformation(
+            "Bob", "Taylor", "btaylor", AccountListRole.User,
+            password = "TempPassword",
+            email = "a@b.com",
+            phone = "092123212"
+        ),
+        ListedAccountInformation(
+            "Alice", "Bob", "abob", AccountListRole.User,
+            password = "TempPassword",
+            email = "a@b.com",
+            phone = "092123212"
+        ),
+        ListedAccountInformation(
+            "Antonio", "Testic", "test", AccountListRole.Admin,
+            password = "TempPassword",
+            email = "a@b.com",
+            phone = "092123212"
+        ),
+
     )
     val filteredAccounts = allAccounts.filter {
         it.name.contains(searchQuery, ignoreCase = true) ||

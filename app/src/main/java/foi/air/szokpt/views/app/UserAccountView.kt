@@ -1,12 +1,17 @@
 package foi.air.szokpt.views.app
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,7 +26,9 @@ import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -33,9 +40,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.helpers.SharedAccountViewModel
 import foi.air.szokpt.models.AccountListRole
+import foi.air.szokpt.models.ListedAccountInformation
+import foi.air.szokpt.ui.components.LoginTextField
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
@@ -50,7 +60,17 @@ import foi.air.szokpt.ui.theme.warning
 fun UserAccountView(navController: NavController, sharedViewModel: SharedAccountViewModel){
     val account = sharedViewModel.selectedAccount
     var isEditTileVisible by remember { mutableStateOf(false) }
+
+    val viewModel: SharedAccountViewModel = viewModel()
+
+    val username = viewModel.username.observeAsState().value ?: ""
+    val password = viewModel.password.observeAsState().value ?: ""
+    val name = viewModel.firstName.observeAsState().value ?: ""
+    val lastName = viewModel.lastName.observeAsState().value ?: ""
+    val email = viewModel.email.observeAsState().value ?: ""
+
     if (account != null) {
+        setTextBoxValuesToCurrent(account)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -84,7 +104,7 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                                     Brush.verticalGradient(
                                         colors = listOf(BGLevelOne, Primary),
                                         startY = 0f,
-                                        endY = 1200f
+                                        endY = 1600f
                                     ),
 
                                 )
@@ -155,24 +175,80 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                         }
                     }
                 }
-                if (isEditTileVisible) {
-                    item {
+                item {
+                    var scaleState by remember { mutableStateOf(true) }
+                    val scale by animateFloatAsState(
+                        targetValue = if (isEditTileVisible) 1f else 0f,
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioLowBouncy,
+                            stiffness = 50f
+                        )
+                    )
+
+                    LaunchedEffect(scale) {
+                        if (scale == 0f && !isEditTileVisible) {
+                            scaleState = false
+                        } else if (scale > 0f) {
+                            scaleState = true
+                        }
+                    }
+                    if (scaleState) {
                         TileSegment(
                             tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
                             innerPadding = 8.dp,
                             outerMargin = 8.dp,
                             minWidth = 250.dp,
-                            minHeight = 90.dp,
-                            color = BGLevelOne
+                            minHeight = 400.dp,
+                            color = BGLevelOne,
+                            modifier = Modifier.height((scale * 460).dp)
                         ) {
-                            Text(
-                                text = "Additional Information",
-                                color = TextWhite,
-                                modifier = Modifier.padding(8.dp)
-                            )
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                val spacerHeight = 12.dp
+                                Spacer(modifier = Modifier.height(spacerHeight))
+                                LoginTextField(
+                                    label = "Username",
+                                    value = username,
+                                    onValueChange = { viewModel.username.value = it },
+                                    isPasswordField = false,
+                                )
+                                Spacer(modifier = Modifier.height(spacerHeight))
+                                LoginTextField(
+                                    label = "Password",
+                                    value = password,
+                                    onValueChange = { viewModel.password.value = it },
+                                    isPasswordField = true,
+                                )
+                                Spacer(modifier = Modifier.height(spacerHeight))
+                                LoginTextField(
+                                    label = "Name",
+                                    value = name,
+                                    onValueChange = { viewModel.firstName.value = it },
+                                    isPasswordField = false,
+                                )
+                                Spacer(modifier = Modifier.height(spacerHeight))
+                                LoginTextField(
+                                    label = "Last Name",
+                                    value = lastName,
+                                    onValueChange = { viewModel.lastName.value = it },
+                                    isPasswordField = false,
+                                )
+                                Spacer(modifier = Modifier.height(spacerHeight))
+                                LoginTextField(
+                                    label = "E-mail",
+                                    value = email,
+                                    onValueChange = { viewModel.email.value = it },
+                                    isPasswordField = false,
+                                )
+                            }
                         }
                     }
                 }
+
                 item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -202,4 +278,14 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
     else {
         Text("No account selected", color = TextWhite)
     }
+}
+
+@Composable
+fun setTextBoxValuesToCurrent(account: ListedAccountInformation) {
+    val viewModel: SharedAccountViewModel = viewModel()
+    viewModel.username.value = account.userName
+    viewModel.password.value = account.password
+    viewModel.firstName.value = account.name
+    viewModel.lastName.value = account.lastName
+    viewModel.email.value = account.email
 }
