@@ -14,7 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import foi.air.szokpt.helpers.SharedAccountViewModel
+import foi.air.szokpt.viewmodels.AccountViewModel
 import foi.air.szokpt.ui.LoginPage
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
 import foi.air.szokpt.views.app.AccountSearchView
@@ -36,7 +36,7 @@ const val ROUTE_USER_ACCOUNT_OVERVIEW = "user_account"
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    val sharedAccountViewModel: SharedAccountViewModel = viewModel()
+    val sharedAccountViewModel: AccountViewModel = viewModel()
 
     val isAuthenticated = remember { mutableStateOf(false) }
 
@@ -50,13 +50,13 @@ fun MainScreen() {
 
     Scaffold(
         bottomBar = {
-            if(isAuthenticated.value)
+            //if(isAuthenticated.value)
                 AnimatedNavigationBar(navController = navController)
         }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "login",
+            startDestination = "dashboard",
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("login") {

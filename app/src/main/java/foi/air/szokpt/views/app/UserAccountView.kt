@@ -1,6 +1,5 @@
 package foi.air.szokpt.views.app
 
-import android.util.Log
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -44,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import foi.air.szokpt.helpers.SharedAccountViewModel
+import foi.air.szokpt.viewmodels.AccountViewModel
 import foi.air.szokpt.models.AccountListRole
 import foi.air.szokpt.models.ListedAccountInformation
 import foi.air.szokpt.ui.components.LoginTextField
@@ -59,15 +58,13 @@ import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.ui.theme.warning
-import hr.foi.air.core.register.RegistrationBody
-import hr.foi.air.core.register.Role
 
 @Composable
-fun UserAccountView(navController: NavController, sharedViewModel: SharedAccountViewModel){
+fun UserAccountView(navController: NavController, sharedViewModel: AccountViewModel){
     val account = sharedViewModel.selectedAccount
     var isEditTileVisible by remember { mutableStateOf(false) }
 
-    val viewModel: SharedAccountViewModel = viewModel()
+    val viewModel: AccountViewModel = viewModel()
 
     val username = viewModel.username.observeAsState().value ?: ""
     val password = viewModel.password.observeAsState().value ?: ""
@@ -75,7 +72,10 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
     val lastName = viewModel.lastName.observeAsState().value ?: ""
     val email = viewModel.email.observeAsState().value ?: ""
 
-    var openDialog = remember { mutableStateOf(false) }
+    var openEditDialog = remember { mutableStateOf(false) }
+    var openBlockDialog = remember { mutableStateOf(false) }
+    var openDeactivateDialog = remember { mutableStateOf(false) }
+    val isEditConfirmed = remember { mutableStateOf(false) }
 
     if (account != null) {
         setTextBoxValuesToCurrent(account)
@@ -93,7 +93,7 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
             )
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 item {
                     TileSegment(
@@ -123,7 +123,6 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                                 verticalArrangement = Arrangement.spacedBy(8.dp),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                // Role Icon Row
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Start,
@@ -168,8 +167,11 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                                         )
                                         OutlineBouncingButton(
                                             onClick = {
-                                                isEditTileVisible = !isEditTileVisible
-                                                openDialog.value = true
+                                                if (isEditTileVisible) {
+                                                    openEditDialog.value = true
+                                                } else {
+                                                    isEditTileVisible = true
+                                                }
                                             },
                                             contentColor = if (isEditTileVisible) success else TextWhite,
                                             borderColor = if (isEditTileVisible) success else TextWhite,
@@ -178,11 +180,13 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                                             modifier = Modifier
                                         )
                                     }
-                                    if(openDialog.value && !isEditTileVisible){
+                                    if(openEditDialog.value){
                                         DialogComponent(
-                                            onDismissRequest = { openDialog.value = false },
+                                            onDismissRequest = { openEditDialog.value = false },
                                             onConfirmation = {
-                                                openDialog.value = false
+                                                isEditTileVisible = false
+                                                isEditConfirmed.value = true
+                                                openEditDialog.value = false
                                             },
                                             dialogTitle = "Change user data?",
                                             dialogText =
@@ -211,9 +215,10 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                         )
                     )
 
-                    LaunchedEffect(scale) {
-                        if (scale == 0f && !isEditTileVisible) {
+                    LaunchedEffect(scale, isEditConfirmed.value) {
+                        if (scale == 0f && !isEditTileVisible && isEditConfirmed.value) {
                             scaleState = false
+                            isEditConfirmed.value = false
                         } else if (scale > 0f) {
                             scaleState = true
                         }
@@ -226,7 +231,7 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                             minWidth = 250.dp,
                             minHeight = 400.dp,
                             color = BGLevelOne,
-                            modifier = Modifier.height((scale * 400).dp)
+                            modifier = Modifier.height((scale * 440).dp)
                         ) {
                             Column(
                                 modifier = Modifier
@@ -234,29 +239,34 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                                     .padding(16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                val spacerHeight = 12.dp
-                                Spacer(modifier = Modifier.height(spacerHeight))
+                                Spacer(modifier = Modifier.height(12.dp))
                                 LoginTextField(
                                     label = "Username",
                                     value = username,
                                     onValueChange = { viewModel.username.value = it },
                                     isPasswordField = false,
                                 )
-                                Spacer(modifier = Modifier.height(spacerHeight))
+                                LoginTextField(
+                                    label = "New Password",
+                                    value = "",
+                                    onValueChange = { viewModel.username.value = it },
+                                    isPasswordField = true,
+                                )
+                                Spacer(modifier = Modifier.height(12.dp))
                                 LoginTextField(
                                     label = "Name",
                                     value = name,
                                     onValueChange = { viewModel.firstName.value = it },
                                     isPasswordField = false,
                                 )
-                                Spacer(modifier = Modifier.height(spacerHeight))
+                                Spacer(modifier = Modifier.height(12.dp))
                                 LoginTextField(
                                     label = "Last Name",
                                     value = lastName,
                                     onValueChange = { viewModel.lastName.value = it },
                                     isPasswordField = false,
                                 )
-                                Spacer(modifier = Modifier.height(spacerHeight))
+                                Spacer(modifier = Modifier.height(12.dp))
                                 LoginTextField(
                                     label = "E-mail",
                                     value = email,
@@ -274,7 +284,9 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                         horizontalArrangement = Arrangement.Center
                     ) {
                         OutlineBouncingButton(
-                            onClick = { /* Trigger account Deactivation HERE */ },
+                            onClick = {
+
+                            },
                             inputText = "Deactivate Acc.",
                             contentColor = danger,
                             borderColor = danger,
@@ -292,7 +304,6 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                 }
             }
         }
-
     }
     else {
         Text("No account selected", color = TextWhite)
@@ -301,7 +312,7 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
 
 @Composable
 fun setTextBoxValuesToCurrent(account: ListedAccountInformation) {
-    val viewModel: SharedAccountViewModel = viewModel()
+    val viewModel: AccountViewModel = viewModel()
     viewModel.username.value = account.userName
     viewModel.password.value = account.password
     viewModel.firstName.value = account.name
