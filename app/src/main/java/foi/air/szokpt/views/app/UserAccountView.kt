@@ -47,7 +47,6 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
         Column(
             modifier = Modifier
                 .fillMaxSize()
-
         ) {
             Text(
                 modifier = Modifier
@@ -99,54 +98,51 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                                         imageVector = if (account.role == AccountListRole.Admin) Icons.Rounded.AccountCircle else Icons.Rounded.Person,
                                         contentDescription = null,
                                         tint = Color.White,
-                                        modifier = Modifier.size(56.dp)
+                                        modifier = Modifier.size(68.dp)
                                     )
                                 }
-                                Box(
+                                Column (
                                     modifier = Modifier
-                                        .background(
-                                            color = BGLevelOne,
-                                            shape = RoundedCornerShape(30.dp)
-                                        )
-                                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                                ) {
-                                    Text(
-                                        text = "@${account.userName}",
-                                        color = Primary,
-                                        fontSize = 18.sp
-                                    )
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = "${account.name} ${account.lastName}",
-                                        color = TextWhite,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 22.sp,
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    OutlineBouncingButton(
-                                        onClick = { /* Handle action here */ },
-                                        contentColor = TextWhite,
-                                        borderColor = TextWhite,
-                                        inputIcon = Icons.Rounded.Edit,
-                                        inputText = "",
+                                        .fillMaxWidth()
+                                        .padding(top = 8.dp)) {
+                                    Box(
                                         modifier = Modifier
-                                    )
+                                            .background(
+                                                color = BGLevelOne,
+                                                shape = RoundedCornerShape(30.dp)
+                                            )
+                                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                                    ) {
+                                        Text(
+                                            text = "@${account.userName}",
+                                            color = Primary,
+                                            fontWeight = FontWeight.SemiBold,
+                                            fontSize = 18.sp
+                                        )
+                                    }
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "${account.name} ${account.lastName}",
+                                            color = TextWhite,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 20.sp,
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                        OutlineBouncingButton(
+                                            onClick = { /* Handle action here */ },
+                                            contentColor = TextWhite,
+                                            borderColor = TextWhite,
+                                            inputIcon = Icons.Rounded.Edit,
+                                            inputText = "",
+                                            modifier = Modifier
+                                        )
+                                    }
                                 }
-                            }
 
-                            OutlineBouncingButton(
-                                onClick = { /* Handle action here */ },
-                                contentColor = TextWhite,
-                                borderColor = TextWhite,
-                                inputIcon = Icons.Rounded.Edit,
-                                inputText = "",
-                                modifier = Modifier
-                                    .align(Alignment.BottomEnd)
-                            )
+                            }
                         }
                     }
                 }
