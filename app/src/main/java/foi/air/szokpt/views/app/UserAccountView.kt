@@ -75,35 +75,26 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                     }
                 }
                 item {
-                    TileSegment(
-                        tileSizeMode = TileSizeMode.WRAP_CONTENT,
-                        innerPadding = 2.dp,
-                        outerMargin = 6.dp,
-                        minWidth = 250.dp,
-                        minHeight = 90.dp,
-                        color = BGLevelOne
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                                .padding(top = 2.dp),
-                                horizontalArrangement = Arrangement.Center
-                        ) {
-                            OutlineBouncingButton(
-                                onClick = { /* Trigger account blocking */ },
-                                inputText = "Delete Acc.",
-                                contentColor = danger,
-                                borderColor = danger,
-                                inputIcon = Icons.Rounded.Delete,
-                            )
-                            OutlineBouncingButton(
-                                onClick = { /* Trigger account blocking */ },
-                                inputText = "Block",
-                                contentColor = warning,
-                                borderColor = warning,
-                                inputIcon = Icons.Rounded.Clear,
-                            )
-                        }
+                        OutlineBouncingButton(
+                            onClick = { /* Trigger account blocking */ },
+                            inputText = "Delete Acc.",
+                            contentColor = danger,
+                            borderColor = danger,
+                            inputIcon = Icons.Rounded.Delete,
+                        )
+                        OutlineBouncingButton(
+                            onClick = { /* Trigger account blocking */ },
+                            inputText = "Deactivate",
+                            contentColor = warning,
+                            borderColor = warning,
+                            inputIcon = Icons.Rounded.Clear,
+                        )
                     }
+
                 }
             }
         }
