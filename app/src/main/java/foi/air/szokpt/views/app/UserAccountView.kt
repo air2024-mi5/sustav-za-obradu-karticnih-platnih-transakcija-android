@@ -1,6 +1,8 @@
 package foi.air.szokpt.views.app
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Delete
@@ -16,6 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,6 +33,8 @@ import foi.air.szokpt.ui.components.list_components.AccountListItem
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.BGLevelThree
 import foi.air.szokpt.ui.theme.BGLevelTwo
+import foi.air.szokpt.ui.theme.Primary
+import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
@@ -58,19 +66,35 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                     TileSegment(
                         tileSizeMode = TileSizeMode.WRAP_CONTENT,
                         innerPadding = 16.dp,
-                        outerMargin = 6.dp,
+                        outerMargin = 0.dp,
                         minWidth = 250.dp,
                         minHeight = 90.dp,
-                        color = BGLevelOne
+                        color = Color.Transparent
                     ) {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.fillMaxWidth()
+
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(30.dp))
+                                .background(
+                                    Brush.verticalGradient(
+                                        colors = listOf(BGLevelOne, Primary),
+                                        startY = 0f,
+                                        endY = 1200f
+                                    ),
+
+                                )
+                                .fillMaxSize()
+                                .padding(16.dp)
                         ) {
-                            Text("Name: ${account.name}", color = TextWhite)
-                            Text("Last Name: ${account.lastName}", color = TextWhite)
-                            Text("Username: ${account.userName}", color = TextWhite)
-                            Text("Role: ${account.role}", color = TextWhite)
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Name: ${account.name}", color = TextWhite)
+                                Text("Last Name: ${account.lastName}", color = TextWhite)
+                                Text("Username: ${account.userName}", color = TextWhite)
+                                Text("Role: ${account.role}", color = TextWhite)
+                            }
                         }
                     }
                 }
