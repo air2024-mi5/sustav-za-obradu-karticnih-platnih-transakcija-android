@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Person
@@ -199,6 +200,38 @@ fun UserAccountView(navController: NavController, sharedViewModel: AccountViewMo
                                             containerColor = BGLevelTwo
                                         )
                                     }
+                                    if(openDeactivateDialog.value){
+                                        DialogComponent(
+                                            onDismissRequest = { openDeactivateDialog.value = false },
+                                            onConfirmation = {
+                                                openDeactivateDialog.value = false
+                                            },
+                                            dialogTitle = "Deactivate User Account",
+                                            dialogText =
+                                            "Are you sure you want to DEACTIVATE ${name} " +
+                                            "${lastName}, @${username}? \n \n" +
+                                            "Be cautious!",
+                                            iconTop = Icons.Rounded.Delete,
+                                            highlightColor = danger,
+                                            containerColor = BGLevelTwo
+                                        )
+                                    }
+                                    if(openBlockDialog.value){
+                                        DialogComponent(
+                                            onDismissRequest = { openBlockDialog.value = false },
+                                            onConfirmation = {
+                                                openBlockDialog.value = false
+                                            },
+                                            dialogTitle = "Block User Account",
+                                            dialogText =
+                                            "Are you sure you want to BLOCK ${name} " +
+                                            "${lastName}, @${username}? \n \n" +
+                                            "Be cautious!",
+                                            iconTop = Icons.Rounded.Close,
+                                            highlightColor = warning,
+                                            containerColor = BGLevelTwo
+                                        )
+                                    }
                                 }
 
                             }
@@ -285,6 +318,8 @@ fun UserAccountView(navController: NavController, sharedViewModel: AccountViewMo
                     ) {
                         OutlineBouncingButton(
                             onClick = {
+                                /* Trigger account Deactivation HERE */
+                                openDeactivateDialog.value = true
 
                             },
                             inputText = "Deactivate Acc.",
@@ -293,7 +328,10 @@ fun UserAccountView(navController: NavController, sharedViewModel: AccountViewMo
                             inputIcon = Icons.Rounded.Delete,
                         )
                         OutlineBouncingButton(
-                            onClick = { /* Trigger account Blocking HERE */ },
+                            onClick = {
+                                /* Trigger account Blocking HERE */
+                                openBlockDialog.value = true
+                            },
                             inputText = "Block",
                             contentColor = warning,
                             borderColor = warning,
