@@ -132,7 +132,7 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                                             modifier = Modifier.weight(1f)
                                         )
                                         OutlineBouncingButton(
-                                            onClick = { /* Handle action here */ },
+                                            onClick = { /* Handle action HERE */ },
                                             contentColor = TextWhite,
                                             borderColor = TextWhite,
                                             inputIcon = Icons.Rounded.Edit,
@@ -144,6 +144,17 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
 
                             }
                         }
+                    }
+                }
+                item {
+                    TileSegment(
+                        tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
+                        innerPadding = 8.dp,
+                        outerMargin = 8.dp,
+                        minWidth = 250.dp,
+                        minHeight = 90.dp,
+                        color = BGLevelOne
+                    ) {
                     }
                 }
                 item {
