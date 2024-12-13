@@ -10,5 +10,8 @@ data class ListedAccountInformation(
     val lastName: String,
     val userName: String,
     // TODO: Change to actual type of Role, not this enum class above
-    val role: AccountListRole // Need to change to actual type of Role! This is temporary for proof of concept!
+    val role: AccountListRole, // Need to change to actual type of Role! This is temporary for proof of concept!
+    val password: String,
+    val email: String,
+    val phone: String,
 )

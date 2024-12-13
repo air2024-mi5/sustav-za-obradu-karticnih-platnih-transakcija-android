@@ -1,10 +1,8 @@
 package foi.air.szokpt.views.app
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -13,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,29 +27,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import foi.air.szokpt.viewmodels.AccountViewModel
 import foi.air.szokpt.models.AccountListRole
 import foi.air.szokpt.models.ListedAccountInformation
 import foi.air.szokpt.ui.components.TileSegment
-import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.components.list_components.AccountListItem
 import foi.air.szokpt.ui.theme.AppBorderRadius
 import foi.air.szokpt.ui.theme.BGLevelOne
-import foi.air.szokpt.ui.theme.BGLevelThree
 import foi.air.szokpt.ui.theme.BGLevelTwo
-import foi.air.szokpt.ui.theme.Primary
-import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
+import foi.air.szokpt.views.ROUTE_USER_ACCOUNT_OVERVIEW
 
 
 @Composable
-fun AccountSearchView(navController: NavController){
+fun AccountSearchView(navController: NavController, sharedViewModel: AccountViewModel){
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -73,25 +67,57 @@ fun AccountSearchView(navController: NavController){
             minHeight = 90.dp,
             color = BGLevelOne
         ) {
-            SearchBarForAccount()
+            SearchBarForAccount(
+                navController,
+                sharedViewModel
+            )
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarForAccount() {
+fun SearchBarForAccount(navControler: NavController, sharedViewModel: AccountViewModel) {
     var searchQuery by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
     val allAccounts = listOf(
-        ListedAccountInformation("Alice", "Bob", "abob", AccountListRole.User),
-        ListedAccountInformation("Antonio", "Testic", "test", AccountListRole.Admin),
-        ListedAccountInformation("Matija", "Rosevelt", "mmatija", AccountListRole.User),
-        ListedAccountInformation("Bob", "Taylor", "btaylor", AccountListRole.User),
-        ListedAccountInformation("Alice", "Bob", "abob", AccountListRole.User),
-        ListedAccountInformation("Antonio", "Testic", "test", AccountListRole.Admin),
-        ListedAccountInformation("Matija", "Rosevelt", "mmatija", AccountListRole.User),
-        ListedAccountInformation("Bob", "Taylor", "btaylor", AccountListRole.User)
+        ListedAccountInformation(
+            "Alice", "Bob", "abob", AccountListRole.User,
+            password = "TempPassword",
+            email = "a@b.com",
+            phone = "092123212"
+        ),
+        ListedAccountInformation(
+            "Antonio", "Testic", "test", AccountListRole.Admin,
+            password = "TempPassword",
+            email = "a@b.com",
+            phone = "092123212"
+        ),
+        ListedAccountInformation(
+            "Matija", "Rosevelt", "mmatija", AccountListRole.User,
+            password = "TempPassword",
+            email = "a@b.com",
+            phone = "092123212"
+        ),
+        ListedAccountInformation(
+            "Bob", "Taylor", "btaylor", AccountListRole.User,
+            password = "TempPassword",
+            email = "a@b.com",
+            phone = "092123212"
+        ),
+        ListedAccountInformation(
+            "Alice", "Bob", "abob", AccountListRole.User,
+            password = "TempPassword",
+            email = "a@b.com",
+            phone = "092123212"
+        ),
+        ListedAccountInformation(
+            "Antonio", "Testic", "test", AccountListRole.Admin,
+            password = "TempPassword",
+            email = "a@b.com",
+            phone = "092123212"
+        ),
+
     )
     val filteredAccounts = allAccounts.filter {
         it.name.contains(searchQuery, ignoreCase = true) ||
@@ -141,7 +167,10 @@ fun SearchBarForAccount() {
                             contentPadding = PaddingValues(8.dp)
                         ) {
                             items(filteredAccounts) { account ->
-                                AccountListItem(account = account)
+                                AccountListItem(account = account) {
+                                    sharedViewModel.selectedAccount = account
+                                    navControler.navigate(ROUTE_USER_ACCOUNT_OVERVIEW)
+                                }
                             }
                         }
                     } else {
