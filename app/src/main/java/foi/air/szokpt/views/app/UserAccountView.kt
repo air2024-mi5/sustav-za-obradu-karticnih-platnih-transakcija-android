@@ -105,14 +105,14 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                     ) {
                         OutlineBouncingButton(
                             onClick = { /* Trigger account blocking */ },
-                            inputText = "Delete Acc.",
+                            inputText = "Deactivate Acc.",
                             contentColor = danger,
                             borderColor = danger,
                             inputIcon = Icons.Rounded.Delete,
                         )
                         OutlineBouncingButton(
                             onClick = { /* Trigger account blocking */ },
-                            inputText = "Deactivate",
+                            inputText = "Block",
                             contentColor = warning,
                             borderColor = warning,
                             inputIcon = Icons.Rounded.Clear,
