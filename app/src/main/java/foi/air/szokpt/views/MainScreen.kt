@@ -22,7 +22,6 @@ import foi.air.szokpt.views.app.AccountSearchView
 import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.RegistrationView
-import foi.air.szokpt.views.app.ReportsView
 import foi.air.szokpt.views.app.UserAccountView
 import foi.air.szokpt.views.app.TransactionsView
 import foi.air.szokpt.views.test_views.DailyProcessScreen
@@ -52,13 +51,13 @@ fun MainScreen() {
 
     Scaffold(
         bottomBar = {
-            if(isAuthenticated.value)
+            //if(isAuthenticated.value)
                 AnimatedNavigationBar(navController = navController)
         }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "login",
+            startDestination = "dashboard",
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("login") {

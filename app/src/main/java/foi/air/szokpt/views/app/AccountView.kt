@@ -55,12 +55,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import foi.air.szokpt.models.AccountListRole
 import foi.air.szokpt.models.ListedAccountInformation
-import foi.air.szokpt.models.Transaction
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.components.list_components.AccountListItem
-import foi.air.szokpt.ui.components.transaction_components.TransactionIcon
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.AppBorderRadius
 import foi.air.szokpt.ui.theme.BGLevelOne
