@@ -4,17 +4,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,19 +30,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import foi.air.szokpt.helpers.SharedAccountViewModel
+import foi.air.szokpt.models.AccountListRole
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
-import foi.air.szokpt.ui.components.list_components.AccountListItem
 import foi.air.szokpt.ui.theme.BGLevelOne
-import foi.air.szokpt.ui.theme.BGLevelThree
-import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.Primary
-import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.warning
-import foi.air.szokpt.views.ROUTE_USER_ACCOUNT_OVERVIEW
 
 @Composable
 fun UserAccountView(navController: NavController, sharedViewModel: SharedAccountViewModel){
@@ -65,7 +64,7 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                 item {
                     TileSegment(
                         tileSizeMode = TileSizeMode.WRAP_CONTENT,
-                        innerPadding = 16.dp,
+                        innerPadding = 8.dp,
                         outerMargin = 0.dp,
                         minWidth = 250.dp,
                         minHeight = 90.dp,
@@ -90,11 +89,64 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                                 verticalArrangement = Arrangement.spacedBy(8.dp),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("Name: ${account.name}", color = TextWhite)
-                                Text("Last Name: ${account.lastName}", color = TextWhite)
-                                Text("Username: ${account.userName}", color = TextWhite)
-                                Text("Role: ${account.role}", color = TextWhite)
+                                // Role Icon Row
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Start,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Icon(
+                                        imageVector = if (account.role == AccountListRole.Admin) Icons.Rounded.AccountCircle else Icons.Rounded.Person,
+                                        contentDescription = null,
+                                        tint = Color.White,
+                                        modifier = Modifier.size(56.dp)
+                                    )
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            color = BGLevelOne,
+                                            shape = RoundedCornerShape(30.dp)
+                                        )
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                ) {
+                                    Text(
+                                        text = "@${account.userName}",
+                                        color = Primary,
+                                        fontSize = 18.sp
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "${account.name} ${account.lastName}",
+                                        color = TextWhite,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 22.sp,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    OutlineBouncingButton(
+                                        onClick = { /* Handle action here */ },
+                                        contentColor = TextWhite,
+                                        borderColor = TextWhite,
+                                        inputIcon = Icons.Rounded.Edit,
+                                        inputText = "",
+                                        modifier = Modifier
+                                    )
+                                }
                             }
+
+                            OutlineBouncingButton(
+                                onClick = { /* Handle action here */ },
+                                contentColor = TextWhite,
+                                borderColor = TextWhite,
+                                inputIcon = Icons.Rounded.Edit,
+                                inputText = "",
+                                modifier = Modifier
+                                    .align(Alignment.BottomEnd)
+                            )
                         }
                     }
                 }
@@ -104,14 +156,14 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                         horizontalArrangement = Arrangement.Center
                     ) {
                         OutlineBouncingButton(
-                            onClick = { /* Trigger account blocking */ },
+                            onClick = { /* Trigger account Deactivation HERE */ },
                             inputText = "Deactivate Acc.",
                             contentColor = danger,
                             borderColor = danger,
                             inputIcon = Icons.Rounded.Delete,
                         )
                         OutlineBouncingButton(
-                            onClick = { /* Trigger account blocking */ },
+                            onClick = { /* Trigger account Blocking HERE */ },
                             inputText = "Block",
                             contentColor = warning,
                             borderColor = warning,
