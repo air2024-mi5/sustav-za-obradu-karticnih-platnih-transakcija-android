@@ -14,7 +14,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import foi.air.szokpt.helpers.LoginHandler
 import foi.air.szokpt.helpers.SharedAccountViewModel
 import foi.air.szokpt.ui.LoginPage
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
@@ -51,13 +50,13 @@ fun MainScreen() {
 
     Scaffold(
         bottomBar = {
-            //if(isAuthenticated.value)
+            if(isAuthenticated.value)
                 AnimatedNavigationBar(navController = navController)
         }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "dashboard",
+            startDestination = "login",
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("login") {
