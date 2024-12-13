@@ -1,5 +1,6 @@
 package foi.air.szokpt.views.app
 
+import android.util.Log
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -18,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
@@ -47,14 +49,18 @@ import foi.air.szokpt.models.AccountListRole
 import foi.air.szokpt.models.ListedAccountInformation
 import foi.air.szokpt.ui.components.LoginTextField
 import foi.air.szokpt.ui.components.TileSegment
+import foi.air.szokpt.ui.components.dialog_components.DialogComponent
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.ui.theme.warning
+import hr.foi.air.core.register.RegistrationBody
+import hr.foi.air.core.register.Role
 
 @Composable
 fun UserAccountView(navController: NavController, sharedViewModel: SharedAccountViewModel){
@@ -68,6 +74,8 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
     val name = viewModel.firstName.observeAsState().value ?: ""
     val lastName = viewModel.lastName.observeAsState().value ?: ""
     val email = viewModel.email.observeAsState().value ?: ""
+
+    var openDialog = remember { mutableStateOf(false) }
 
     if (account != null) {
         setTextBoxValuesToCurrent(account)
@@ -160,13 +168,31 @@ fun UserAccountView(navController: NavController, sharedViewModel: SharedAccount
                                         )
                                         OutlineBouncingButton(
                                             onClick = {
-                                                isEditTileVisible = !isEditTileVisible // Toggle visibility of the second tile
+                                                isEditTileVisible = !isEditTileVisible
+                                                openDialog.value = true
                                             },
                                             contentColor = if (isEditTileVisible) success else TextWhite,
                                             borderColor = if (isEditTileVisible) success else TextWhite,
                                             inputIcon = if (isEditTileVisible) Icons.Rounded.Refresh else Icons.Rounded.Edit,
                                             inputText = if (isEditTileVisible) "Save" else "",
                                             modifier = Modifier
+                                        )
+                                    }
+                                    if(openDialog.value && !isEditTileVisible){
+                                        DialogComponent(
+                                            onDismissRequest = { openDialog.value = false },
+                                            onConfirmation = {
+                                                openDialog.value = false
+                                            },
+                                            dialogTitle = "Change user data?",
+                                            dialogText =
+                                            "" +
+                                                    "Are you sure you want to change ${name}, " +
+                                                    "${lastName} data?" +
+                                                    "",
+                                            iconTop = Icons.Rounded.CheckCircle,
+                                            highlightColor = success,
+                                            containerColor = BGLevelTwo
                                         )
                                     }
                                 }
