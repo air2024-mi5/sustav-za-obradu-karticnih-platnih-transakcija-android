@@ -11,7 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,6 +42,7 @@ import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogBut
 import foi.air.szokpt.ui.components.pagination_components.Pagination
 import foi.air.szokpt.ui.components.transaction_components.TransactionFilterView
 import foi.air.szokpt.ui.components.transaction_components.TransactionItem
+import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.viewmodels.TransactionsViewModel
 import kotlinx.coroutines.launch
@@ -111,6 +116,33 @@ fun TransactionsView(navController: NavController) {
             }
         }
 
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Pagination(
+                    currentPage = currentPage,
+                    totalPages = totalPages,
+                    onPageSelected = { page ->
+                        viewModel.fetchTransactionPage(page)
+                        coroutineScope.launch {
+                            listState.scrollToItem(0)
+                        }
+                    }
+                )
+            }
+            BouncingFABDialogButton()
+        }
+    }
+}
 
         Row(
             modifier = Modifier
