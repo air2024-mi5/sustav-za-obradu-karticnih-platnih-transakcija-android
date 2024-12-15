@@ -21,9 +21,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -48,6 +52,8 @@ fun TransactionsView(navController: NavController) {
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+
+    var isExpanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(currentPage) {
         if (transactionPage == null) {
@@ -118,7 +124,10 @@ fun TransactionsView(navController: NavController) {
                     }
                 )
             }
-            BouncingFABDialogButton()
+            BouncingFABDialogButton(
+                isExpanded = isExpanded,
+                onToggle = { isExpanded = !isExpanded },
+            )
         }
     }
 }
