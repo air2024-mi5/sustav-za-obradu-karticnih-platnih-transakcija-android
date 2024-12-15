@@ -23,9 +23,8 @@ import foi.air.szokpt.ui.theme.TextWhite
 fun BouncingFABDialogButton(){
     var isPressed by remember { mutableStateOf(false) }
 
-    // Animations for scaling the FAB
     val scale by animateFloatAsState(
-        targetValue = if (isPressed) 1.1f else 1f,
+        targetValue = if (isPressed) 1.15f else 1f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioLowBouncy,
             stiffness = 500f
@@ -33,24 +32,25 @@ fun BouncingFABDialogButton(){
         finishedListener = { isPressed = false }
     )
     val iconScale by animateFloatAsState(
-        targetValue = if (isPressed) 1.2f else 1f,
+        targetValue = if (isPressed) 1.3f else 1f,
         animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = 700f
+            dampingRatio = Spring.DampingRatioHighBouncy,
+            stiffness = Spring.StiffnessMediumLow
         ),
         finishedListener = { isPressed = false }
     )
 
     FloatingActionButton(
         onClick = {
-            isPressed = true // Trigger the animation
+            isPressed = true
         },
         modifier = Modifier
-            .scale(scale) // Apply the scale animation
-            .padding(16.dp), // Padding for spacing
+            .scale(scale),
         containerColor = Primary
     ) {
         Icon(
+            modifier = Modifier
+                .scale(iconScale),
             imageVector = Icons.Default.KeyboardArrowUp,
             contentDescription = "Filter",
             tint = TextWhite
