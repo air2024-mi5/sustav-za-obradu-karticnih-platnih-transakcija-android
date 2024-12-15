@@ -1,5 +1,6 @@
 package foi.air.szokpt.views.app
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,8 +15,11 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,8 +47,11 @@ import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogBut
 import foi.air.szokpt.ui.components.pagination_components.Pagination
 import foi.air.szokpt.ui.components.transaction_components.TransactionFilterView
 import foi.air.szokpt.ui.components.transaction_components.TransactionItem
+import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
+import foi.air.szokpt.ui.theme.danger
+import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.TransactionsViewModel
 import kotlinx.coroutines.launch
 
@@ -146,6 +153,18 @@ fun TransactionsView(navController: NavController) {
             )
         }
     }
+    ModalBottomSheetFilter(
+        isVisible = isExpanded,
+        onDismiss = { isExpanded = false },
+        onApplyNewFilter = {
+            // Create a new filter here
+            isExpanded = false
+        },
+        onRemoveFilters = {
+            // Remove current filter
+            isExpanded = false
+        }
+    )
 }
 
         Row(
