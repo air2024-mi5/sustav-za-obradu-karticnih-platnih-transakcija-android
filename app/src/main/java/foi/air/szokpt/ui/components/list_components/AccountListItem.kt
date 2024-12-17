@@ -30,7 +30,6 @@ fun AccountListItem(account: User, onClick: () -> Unit) {
                 shape = RoundedCornerShape(10.dp)
             )
             .clickable {
-                println("Selected account: $account")
                 onClick()
             }
             .padding(6.dp),
@@ -38,7 +37,7 @@ fun AccountListItem(account: User, onClick: () -> Unit) {
     ) {
         Column {
             Text(
-                text = account.role.name + " @" + account.username,
+                text = account.username,
                 color = Primary,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold
