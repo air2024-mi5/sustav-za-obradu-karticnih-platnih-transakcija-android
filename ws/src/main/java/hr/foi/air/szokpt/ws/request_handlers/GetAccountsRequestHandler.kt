@@ -5,7 +5,7 @@ import hr.foi.air.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.ws.models.responses.User
 import retrofit2.Call
 
-class GetUsersRequestHandler(
+class GetAccountsRequestHandler(
     private val jwtToken: String,
 ) : TemplateRequestHandler<User>() {
     override fun getServiceCall(): Call<SuccessfulResponseBody<User>> {

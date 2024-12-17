@@ -8,7 +8,7 @@ import hr.foi.air.core.network.ResponseListener
 import hr.foi.air.core.network.models.ErrorResponseBody
 import hr.foi.air.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.ws.models.responses.User
-import hr.foi.air.szokpt.ws.request_handlers.GetUsersRequestHandler
+import hr.foi.air.szokpt.ws.request_handlers.GetAccountsRequestHandler
 
 class AccountsViewModel : ViewModel() {
     private val _loading = MutableLiveData(true)
@@ -20,7 +20,7 @@ class AccountsViewModel : ViewModel() {
     fun fetchUsers() {
         val token = Auth.logedInUserData?.token
         if (token == null) return
-        val usersRequestHandler = GetUsersRequestHandler(token)
+        val usersRequestHandler = GetAccountsRequestHandler(token)
         usersRequestHandler.sendRequest(object : ResponseListener<User> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<User>) {
                 _loading.value = true
