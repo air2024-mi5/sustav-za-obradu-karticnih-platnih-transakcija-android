@@ -44,9 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import foi.air.szokpt.viewmodels.AccountViewModel
-import foi.air.szokpt.models.AccountListRole
-import foi.air.szokpt.models.ListedAccountInformation
 import foi.air.szokpt.ui.components.LoginTextField
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dialog_components.DialogComponent
@@ -59,10 +56,11 @@ import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.ui.theme.warning
+import foi.air.szokpt.viewmodels.AccountViewModel
+import hr.foi.air.szokpt.ws.models.responses.User
 
 @Composable
-fun UserAccountView(navController: NavController, sharedViewModel: AccountViewModel){
-    val account = sharedViewModel.selectedAccount
+fun UserAccountView(navController: NavController, account: User) {
     var isEditTileVisible by remember { mutableStateOf(false) }
 
     val viewModel: AccountViewModel = viewModel()
@@ -78,282 +76,280 @@ fun UserAccountView(navController: NavController, sharedViewModel: AccountViewMo
     var openDeactivateDialog = remember { mutableStateOf(false) }
     val isEditConfirmed = remember { mutableStateOf(false) }
 
-    if (account != null) {
-        setTextBoxValuesToCurrent(account)
-        Column(
+    setTextBoxValuesToCurrent(account)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Text(
             modifier = Modifier
-                .fillMaxSize()
+                .padding(16.dp),
+            text = "Account Overview",
+            color = TextWhite,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+        )
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Text(
-                modifier = Modifier
-                    .padding(16.dp),
-                text = "Account Overview",
-                color = TextWhite,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-            )
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                item {
-                    TileSegment(
-                        tileSizeMode = TileSizeMode.WRAP_CONTENT,
-                        innerPadding = 8.dp,
-                        outerMargin = 0.dp,
-                        minWidth = 250.dp,
-                        minHeight = 90.dp,
-                        color = Color.Transparent
-                    ) {
+            item {
+                TileSegment(
+                    tileSizeMode = TileSizeMode.WRAP_CONTENT,
+                    innerPadding = 8.dp,
+                    outerMargin = 0.dp,
+                    minWidth = 250.dp,
+                    minHeight = 90.dp,
+                    color = Color.Transparent
+                ) {
 
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(30.dp))
-                                .background(
-                                    Brush.verticalGradient(
-                                        colors = listOf(BGLevelOne, Primary),
-                                        startY = 0f,
-                                        endY = 1600f
-                                    ),
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(30.dp))
+                            .background(
+                                Brush.verticalGradient(
+                                    colors = listOf(BGLevelOne, Primary),
+                                    startY = 0f,
+                                    endY = 1600f
+                                ),
 
                                 )
-                                .fillMaxSize()
-                                .padding(16.dp)
+                            .fillMaxSize()
+                            .padding(16.dp)
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Start,
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Icon(
-                                        imageVector = if (account.role == AccountListRole.Admin) Icons.Rounded.AccountCircle else Icons.Rounded.Person,
-                                        contentDescription = null,
-                                        tint = Color.White,
-                                        modifier = Modifier.size(68.dp)
-                                    )
-                                }
-                                Column (
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 8.dp)) {
-                                    Box(
-                                        modifier = Modifier
-                                            .background(
-                                                color = BGLevelOne,
-                                                shape = RoundedCornerShape(30.dp)
-                                            )
-                                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                                    ) {
-                                        Text(
-                                            text = "@${account.userName}",
-                                            color = Primary,
-                                            fontWeight = FontWeight.SemiBold,
-                                            fontSize = 18.sp
-                                        )
-                                    }
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text(
-                                            text = "${account.name} ${account.lastName}",
-                                            color = TextWhite,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 20.sp,
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                        OutlineBouncingButton(
-                                            onClick = {
-                                                if (isEditTileVisible) {
-                                                    openEditDialog.value = true
-                                                } else {
-                                                    isEditTileVisible = true
-                                                }
-                                            },
-                                            contentColor = if (isEditTileVisible) success else TextWhite,
-                                            borderColor = if (isEditTileVisible) success else TextWhite,
-                                            inputIcon = if (isEditTileVisible) Icons.Rounded.Refresh else Icons.Rounded.Edit,
-                                            inputText = if (isEditTileVisible) "Save" else "",
-                                            modifier = Modifier
-                                        )
-                                    }
-                                    if(openEditDialog.value){
-                                        DialogComponent(
-                                            onDismissRequest = { openEditDialog.value = false },
-                                            onConfirmation = {
-                                                isEditTileVisible = false
-                                                isEditConfirmed.value = true
-                                                openEditDialog.value = false
-                                            },
-                                            dialogTitle = "Change user data?",
-                                            dialogText =
-                                            "" +
-                                                    "Are you sure you want to change ${name} " +
-                                                    "${lastName}s data?" +
-                                                    "",
-                                            iconTop = Icons.Rounded.CheckCircle,
-                                            highlightColor = success,
-                                            containerColor = BGLevelTwo
-                                        )
-                                    }
-                                    if(openDeactivateDialog.value){
-                                        DialogComponent(
-                                            onDismissRequest = { openDeactivateDialog.value = false },
-                                            onConfirmation = {
-                                                openDeactivateDialog.value = false
-                                            },
-                                            dialogTitle = "Deactivate User Account",
-                                            dialogText =
-                                            "Are you sure you want to DEACTIVATE ${name} " +
-                                            "${lastName}, @${username}? \n \n" +
-                                            "Be cautious!",
-                                            iconTop = Icons.Rounded.Delete,
-                                            highlightColor = danger,
-                                            containerColor = BGLevelTwo
-                                        )
-                                    }
-                                    if(openBlockDialog.value){
-                                        DialogComponent(
-                                            onDismissRequest = { openBlockDialog.value = false },
-                                            onConfirmation = {
-                                                openBlockDialog.value = false
-                                            },
-                                            dialogTitle = "Block User Account",
-                                            dialogText =
-                                            "Are you sure you want to BLOCK ${name} " +
-                                            "${lastName}, @${username}? \n \n" +
-                                            "Be cautious!",
-                                            iconTop = Icons.Rounded.Close,
-                                            highlightColor = warning,
-                                            containerColor = BGLevelTwo
-                                        )
-                                    }
-                                }
-
+                                Icon(
+                                    imageVector = if (account.role.name == "admin") Icons.Rounded.AccountCircle else Icons.Rounded.Person,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(68.dp)
+                                )
                             }
-                        }
-                    }
-                }
-                item {
-                    var scaleState by remember { mutableStateOf(true) }
-                    val scale by animateFloatAsState(
-                        targetValue = if (isEditTileVisible) 1f else 0f,
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioLowBouncy,
-                            stiffness = 50f
-                        )
-                    )
-
-                    LaunchedEffect(scale, isEditConfirmed.value) {
-                        if (scale == 0f && !isEditTileVisible && isEditConfirmed.value) {
-                            scaleState = false
-                            isEditConfirmed.value = false
-                        } else if (scale > 0f) {
-                            scaleState = true
-                        }
-                    }
-                    if (scaleState) {
-                        TileSegment(
-                            tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
-                            innerPadding = 8.dp,
-                            outerMargin = 8.dp,
-                            minWidth = 250.dp,
-                            minHeight = 400.dp,
-                            color = BGLevelOne,
-                            modifier = Modifier.height((scale * 440).dp)
-                        ) {
                             Column(
                                 modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp)
                             ) {
-                                Spacer(modifier = Modifier.height(12.dp))
-                                LoginTextField(
-                                    label = "Username",
-                                    value = username,
-                                    onValueChange = { viewModel.username.value = it },
-                                    isPasswordField = false,
-                                )
-                                LoginTextField(
-                                    label = "New Password",
-                                    value = password,
-                                    onValueChange = { viewModel.password.value = it },
-                                    isPasswordField = true,
-                                )
-                                Spacer(modifier = Modifier.height(12.dp))
-                                LoginTextField(
-                                    label = "Name",
-                                    value = name,
-                                    onValueChange = { viewModel.firstName.value = it },
-                                    isPasswordField = false,
-                                )
-                                Spacer(modifier = Modifier.height(12.dp))
-                                LoginTextField(
-                                    label = "Last Name",
-                                    value = lastName,
-                                    onValueChange = { viewModel.lastName.value = it },
-                                    isPasswordField = false,
-                                )
-                                Spacer(modifier = Modifier.height(12.dp))
-                                LoginTextField(
-                                    label = "E-mail",
-                                    value = email,
-                                    onValueChange = { viewModel.email.value = it },
-                                    isPasswordField = false,
-                                )
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            color = BGLevelOne,
+                                            shape = RoundedCornerShape(30.dp)
+                                        )
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                ) {
+                                    Text(
+                                        text = "@${account.username}",
+                                        color = Primary,
+                                        fontWeight = FontWeight.SemiBold,
+                                        fontSize = 18.sp
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "${account.firstName} ${account.lastName}",
+                                        color = TextWhite,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 20.sp,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    OutlineBouncingButton(
+                                        onClick = {
+                                            if (isEditTileVisible) {
+                                                openEditDialog.value = true
+                                            } else {
+                                                isEditTileVisible = true
+                                            }
+                                        },
+                                        contentColor = if (isEditTileVisible) success else TextWhite,
+                                        borderColor = if (isEditTileVisible) success else TextWhite,
+                                        inputIcon = if (isEditTileVisible) Icons.Rounded.Refresh else Icons.Rounded.Edit,
+                                        inputText = if (isEditTileVisible) "Save" else "",
+                                        modifier = Modifier
+                                    )
+                                }
+                                if (openEditDialog.value) {
+                                    DialogComponent(
+                                        onDismissRequest = { openEditDialog.value = false },
+                                        onConfirmation = {
+                                            isEditTileVisible = false
+                                            isEditConfirmed.value = true
+                                            openEditDialog.value = false
+                                        },
+                                        dialogTitle = "Change user data?",
+                                        dialogText =
+                                        "" +
+                                                "Are you sure you want to change ${name} " +
+                                                "${lastName}s data?" +
+                                                "",
+                                        iconTop = Icons.Rounded.CheckCircle,
+                                        highlightColor = success,
+                                        containerColor = BGLevelTwo
+                                    )
+                                }
+                                if (openDeactivateDialog.value) {
+                                    DialogComponent(
+                                        onDismissRequest = {
+                                            openDeactivateDialog.value = false
+                                        },
+                                        onConfirmation = {
+                                            openDeactivateDialog.value = false
+                                        },
+                                        dialogTitle = "Deactivate User Account",
+                                        dialogText =
+                                        "Are you sure you want to DEACTIVATE ${name} " +
+                                                "${lastName}, @${username}? \n \n" +
+                                                "Be cautious!",
+                                        iconTop = Icons.Rounded.Delete,
+                                        highlightColor = danger,
+                                        containerColor = BGLevelTwo
+                                    )
+                                }
+                                if (openBlockDialog.value) {
+                                    DialogComponent(
+                                        onDismissRequest = { openBlockDialog.value = false },
+                                        onConfirmation = {
+                                            openBlockDialog.value = false
+                                        },
+                                        dialogTitle = "Block User Account",
+                                        dialogText =
+                                        "Are you sure you want to BLOCK ${name} " +
+                                                "${lastName}, @${username}? \n \n" +
+                                                "Be cautious!",
+                                        iconTop = Icons.Rounded.Close,
+                                        highlightColor = warning,
+                                        containerColor = BGLevelTwo
+                                    )
+                                }
                             }
+
                         }
                     }
                 }
+            }
+            item {
+                var scaleState by remember { mutableStateOf(true) }
+                val scale by animateFloatAsState(
+                    targetValue = if (isEditTileVisible) 1f else 0f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioLowBouncy,
+                        stiffness = 50f
+                    )
+                )
 
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        OutlineBouncingButton(
-                            onClick = {
-                                /* Trigger account Deactivation HERE */
-                                openDeactivateDialog.value = true
-
-                            },
-                            inputText = "Deactivate Acc.",
-                            contentColor = danger,
-                            borderColor = danger,
-                            inputIcon = Icons.Rounded.Delete,
-                        )
-                        OutlineBouncingButton(
-                            onClick = {
-                                /* Trigger account Blocking HERE */
-                                openBlockDialog.value = true
-                            },
-                            inputText = "Block",
-                            contentColor = warning,
-                            borderColor = warning,
-                            inputIcon = Icons.Rounded.Clear,
-                        )
+                LaunchedEffect(scale, isEditConfirmed.value) {
+                    if (scale == 0f && !isEditTileVisible && isEditConfirmed.value) {
+                        scaleState = false
+                        isEditConfirmed.value = false
+                    } else if (scale > 0f) {
+                        scaleState = true
                     }
-
+                }
+                if (scaleState) {
+                    TileSegment(
+                        tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
+                        innerPadding = 8.dp,
+                        outerMargin = 8.dp,
+                        minWidth = 250.dp,
+                        minHeight = 400.dp,
+                        color = BGLevelOne,
+                        modifier = Modifier.height((scale * 440).dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(modifier = Modifier.height(12.dp))
+                            LoginTextField(
+                                label = "Username",
+                                value = username,
+                                onValueChange = { viewModel.username.value = it },
+                                isPasswordField = false,
+                            )
+                            LoginTextField(
+                                label = "New Password",
+                                value = password,
+                                onValueChange = { viewModel.password.value = it },
+                                isPasswordField = true,
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            LoginTextField(
+                                label = "Name",
+                                value = name,
+                                onValueChange = { viewModel.firstName.value = it },
+                                isPasswordField = false,
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            LoginTextField(
+                                label = "Last Name",
+                                value = lastName,
+                                onValueChange = { viewModel.lastName.value = it },
+                                isPasswordField = false,
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            LoginTextField(
+                                label = "E-mail",
+                                value = email,
+                                onValueChange = { viewModel.email.value = it },
+                                isPasswordField = false,
+                            )
+                        }
+                    }
                 }
             }
+
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    OutlineBouncingButton(
+                        onClick = {
+                            /* Trigger account Deactivation HERE */
+                            openDeactivateDialog.value = true
+
+                        },
+                        inputText = "Deactivate Acc.",
+                        contentColor = danger,
+                        borderColor = danger,
+                        inputIcon = Icons.Rounded.Delete,
+                    )
+                    OutlineBouncingButton(
+                        onClick = {
+                            /* Trigger account Blocking HERE */
+                            openBlockDialog.value = true
+                        },
+                        inputText = "Block",
+                        contentColor = warning,
+                        borderColor = warning,
+                        inputIcon = Icons.Rounded.Clear,
+                    )
+                }
+
+            }
         }
-    }
-    else {
-        Text("No account selected", color = TextWhite)
     }
 }
 
 @Composable
-fun setTextBoxValuesToCurrent(account: ListedAccountInformation) {
+fun setTextBoxValuesToCurrent(account: User) {
     val viewModel: AccountViewModel = viewModel()
-    viewModel.username.value = account.userName
+    viewModel.username.value = account.username
     viewModel.password.value = account.password
-    viewModel.firstName.value = account.name
+    viewModel.firstName.value = account.firstName
     viewModel.lastName.value = account.lastName
     viewModel.email.value = account.email
 }
