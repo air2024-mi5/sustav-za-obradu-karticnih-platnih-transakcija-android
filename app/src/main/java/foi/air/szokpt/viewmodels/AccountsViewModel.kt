@@ -1,3 +1,5 @@
+package foi.air.szokpt.viewmodels
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,7 +10,7 @@ import hr.foi.air.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.ws.models.responses.User
 import hr.foi.air.szokpt.ws.request_handlers.GetUsersRequestHandler
 
-class UsersViewModel : ViewModel() {
+class AccountsViewModel : ViewModel() {
     private val _loading = MutableLiveData(true)
     val loading: LiveData<Boolean> = _loading
 
@@ -17,7 +19,7 @@ class UsersViewModel : ViewModel() {
 
     fun fetchUsers() {
         val token = Auth.logedInUserData?.token
-        if (token == null) return //_MESSAGE
+        if (token == null) return
         val usersRequestHandler = GetUsersRequestHandler(token)
         usersRequestHandler.sendRequest(object : ResponseListener<User> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<User>) {

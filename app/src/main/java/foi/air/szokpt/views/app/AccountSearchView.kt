@@ -21,6 +21,7 @@ import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,10 +31,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import foi.air.szokpt.viewmodels.AccountViewModel
-import foi.air.szokpt.models.AccountListRole
-import foi.air.szokpt.models.ListedAccountInformation
+import com.google.gson.Gson
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.list_components.AccountListItem
 import foi.air.szokpt.ui.theme.AppBorderRadius
@@ -42,11 +42,13 @@ import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
-import foi.air.szokpt.views.ROUTE_USER_ACCOUNT_OVERVIEW
+import foi.air.szokpt.viewmodels.AccountsViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 
 @Composable
-fun AccountSearchView(navController: NavController, sharedViewModel: AccountViewModel){
+fun AccountSearchView(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -69,7 +71,6 @@ fun AccountSearchView(navController: NavController, sharedViewModel: AccountView
         ) {
             SearchBarForAccount(
                 navController,
-                sharedViewModel
             )
         }
     }
@@ -77,52 +78,16 @@ fun AccountSearchView(navController: NavController, sharedViewModel: AccountView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarForAccount(navControler: NavController, sharedViewModel: AccountViewModel) {
+fun SearchBarForAccount(navController: NavController) {
+    val viewModel: AccountsViewModel = viewModel()
+    viewModel.fetchUsers()
     var searchQuery by remember { mutableStateOf("") }
+    val users by viewModel.accounts.observeAsState(emptyList())
     var active by remember { mutableStateOf(false) }
-    val allAccounts = listOf(
-        ListedAccountInformation(
-            "Alice", "Bob", "abob", AccountListRole.User,
-            password = "TempPassword",
-            email = "a@b.com",
-            phone = "092123212"
-        ),
-        ListedAccountInformation(
-            "Antonio", "Testic", "test", AccountListRole.Admin,
-            password = "TempPassword",
-            email = "a@b.com",
-            phone = "092123212"
-        ),
-        ListedAccountInformation(
-            "Matija", "Rosevelt", "mmatija", AccountListRole.User,
-            password = "TempPassword",
-            email = "a@b.com",
-            phone = "092123212"
-        ),
-        ListedAccountInformation(
-            "Bob", "Taylor", "btaylor", AccountListRole.User,
-            password = "TempPassword",
-            email = "a@b.com",
-            phone = "092123212"
-        ),
-        ListedAccountInformation(
-            "Alice", "Bob", "abob", AccountListRole.User,
-            password = "TempPassword",
-            email = "a@b.com",
-            phone = "092123212"
-        ),
-        ListedAccountInformation(
-            "Antonio", "Testic", "test", AccountListRole.Admin,
-            password = "TempPassword",
-            email = "a@b.com",
-            phone = "092123212"
-        ),
-
-    )
-    val filteredAccounts = allAccounts.filter {
-        it.name.contains(searchQuery, ignoreCase = true) ||
-            it.lastName.contains(searchQuery, ignoreCase = true) ||
-            it.userName.contains(searchQuery, ignoreCase = true)
+    val filteredAccounts = users.filter {
+        it.firstName.contains(searchQuery, ignoreCase = true) ||
+                it.lastName.contains(searchQuery, ignoreCase = true) ||
+                it.username.contains(searchQuery, ignoreCase = true)
     }
 
     Box(
@@ -130,12 +95,12 @@ fun SearchBarForAccount(navControler: NavController, sharedViewModel: AccountVie
             .fillMaxWidth()
             .clip(RoundedCornerShape(AppBorderRadius))
             .heightIn(min = 56.dp, max = 900.dp),
-        contentAlignment = Alignment.TopStart // Align everything to the top
+        contentAlignment = Alignment.TopStart
     ) {
         SearchBar(
             query = searchQuery,
             onQueryChange = { searchQuery = it },
-            onSearch = { /* Handle search submission logic --HERE-- */ },
+            onSearch = {},
             active = active,
             onActiveChange = { active = it },
             placeholder = { Text("Search accounts...") },
@@ -167,12 +132,22 @@ fun SearchBarForAccount(navControler: NavController, sharedViewModel: AccountVie
                             contentPadding = PaddingValues(8.dp)
                         ) {
                             items(filteredAccounts) { account ->
-                                AccountListItem(account = account) {
-                                    sharedViewModel.selectedAccount = account
-                                    navControler.navigate(ROUTE_USER_ACCOUNT_OVERVIEW)
-                                }
+                                AccountListItem(
+                                    account = account,
+                                    onClick = {
+                                        val gson = Gson()
+                                        val userJson =
+                                            gson.toJson(account)
+                                        val encodedUserJson = URLEncoder.encode(
+                                            userJson,
+                                            StandardCharsets.UTF_8.toString()
+                                        )
+                                        navController.navigate("user_account/$encodedUserJson")
+                                    }
+                                )
                             }
                         }
+
                     } else {
                         Text(
                             text = "No results found :(",
