@@ -19,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -28,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,6 +45,7 @@ import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.viewmodels.AccountsViewModel
+import foi.air.szokpt.views.ROUTE_USER_ACCOUNT_OVERVIEW
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -114,12 +117,14 @@ fun SearchBarForAccount(navController: NavController) {
             },
             colors = SearchBarDefaults.colors(
                 containerColor = BGLevelOne,
-                dividerColor = BGLevelTwo
+                dividerColor = BGLevelTwo,
+                inputFieldColors = TextFieldDefaults.colors(
+                    focusedTextColor = Color.White
+                )
             ),
             modifier = Modifier
-                .fillMaxWidth() // Ensure it spans the full width - Else ERROR
+                .fillMaxWidth(),
         ) {
-            // Display results using AccountListItem composable
             if (active) {
                 Box(
                     modifier = Modifier
@@ -142,7 +147,7 @@ fun SearchBarForAccount(navController: NavController) {
                                             userJson,
                                             StandardCharsets.UTF_8.toString()
                                         )
-                                        navController.navigate("user_account/$encodedUserJson")
+                                        navController.navigate(ROUTE_USER_ACCOUNT_OVERVIEW + "/$encodedUserJson")
                                     }
                                 )
                             }
