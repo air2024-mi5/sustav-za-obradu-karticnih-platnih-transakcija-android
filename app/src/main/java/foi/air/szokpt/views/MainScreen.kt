@@ -8,22 +8,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import foi.air.szokpt.viewmodels.AccountViewModel
+import com.google.gson.Gson
 import foi.air.szokpt.ui.LoginPage
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
 import foi.air.szokpt.views.app.AccountSearchView
 import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.RegistrationView
-import foi.air.szokpt.views.app.UserAccountView
 import foi.air.szokpt.views.app.TransactionsView
+import foi.air.szokpt.views.app.UserAccountView
 import foi.air.szokpt.views.test_views.DailyProcessScreen
+import hr.foi.air.szokpt.ws.models.responses.User
+import java.nio.charset.StandardCharsets
 
 const val ROUTE_DASHBOARD = "dashboard"
 const val ROUTE_REPORTS = "reports"
@@ -36,8 +37,6 @@ const val ROUTE_USER_ACCOUNT_OVERVIEW = "user_account"
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    val sharedAccountViewModel: AccountViewModel = viewModel()
-
     val isAuthenticated = remember { mutableStateOf(false) }
 
     // For the top status bar to be white on a back background of the app
@@ -50,7 +49,7 @@ fun MainScreen() {
 
     Scaffold(
         bottomBar = {
-            if(isAuthenticated.value)
+            if (isAuthenticated.value)
                 AnimatedNavigationBar(navController = navController)
         }
     ) { innerPadding ->
@@ -80,12 +79,24 @@ fun MainScreen() {
                 val userType = backStackEntry.arguments?.getString("userType") ?: "Unknown"
                 RegistrationView(navController = navController, userType = userType)
             }
-            composable("all_account_search") { AccountSearchView(navController, sharedAccountViewModel) }
-            composable(route = "user_account") {
-                UserAccountView(
-                    navController = navController,
-                    sharedViewModel = sharedAccountViewModel
+            composable("all_account_search") {
+                AccountSearchView(
+                    navController,
                 )
+            }
+            composable(
+                route = "user_account/{userJson}",
+                arguments = listOf(navArgument("userJson") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val encodedUserJson = backStackEntry.arguments?.getString("userJson")
+
+                val userJson = encodedUserJson?.let {
+                    java.net.URLDecoder.decode(it, StandardCharsets.UTF_8.toString())
+                }
+
+                val gson = Gson()
+                val user = gson.fromJson(userJson, User::class.java)
+                UserAccountView(navController = navController, account = user)
             }
         }
     }
