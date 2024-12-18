@@ -60,3 +60,44 @@ fun StyledTextField(
         }
     )
 }
+
+@Composable
+fun InputTextField(
+    label: String,
+    value: String,
+    onValueChange: (newValue: String) -> Unit,
+    modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        singleLine = true,
+        modifier = modifier.fillMaxWidth(),
+        keyboardOptions = keyboardOptions,
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedTextColor = Color.White,
+            unfocusedPlaceholderColor = Color.Gray,
+            focusedTrailingIconColor = Primary,
+            cursorColor = Primary,
+            unfocusedBorderColor = Color.LightGray,
+            unfocusedLabelColor = Color.LightGray,
+            focusedBorderColor = Primary,
+            focusedLabelColor = Primary,
+            focusedTextColor = Color.White
+
+        ),
+        trailingIcon = {
+            if (value.isNotEmpty()) {
+                IconButton(onClick = { onValueChange("") }) {  // Correctly call onValueChange
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "Clear input",
+                        tint = TextGray
+                    )
+                }
+            }
+        }
+    )
+}
