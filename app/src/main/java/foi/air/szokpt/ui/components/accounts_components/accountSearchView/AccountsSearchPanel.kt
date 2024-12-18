@@ -33,7 +33,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.gson.Gson
 import foi.air.szokpt.ui.theme.AppBorderRadius
@@ -48,8 +47,7 @@ import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountsSearchPanel(navController: NavController) {
-    val viewModel: AccountsViewModel = viewModel()
+fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewModel) {
     viewModel.fetchUsers()
 
     var searchQuery by remember { mutableStateOf("") }

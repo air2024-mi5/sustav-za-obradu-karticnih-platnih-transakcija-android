@@ -9,12 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.accounts_components.accountSearchView.AccountsSearchPanel
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
+import foi.air.szokpt.viewmodels.AccountsViewModel
 
 
 @Composable
@@ -39,8 +41,10 @@ fun AccountSearchView(navController: NavController) {
             minHeight = 90.dp,
             color = BGLevelOne
         ) {
+            val viewModel: AccountsViewModel = viewModel()
             AccountsSearchPanel(
                 navController,
+                viewModel
             )
         }
     }
