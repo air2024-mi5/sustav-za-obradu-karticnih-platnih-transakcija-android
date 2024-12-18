@@ -85,10 +85,12 @@ fun AccountSearchView(navController: NavController) {
 fun SearchBarForAccount(navController: NavController) {
     val viewModel: AccountsViewModel = viewModel()
     viewModel.fetchUsers()
+
     var searchQuery by remember { mutableStateOf("") }
     val users by viewModel.accounts.observeAsState(emptyList())
     var active by remember { mutableStateOf(false) }
     val loading by viewModel.loading.observeAsState(true)
+    val message by viewModel.message.observeAsState("")
 
     val filteredAccounts = users.filter {
         it.firstName.contains(searchQuery, ignoreCase = true) ||
@@ -139,7 +141,8 @@ fun SearchBarForAccount(navController: NavController) {
             ),
             modifier = Modifier
                 .fillMaxWidth(),
-        ) {
+        )
+        {
             if (active) {
                 Box(
                     modifier = Modifier
@@ -168,6 +171,20 @@ fun SearchBarForAccount(navController: NavController) {
                             }
                         }
 
+                    } else if (message.isNotEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = message,
+                                color = Color.Red,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     } else {
                         Text(
                             text = "No results found :(",
