@@ -43,6 +43,8 @@ fun AccountView(navController: NavController) {
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             if (Auth.logedInUserData!!.role == "admin") {
+                //TODO
+                //Add tile for going to "My Account"
                 item(span = { GridItemSpan(2) }) {
                     RegistrationTile(navController)
                 }
@@ -50,7 +52,9 @@ fun AccountView(navController: NavController) {
                     AccountsSearchTile(navController)
                 }
             } else {
-                //TODO AccountDetails)
+                //TODO
+                //Fetch loeggedInUser data
+                //Change nav route to details with loggedInUser
             }
         }
     }
