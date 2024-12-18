@@ -15,8 +15,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import foi.air.szokpt.ui.components.accounts_components.accountViewComponents.AccountList
-import foi.air.szokpt.ui.components.accounts_components.accountViewComponents.RegisterNewAccount
+import foi.air.szokpt.ui.components.accounts_components.accountViewComponents.AccountsListTile
+import foi.air.szokpt.ui.components.accounts_components.accountViewComponents.RegistrationTile
 
 @Composable
 fun AccountView(navController: NavController) {
@@ -42,10 +42,10 @@ fun AccountView(navController: NavController) {
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             item(span = { GridItemSpan(2) }) {
-                RegisterNewAccount(navController)
+                RegistrationTile(navController)
             }
             item(span = { GridItemSpan(2) }) {
-                AccountList(navController)
+                AccountsListTile(navController)
             }
         }
     }

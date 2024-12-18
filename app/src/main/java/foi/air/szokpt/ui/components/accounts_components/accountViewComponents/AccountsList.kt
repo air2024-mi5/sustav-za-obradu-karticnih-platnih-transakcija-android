@@ -27,7 +27,7 @@ import foi.air.szokpt.views.ROUTE_ALL_ACCOUNT_SEARCH
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountList(navController: NavController) {
+fun AccountsListTile(navController: NavController) {
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 10.dp,

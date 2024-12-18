@@ -1,7 +1,6 @@
-package foi.air.szokpt.views.app
+package foi.air.szokpt.ui.components.accounts_components.accountSearchView
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,52 +36,19 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.gson.Gson
-import foi.air.szokpt.ui.components.TileSegment
-import foi.air.szokpt.ui.components.list_components.AccountListItem
 import foi.air.szokpt.ui.theme.AppBorderRadius
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.TextGray
-import foi.air.szokpt.ui.theme.TextWhite
-import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.viewmodels.AccountsViewModel
 import foi.air.szokpt.views.ROUTE_USER_ACCOUNT_OVERVIEW
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 
-@Composable
-fun AccountSearchView(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Text(
-            modifier = Modifier
-                .padding(16.dp),
-            text = "Search All Accounts",
-            color = TextWhite,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-        )
-        TileSegment(
-            tileSizeMode = TileSizeMode.WRAP_CONTENT,
-            innerPadding = 0.dp,
-            outerMargin = 8.dp,
-            minWidth = 250.dp,
-            minHeight = 90.dp,
-            color = BGLevelOne
-        ) {
-            SearchBarForAccount(
-                navController,
-            )
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarForAccount(navController: NavController) {
+fun AccountsSearchPanel(navController: NavController) {
     val viewModel: AccountsViewModel = viewModel()
     viewModel.fetchUsers()
 

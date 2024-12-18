@@ -37,7 +37,7 @@ import foi.air.szokpt.views.ROUTE_REGISTRATION
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterNewAccount(navController: NavController) {
+fun RegistrationTile(navController: NavController) {
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 12.dp,

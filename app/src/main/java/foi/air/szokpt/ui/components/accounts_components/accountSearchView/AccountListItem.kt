@@ -1,4 +1,4 @@
-package foi.air.szokpt.ui.components.list_components
+package foi.air.szokpt.ui.components.accounts_components.accountSearchView
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
