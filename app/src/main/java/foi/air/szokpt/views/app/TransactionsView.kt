@@ -13,13 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,7 +29,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -44,12 +41,11 @@ import foi.air.szokpt.R
 import foi.air.szokpt.models.TransactionFilter
 import foi.air.szokpt.ui.components.filter_components.ModalBottomSheetFilter
 import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogButton
+import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.components.pagination_components.Pagination
 import foi.air.szokpt.ui.components.transaction_components.TransactionFilterView
 import foi.air.szokpt.ui.components.transaction_components.TransactionItem
 import foi.air.szokpt.ui.theme.BGLevelOne
-import foi.air.szokpt.ui.theme.Primary
-import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.TransactionsViewModel
@@ -69,6 +65,8 @@ fun TransactionsView(navController: NavController) {
     var isExpanded by remember { mutableStateOf(false) }
     var hasFilters by remember { mutableStateOf(false) }
     var isShowingFilters by remember { mutableStateOf(false) }
+    var minAmount by remember { mutableStateOf<String?>(null) }
+    var maxAmount by remember { mutableStateOf<String?>(null) }
 
     // Result of applied filters. Contains a list of filters that are applied
     var filterResults by remember { mutableStateOf<TransactionFilter?>(null) }
@@ -163,42 +161,101 @@ fun TransactionsView(navController: NavController) {
         },
         onRemoveFilters = {
             hasFilters = false
+            minAmount = null
+            maxAmount = null
             isExpanded = false
         },
         filterOptionsContent = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(8.dp)
             ) {
                 Text(
                     text = "Filter Options",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 18.dp)
                 )
 
-                // Example filter options
                 Text(
-                    text = "Option 1",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .clickable {
+                    text = "Date range",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                ) {
+                    InputNumberField(
+                        label = "Min",
+                        value = minAmount ?: "",
+                        onValueChange = { minAmount = it.takeIf { it.isNotEmpty() } },
+                        width = 160.dp,
+                    )
+                    InputNumberField(
+                        label = "Max",
+                        value = maxAmount ?: "",
+                        onValueChange = { maxAmount = it.takeIf { it.isNotEmpty() } },
+                        width = 160.dp,
+                    )
+                }
+
+                Text(
+                    text = "Amount range",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                ) {
+                    InputNumberField(
+                        label = "Min",
+                        value = minAmount ?: "",
+                        onValueChange = { minAmount = it.takeIf { it.isNotEmpty() } },
+                        width = 160.dp,
+                    )
+                    InputNumberField(
+                        label = "Max",
+                        value = maxAmount ?: "",
+                        onValueChange = { maxAmount = it.takeIf { it.isNotEmpty() } },
+                        width = 160.dp,
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    OutlineBouncingButton(
+                        inputText = "Apply",
+                        inputIcon = Icons.Rounded.Add,
+                        contentColor = success,
+                        borderColor = success,
+                        onClick = {
                             hasFilters = true
                             isShowingFilters = false
-                        }
-                )
-                Text(
-                    text = "Option 2",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .clickable {
-                            hasFilters = true
+                            isExpanded = false
+                        },
+                    )
+
+                    OutlineBouncingButton(
+                        inputText = "Clear",
+                        inputIcon = Icons.Rounded.Delete,
+                        contentColor = danger,
+                        borderColor = danger,
+                        onClick = {
+                            hasFilters = false
+                            minAmount = null
+                            maxAmount = null
                             isShowingFilters = false
-                        }
-                )
+                            isExpanded = false
+                        },
+                    )
+                }
             }
         }
     )
