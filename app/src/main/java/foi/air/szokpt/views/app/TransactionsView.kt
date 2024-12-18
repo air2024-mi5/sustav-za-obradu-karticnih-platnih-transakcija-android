@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -50,6 +51,7 @@ import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.TransactionsViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @Composable
 fun TransactionsView(navController: NavController) {
@@ -67,6 +69,8 @@ fun TransactionsView(navController: NavController) {
     var isShowingFilters by remember { mutableStateOf(false) }
     var minAmount by remember { mutableStateOf<String?>(null) }
     var maxAmount by remember { mutableStateOf<String?>(null) }
+    var selectedBeforeDate by remember { mutableStateOf<LocalDate?>(null) }
+    var selectedAfterDate by remember { mutableStateOf<LocalDate?>(null) }
 
     // Result of applied filters. Contains a list of filters that are applied
     var filterResults by remember { mutableStateOf<TransactionFilter?>(null) }
@@ -187,17 +191,16 @@ fun TransactionsView(navController: NavController) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
-                    InputNumberField(
-                        label = "Min",
-                        value = minAmount ?: "",
-                        onValueChange = { minAmount = it.takeIf { it.isNotEmpty() } },
-                        width = 160.dp,
+
+                    DatePickerField(
+                        onDateSelected = { date -> selectedAfterDate = date },
+                        label = "After date",
+                        maxWidth = 172.dp
                     )
-                    InputNumberField(
-                        label = "Max",
-                        value = maxAmount ?: "",
-                        onValueChange = { maxAmount = it.takeIf { it.isNotEmpty() } },
-                        width = 160.dp,
+                    DatePickerField(
+                        onDateSelected = { date -> selectedBeforeDate = date },
+                        label = "Before date",
+                        maxWidth = 172.dp
                     )
                 }
 
@@ -227,7 +230,7 @@ fun TransactionsView(navController: NavController) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 116.dp),
                     horizontalArrangement = Arrangement.Center,
                 ) {
                     OutlineBouncingButton(
@@ -237,20 +240,6 @@ fun TransactionsView(navController: NavController) {
                         borderColor = success,
                         onClick = {
                             hasFilters = true
-                            isShowingFilters = false
-                            isExpanded = false
-                        },
-                    )
-
-                    OutlineBouncingButton(
-                        inputText = "Clear",
-                        inputIcon = Icons.Rounded.Delete,
-                        contentColor = danger,
-                        borderColor = danger,
-                        onClick = {
-                            hasFilters = false
-                            minAmount = null
-                            maxAmount = null
                             isShowingFilters = false
                             isExpanded = false
                         },
