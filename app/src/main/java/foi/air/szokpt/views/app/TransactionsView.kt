@@ -156,13 +156,50 @@ fun TransactionsView(navController: NavController) {
     ModalBottomSheetFilter(
         isVisible = isExpanded,
         onDismiss = { isExpanded = false },
-        onApplyNewFilter = {
-            // Create a new filter here
-            isExpanded = false
+        hasFilters = hasFilters,
+        isShowingFilters = isShowingFilters,
+        onShowFilterOptions = {
+            isShowingFilters = true
         },
         onRemoveFilters = {
-            // Remove current filter
+            hasFilters = false
             isExpanded = false
+        },
+        filterOptionsContent = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Filter Options",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                // Example filter options
+                Text(
+                    text = "Option 1",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .clickable {
+                            hasFilters = true
+                            isShowingFilters = false
+                        }
+                )
+                Text(
+                    text = "Option 2",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .clickable {
+                            hasFilters = true
+                            isShowingFilters = false
+                        }
+                )
+            }
         }
     )
 }
