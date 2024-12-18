@@ -21,6 +21,7 @@ import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -48,19 +49,15 @@ import java.nio.charset.StandardCharsets
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewModel) {
-    viewModel.fetchUsers()
+    LaunchedEffect(Unit) {
+        viewModel.fetchUsers()
+    }
 
-    var searchQuery by remember { mutableStateOf("") }
-    val users by viewModel.accounts.observeAsState(emptyList())
+    val searchQuery by viewModel.searchQuery.observeAsState("")
     var active by remember { mutableStateOf(false) }
     val loading by viewModel.loading.observeAsState(true)
     val message by viewModel.message.observeAsState("")
-
-    val filteredAccounts = users.filter {
-        it.firstName.contains(searchQuery, ignoreCase = true) ||
-                it.lastName.contains(searchQuery, ignoreCase = true) ||
-                it.username.contains(searchQuery, ignoreCase = true)
-    }
+    val filteredAccounts by viewModel.filteredAccounts.observeAsState(emptyList())
 
     if (loading) {
         Box(
@@ -83,7 +80,7 @@ fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewMod
     ) {
         SearchBar(
             query = searchQuery,
-            onQueryChange = { searchQuery = it },
+            onQueryChange = { viewModel.onSearchQueryChanged(it) },
             onSearch = {},
             active = active,
             onActiveChange = { active = it },
@@ -91,7 +88,7 @@ fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewMod
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             trailingIcon = {
                 if (searchQuery.isNotEmpty()) {
-                    IconButton(onClick = { searchQuery = "" }) {
+                    IconButton(onClick = { viewModel.searchQuery.value = "" }) {
                         Icon(Icons.Default.Close, contentDescription = null)
                     }
                 }

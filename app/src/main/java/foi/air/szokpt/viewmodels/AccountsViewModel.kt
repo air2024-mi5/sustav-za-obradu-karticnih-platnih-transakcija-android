@@ -15,7 +15,8 @@ class AccountsViewModel : ViewModel() {
     private val _loading = MutableLiveData(true)
     private val _message: MutableLiveData<String> = MutableLiveData("")
 
-    val accounts: LiveData<List<User>> = _accounts
+    val filteredAccounts: MutableLiveData<List<User>> = MutableLiveData(emptyList())
+    val searchQuery: MutableLiveData<String> = MutableLiveData("")
     val loading: LiveData<Boolean> = _loading
     val message: MutableLiveData<String> = _message
 
@@ -29,6 +30,7 @@ class AccountsViewModel : ViewModel() {
                 _accounts.value = response.data!!.toMutableList()
                 _loading.value = false
                 _message.value = ""
+                updateFilteredAccounts()
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {
@@ -39,6 +41,25 @@ class AccountsViewModel : ViewModel() {
                 showErrorMessage("Please check your internet connection!")
             }
         })
+    }
+
+    fun onSearchQueryChanged(query: String) {
+        searchQuery.value = query
+        updateFilteredAccounts()
+    }
+
+    private fun updateFilteredAccounts() {
+        val query = searchQuery.value.orEmpty()
+        val accounts = _accounts.value.orEmpty()
+        filteredAccounts.value = if (query.isEmpty()) {
+            accounts
+        } else {
+            accounts.filter {
+                it.firstName.contains(query, ignoreCase = true) ||
+                        it.lastName.contains(query, ignoreCase = true) ||
+                        it.username.contains(query, ignoreCase = true)
+            }
+        }
     }
 
     private fun showErrorMessage(message: String) {
