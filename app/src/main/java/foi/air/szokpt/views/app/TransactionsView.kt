@@ -61,6 +61,8 @@ fun TransactionsView(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
 
     var isExpanded by remember { mutableStateOf(false) }
+    var hasFilters by remember { mutableStateOf(false) }
+    var isShowingFilters by remember { mutableStateOf(false) }
 
     LaunchedEffect(currentPage) {
         if (transactionPage == null) {
@@ -145,13 +147,50 @@ fun TransactionsView(navController: NavController) {
     ModalBottomSheetFilter(
         isVisible = isExpanded,
         onDismiss = { isExpanded = false },
-        onApplyNewFilter = {
-            // Create a new filter here
-            isExpanded = false
+        hasFilters = hasFilters,
+        isShowingFilters = isShowingFilters,
+        onShowFilterOptions = {
+            isShowingFilters = true
         },
         onRemoveFilters = {
-            // Remove current filter
+            hasFilters = false
             isExpanded = false
+        },
+        filterOptionsContent = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Filter Options",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                // Example filter options
+                Text(
+                    text = "Option 1",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .clickable {
+                            hasFilters = true
+                            isShowingFilters = false
+                        }
+                )
+                Text(
+                    text = "Option 2",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .clickable {
+                            hasFilters = true
+                            isShowingFilters = false
+                        }
+                )
+            }
         }
     )
 }
@@ -161,15 +200,17 @@ fun TransactionsView(navController: NavController) {
 fun ModalBottomSheetFilter(
     isVisible: Boolean,
     onDismiss: () -> Unit,
-    onApplyNewFilter: () -> Unit,
-    onRemoveFilters: () -> Unit
+    hasFilters: Boolean,
+    isShowingFilters: Boolean,
+    onShowFilterOptions: () -> Unit,
+    onRemoveFilters: () -> Unit,
+    filterOptionsContent: @Composable () -> Unit
 ) {
     if (isVisible) {
         ModalBottomSheet(
             onDismissRequest = onDismiss,
             containerColor = BGLevelOne,
         ) {
-            // Bottom sheet content
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -177,33 +218,42 @@ fun ModalBottomSheetFilter(
                 verticalArrangement = Arrangement.spacedBy(5.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Apply new filter
-                item {
-                    Text(
-                        text = "Apply New Filter",
-                        fontSize = 16.sp,
-                        color = success,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(9.dp)
-                            .clickable {
-                                onApplyNewFilter()
-                            }
-                    )
-                }
-                // Remove current filter
-                item {
-                    Text(
-                        text = "Remove Filters",
-                        fontSize = 16.sp,
-                        color = danger,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(9.dp)
-                            .clickable {
-                                onRemoveFilters()
-                            }
-                    )
+                if (!isShowingFilters) {
+                    // Main actions: Apply/Change Filter and Remove Filters
+                    item {
+                        Text(
+                            text = if (hasFilters) "Change Current Filter" else "Apply New Filter",
+                            fontSize = 16.sp,
+                            color = success,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(9.dp)
+                                .clickable {
+                                    onShowFilterOptions()
+                                }
+                        )
+                    }
+
+                    if (hasFilters) {
+                        item {
+                            Text(
+                                text = "Remove Filters",
+                                fontSize = 16.sp,
+                                color = danger,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(9.dp)
+                                    .clickable {
+                                        onRemoveFilters()
+                                    }
+                            )
+                        }
+                    }
+                } else {
+                    // Show filter options
+                    item {
+                        filterOptionsContent()
+                    }
                 }
             }
         }
