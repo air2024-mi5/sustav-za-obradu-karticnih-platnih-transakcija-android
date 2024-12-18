@@ -8,7 +8,7 @@ import hr.foi.air.core.network.ResponseListener
 import hr.foi.air.core.network.models.ErrorResponseBody
 import hr.foi.air.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.ws.models.TransactionPageResponse
-import hr.foi.air.szokpt.ws.request_handlers.TransactionPageRequestHandler
+import hr.foi.air.szokpt.ws.request_handlers.GetTransactionsPageRequestHandler
 
 class TransactionsViewModel() : ViewModel() {
     private val _loading = MutableLiveData(true)
@@ -24,7 +24,7 @@ class TransactionsViewModel() : ViewModel() {
 
     fun fetchTransactionPage(page: Int) {
         val jwtToken = Auth.logedInUserData?.token ?: return
-        val transactionsRequestHandler = TransactionPageRequestHandler(jwtToken, page)
+        val transactionsRequestHandler = GetTransactionsPageRequestHandler(jwtToken, page)
         transactionsRequestHandler.sendRequest(object : ResponseListener<TransactionPageResponse> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<TransactionPageResponse>) {
                 _loading.value = true

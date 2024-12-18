@@ -1,19 +1,12 @@
-package foi.air.szokpt.views.app
+package foi.air.szokpt.ui.components.accounts_components.accountViewComponents
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -31,14 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import foi.air.szokpt.models.AccountListRole
-import foi.air.szokpt.models.ListedAccountInformation
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
-import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
-import foi.air.szokpt.ui.components.list_components.AccountListItem
-import foi.air.szokpt.ui.theme.Alternative
-import foi.air.szokpt.ui.theme.AppBorderRadius
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.BGLevelZeroLow
 import foi.air.szokpt.ui.theme.Primary
@@ -46,44 +33,11 @@ import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
-import foi.air.szokpt.views.ROUTE_ALL_ACCOUNT_SEARCH
 import foi.air.szokpt.views.ROUTE_REGISTRATION
 
-@Composable
-fun AccountView(navController: NavController){
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Text(
-            modifier = Modifier
-                .padding(16.dp),
-            text = "Account",
-            color = Color.White,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-        )
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ){
-            item(span = { GridItemSpan(2) }) {
-                RegisterNewAccount(navController)
-            }
-            item(span = { GridItemSpan(2) }) {
-                AccountList(navController)
-            }
-        }
-    }
-}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterNewAccount(navController: NavController) {
+fun RegistrationTile(navController: NavController) {
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 12.dp,
@@ -117,7 +71,10 @@ fun RegisterNewAccount(navController: NavController) {
                     options.forEachIndexed { index, label ->
                         val isSelected = index == selectedIndex
                         SegmentedButton(
-                            shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size),
+                            shape = SegmentedButtonDefaults.itemShape(
+                                index = index,
+                                count = options.size
+                            ),
                             onClick = { selectedIndex = index },
                             selected = isSelected,
                             modifier = Modifier,
@@ -153,46 +110,3 @@ fun RegisterNewAccount(navController: NavController) {
         }
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AccountList(navController: NavController) {
-    TileSegment(
-        tileSizeMode = TileSizeMode.WRAP_CONTENT,
-        innerPadding = 10.dp,
-        outerMargin = 4.dp,
-        minWidth = 250.dp,
-        minHeight = 20.dp,
-        color = BGLevelOne
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "All Accounts",
-                    color = TextWhite,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                // TODO: Implement a route to just show a newly created singular account list view
-                //       Called AcccountListView. Where i can only view and search all accounts.
-                OutlineBouncingButton(
-                    modifier = Modifier,
-                    inputText = "",
-                    inputIcon = Icons.Rounded.Search,
-                    contentColor = Primary,
-                    borderColor = Secondary,
-                ) {
-                    navController.navigate(ROUTE_ALL_ACCOUNT_SEARCH)
-                }
-            }
-        }
-    }
-}
-
