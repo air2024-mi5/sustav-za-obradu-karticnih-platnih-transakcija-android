@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -87,10 +88,24 @@ fun SearchBarForAccount(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
     val users by viewModel.accounts.observeAsState(emptyList())
     var active by remember { mutableStateOf(false) }
+    val loading by viewModel.loading.observeAsState(true)
+
     val filteredAccounts = users.filter {
         it.firstName.contains(searchQuery, ignoreCase = true) ||
                 it.lastName.contains(searchQuery, ignoreCase = true) ||
                 it.username.contains(searchQuery, ignoreCase = true)
+    }
+
+    if (loading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = Color.White
+            )
+        }
     }
 
     Box(

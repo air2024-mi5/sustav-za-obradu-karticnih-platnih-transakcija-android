@@ -11,11 +11,13 @@ import hr.foi.air.szokpt.ws.models.responses.User
 import hr.foi.air.szokpt.ws.request_handlers.GetAccountsRequestHandler
 
 class AccountsViewModel : ViewModel() {
-    private val _loading = MutableLiveData(true)
-    val loading: LiveData<Boolean> = _loading
-
     private val _accounts: MutableLiveData<List<User>> = MutableLiveData(mutableListOf())
+    private val _loading = MutableLiveData(true)
+    private val _message: MutableLiveData<String> = MutableLiveData("")
+    
     val accounts: LiveData<List<User>> = _accounts
+    val loading: LiveData<Boolean> = _loading
+    val message: MutableLiveData<String> = _message
 
     fun fetchUsers() {
         val token = Auth.logedInUserData?.token
