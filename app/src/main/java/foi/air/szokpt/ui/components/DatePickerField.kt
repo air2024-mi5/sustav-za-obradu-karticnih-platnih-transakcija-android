@@ -39,10 +39,11 @@ fun DatePickerField(
     onDateSelected: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
     maxDate: LocalDate = LocalDate.now(),
+    initialDate: LocalDate?,
     label: String,
     maxWidth: Dp? = null
 ) {
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+    var selectedDate by remember { mutableStateOf(initialDate) }
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
     val today = LocalDate.now()
