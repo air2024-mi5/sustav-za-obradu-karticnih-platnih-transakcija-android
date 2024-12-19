@@ -2,6 +2,7 @@ import hr.foi.air.szokpt.ws.network.AuthenticationService
 import hr.foi.air.szokpt.ws.network.NetworkConfig
 import hr.foi.air.szokpt.ws.network.ReportsService
 import hr.foi.air.szokpt.ws.network.TransactionsService
+import hr.foi.air.szokpt.ws.network.UsersService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -28,6 +29,9 @@ object NetworkService {
 
     val authenticationService: AuthenticationService =
         accountsInstance.create(AuthenticationService::class.java)
+
+    val usersService: UsersService =
+        accountsInstance.create(UsersService::class.java)
 
     val transactionsService: TransactionsService =
         transmngInstance.create(TransactionsService::class.java)
