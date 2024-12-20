@@ -65,7 +65,6 @@ fun UserAccountView(navController: NavController, providedAccount: User) {
 
     val viewModel: AccountDetailsViewModel = viewModel()
     val username = viewModel.username.observeAsState().value ?: ""
-    val password = viewModel.password.observeAsState().value ?: ""
     val name = viewModel.firstName.observeAsState().value ?: ""
     val lastName = viewModel.lastName.observeAsState().value ?: ""
     val email = viewModel.email.observeAsState().value ?: ""
@@ -305,6 +304,14 @@ fun UserAccountView(navController: NavController, providedAccount: User) {
                                 onValueChange = { viewModel.updateLastName(it) },
                                 isPasswordField = false,
                             )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            LoginTextField(
+                                label = "Password",
+                                value = "",
+                                onValueChange = { viewModel.updateLastName(it) },
+                                isPasswordField = true,
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
                             if (isEditTileVisible) {
                                 OutlineBouncingButton(
                                     onClick = {
