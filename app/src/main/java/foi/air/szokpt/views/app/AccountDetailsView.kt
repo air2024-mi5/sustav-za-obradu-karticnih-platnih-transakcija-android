@@ -23,6 +23,7 @@ import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Icon
@@ -304,6 +305,18 @@ fun UserAccountView(navController: NavController, providedAccount: User) {
                                 onValueChange = { viewModel.updateLastName(it) },
                                 isPasswordField = false,
                             )
+                            if (isEditTileVisible) {
+                                OutlineBouncingButton(
+                                    onClick = {
+                                        isEditTileVisible = false
+                                    },
+                                    contentColor = warning,
+                                    borderColor = warning,
+                                    inputIcon = Icons.Rounded.KeyboardArrowUp,
+                                    inputText = "Close",
+                                    modifier = Modifier
+                                )
+                            }
                         }
                     }
                 }

@@ -96,7 +96,7 @@ fun MainScreen() {
 
                 val gson = Gson()
                 val user = gson.fromJson(userJson, User::class.java)
-                UserAccountView(navController = navController, account = user)
+                UserAccountView(navController = navController, providedAccount = user)
             }
         }
     }
