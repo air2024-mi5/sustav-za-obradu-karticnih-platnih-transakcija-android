@@ -143,7 +143,7 @@ fun AccountDetailsView(
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Text(
-                                        text = "@${providedAccount.username}",
+                                        text = "${providedAccount.username}",
                                         color = Primary,
                                         fontWeight = FontWeight.SemiBold,
                                         fontSize = 18.sp
