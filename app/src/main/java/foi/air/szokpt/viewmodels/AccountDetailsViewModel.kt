@@ -15,6 +15,7 @@ class AccountDetailsViewModel : ViewModel() {
     private val _role: MutableLiveData<UserRole> = MutableLiveData()
 
     val username: LiveData<String> = _username
+    val password: LiveData<String> = _password
     val firstName: LiveData<String> = _firstName
     val lastName: LiveData<String> = _lastName
     val email: LiveData<String> = _email
@@ -22,9 +23,10 @@ class AccountDetailsViewModel : ViewModel() {
 
     fun initializeAccountData(user: User) {
         _username.value = user.username
+        _password.value = ""
+        _email.value = user.email
         _firstName.value = user.firstName
         _lastName.value = user.lastName
-        _email.value = user.email
         _role.value = user.role
     }
 

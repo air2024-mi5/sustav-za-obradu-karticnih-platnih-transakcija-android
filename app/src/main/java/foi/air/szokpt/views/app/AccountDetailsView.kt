@@ -70,6 +70,7 @@ fun UserAccountView(navController: NavController, providedAccount: User) {
     val name by viewModel.firstName.observeAsState("")
     val lastName by viewModel.lastName.observeAsState("")
     val email by viewModel.email.observeAsState("")
+    val password by viewModel.password.observeAsState("")
 
     var isEditTileVisible by remember { mutableStateOf(false) }
     var openEditDialog = remember { mutableStateOf(false) }
@@ -95,6 +96,7 @@ fun UserAccountView(navController: NavController, providedAccount: User) {
                 if (isEditTileVisible) EditTile(
                     viewModel,
                     username,
+                    password,
                     email,
                     name,
                     lastName,
@@ -228,6 +230,7 @@ fun UserOverviewTile(
 fun EditTile(
     viewModel: AccountDetailsViewModel,
     username: String,
+    password: String,
     email: String,
     name: String,
     lastName: String,
@@ -277,7 +280,7 @@ fun EditTile(
             Spacer(modifier = Modifier.height(12.dp))
             StyledTextField(
                 label = "Password",
-                value = "",
+                value = password,
                 onValueChange = { viewModel.updatePassword(it) },
                 isPasswordField = true
             )
