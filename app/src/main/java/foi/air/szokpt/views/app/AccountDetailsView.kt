@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import foi.air.szokpt.ui.components.LoginTextField
+import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dialog_components.DialogComponent
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
@@ -73,7 +73,7 @@ fun UserAccountView(navController: NavController, providedAccount: User) {
     val role = viewModel.role.observeAsState().value ?: ""
 
     LaunchedEffect(Unit) {
-        viewModel.initializeUserData(providedAccount)
+        viewModel.initializeAccountData(providedAccount)
     }
 
     var isEditTileVisible by remember { mutableStateOf(false) }
@@ -280,38 +280,38 @@ fun UserAccountView(navController: NavController, providedAccount: User) {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Spacer(modifier = Modifier.height(12.dp))
-                            LoginTextField(
+                            StyledTextField(
                                 label = "Username",
                                 value = username ?: "",
                                 onValueChange = { viewModel.updateUsername(it) },
                                 isPasswordField = false,
                             )
                             Spacer(modifier = Modifier.height(12.dp))
-                            LoginTextField(
+                            StyledTextField(
                                 label = "E-mail",
                                 value = email ?: "",
                                 onValueChange = { viewModel.updateEmail(it) },
                                 isPasswordField = false,
                             )
                             Spacer(modifier = Modifier.height(12.dp))
-                            LoginTextField(
+                            StyledTextField(
                                 label = "Name",
                                 value = name ?: "",
                                 onValueChange = { viewModel.updateFirstName(it) },
                                 isPasswordField = false,
                             )
                             Spacer(modifier = Modifier.height(12.dp))
-                            LoginTextField(
+                            StyledTextField(
                                 label = "Last Name",
                                 value = lastName ?: "",
                                 onValueChange = { viewModel.updateLastName(it) },
                                 isPasswordField = false,
                             )
                             Spacer(modifier = Modifier.height(12.dp))
-                            LoginTextField(
+                            StyledTextField(
                                 label = "Password",
                                 value = "",
-                                onValueChange = { viewModel.updateLastName(it) },
+                                onValueChange = { viewModel.updatePassword(it) },
                                 isPasswordField = true,
                             )
                             Spacer(modifier = Modifier.height(12.dp))

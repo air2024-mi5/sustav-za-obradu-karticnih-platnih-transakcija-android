@@ -20,8 +20,7 @@ class AccountDetailsViewModel : ViewModel() {
     val email: LiveData<String> = _email
     val role: MutableLiveData<UserRole> = _role
 
-
-    fun initializeUserData(user: User) {
+    fun initializeAccountData(user: User) {
         _username.value = user.username
         _firstName.value = user.firstName
         _lastName.value = user.lastName
