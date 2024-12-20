@@ -8,14 +8,13 @@ import hr.foi.air.szokpt.ws.models.responses.UserRole
 
 class AccountDetailsViewModel : ViewModel() {
     private val _username: MutableLiveData<String> = MutableLiveData()
-    private val _password: MutableLiveData<String> = MutableLiveData()
+    private val _password: MutableLiveData<String> = MutableLiveData("")
     private val _firstName: MutableLiveData<String> = MutableLiveData()
     private val _lastName: MutableLiveData<String> = MutableLiveData()
     private val _email: MutableLiveData<String> = MutableLiveData()
     private val _role: MutableLiveData<UserRole> = MutableLiveData()
 
     val username: LiveData<String> = _username
-    val password: LiveData<String> = _password
     val firstName: LiveData<String> = _firstName
     val lastName: LiveData<String> = _lastName
     val email: LiveData<String> = _email
@@ -24,7 +23,6 @@ class AccountDetailsViewModel : ViewModel() {
 
     fun initializeUserData(user: User) {
         _username.value = user.username
-        _password.value = user.password
         _firstName.value = user.firstName
         _lastName.value = user.lastName
         _email.value = user.email
