@@ -56,27 +56,31 @@ import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.ui.theme.warning
-import foi.air.szokpt.viewmodels.AccountViewModel
+import foi.air.szokpt.viewmodels.AccountDetailsViewModel
 import hr.foi.air.szokpt.ws.models.responses.User
 
 @Composable
-fun UserAccountView(navController: NavController, account: User) {
-    var isEditTileVisible by remember { mutableStateOf(false) }
+fun UserAccountView(navController: NavController, providedAccount: User) {
 
-    val viewModel: AccountViewModel = viewModel()
-
+    val viewModel: AccountDetailsViewModel = viewModel()
     val username = viewModel.username.observeAsState().value ?: ""
     val password = viewModel.password.observeAsState().value ?: ""
     val name = viewModel.firstName.observeAsState().value ?: ""
     val lastName = viewModel.lastName.observeAsState().value ?: ""
     val email = viewModel.email.observeAsState().value ?: ""
+    val role = viewModel.role.observeAsState().value ?: ""
+
+    LaunchedEffect(Unit) {
+        viewModel.initializeUserData(providedAccount)
+    }
+
+    var isEditTileVisible by remember { mutableStateOf(false) }
 
     var openEditDialog = remember { mutableStateOf(false) }
     var openBlockDialog = remember { mutableStateOf(false) }
     var openDeactivateDialog = remember { mutableStateOf(false) }
     val isEditConfirmed = remember { mutableStateOf(false) }
 
-    setTextBoxValuesToCurrent(account)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -127,7 +131,7 @@ fun UserAccountView(navController: NavController, account: User) {
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Icon(
-                                    imageVector = if (account.role.name == "admin") Icons.Rounded.AccountCircle else Icons.Rounded.Person,
+                                    imageVector = if (providedAccount.role.name == "admin") Icons.Rounded.AccountCircle else Icons.Rounded.Person,
                                     contentDescription = null,
                                     tint = Color.White,
                                     modifier = Modifier.size(68.dp)
@@ -147,7 +151,7 @@ fun UserAccountView(navController: NavController, account: User) {
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Text(
-                                        text = "@${account.username}",
+                                        text = "@${providedAccount.username}",
                                         color = Primary,
                                         fontWeight = FontWeight.SemiBold,
                                         fontSize = 18.sp
@@ -158,7 +162,7 @@ fun UserAccountView(navController: NavController, account: User) {
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        text = "${account.firstName} ${account.lastName}",
+                                        text = "${providedAccount.firstName} ${providedAccount.lastName}",
                                         color = TextWhite,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 20.sp,
@@ -275,35 +279,29 @@ fun UserAccountView(navController: NavController, account: User) {
                             Spacer(modifier = Modifier.height(12.dp))
                             LoginTextField(
                                 label = "Username",
-                                value = username,
-                                onValueChange = { viewModel.username.value = it },
-                                isPasswordField = false,
-                            )
-                            LoginTextField(
-                                label = "New Password",
-                                value = password,
-                                onValueChange = { viewModel.password.value = it },
-                                isPasswordField = true,
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                            LoginTextField(
-                                label = "Name",
-                                value = name,
-                                onValueChange = { viewModel.firstName.value = it },
-                                isPasswordField = false,
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                            LoginTextField(
-                                label = "Last Name",
-                                value = lastName,
-                                onValueChange = { viewModel.lastName.value = it },
+                                value = username ?: "",
+                                onValueChange = { viewModel.updateUsername(it) },
                                 isPasswordField = false,
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             LoginTextField(
                                 label = "E-mail",
-                                value = email,
-                                onValueChange = { viewModel.email.value = it },
+                                value = email ?: "",
+                                onValueChange = { viewModel.updateEmail(it) },
+                                isPasswordField = false,
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            LoginTextField(
+                                label = "Name",
+                                value = name ?: "",
+                                onValueChange = { viewModel.updateFirstName(it) },
+                                isPasswordField = false,
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            LoginTextField(
+                                label = "Last Name",
+                                value = lastName ?: "",
+                                onValueChange = { viewModel.updateLastName(it) },
                                 isPasswordField = false,
                             )
                         }
@@ -318,9 +316,7 @@ fun UserAccountView(navController: NavController, account: User) {
                 ) {
                     OutlineBouncingButton(
                         onClick = {
-                            /* Trigger account Deactivation HERE */
                             openDeactivateDialog.value = true
-
                         },
                         inputText = "Deactivate Acc.",
                         contentColor = danger,
@@ -342,14 +338,4 @@ fun UserAccountView(navController: NavController, account: User) {
             }
         }
     }
-}
-
-@Composable
-fun setTextBoxValuesToCurrent(account: User) {
-    val viewModel: AccountViewModel = viewModel()
-    viewModel.username.value = account.username
-    viewModel.password.value = account.password
-    viewModel.firstName.value = account.firstName
-    viewModel.lastName.value = account.lastName
-    viewModel.email.value = account.email
 }
