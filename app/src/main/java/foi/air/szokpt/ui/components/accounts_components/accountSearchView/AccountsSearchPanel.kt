@@ -59,18 +59,6 @@ fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewMod
     val message by viewModel.message.observeAsState("")
     val filteredAccounts by viewModel.filteredAccounts.observeAsState(emptyList())
 
-    if (loading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center),
-                color = Color.White
-            )
-        }
-    }
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -103,7 +91,19 @@ fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewMod
             modifier = Modifier
                 .fillMaxWidth(),
         )
+
         {
+            if (loading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center),
+                        color = Color.White
+                    )
+                }
+            }
             if (active) {
                 Box(
                     modifier = Modifier
