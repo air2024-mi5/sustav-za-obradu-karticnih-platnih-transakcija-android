@@ -15,8 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.material.icons.rounded.Clear
-import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Person
@@ -42,7 +40,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
+import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.BlockAccountButton
 import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.BlockAccountDialog
+import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.DeactivateAccountButton
 import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.DeactivateAccountDialog
 import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.EditConfirmationDialog
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
@@ -50,7 +50,6 @@ import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
-import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.ui.theme.warning
 import foi.air.szokpt.viewmodels.AccountDetailsViewModel
@@ -143,7 +142,7 @@ fun AccountDetailsView(
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Text(
-                                        text = "${providedAccount.username}",
+                                        text = providedAccount.username,
                                         color = Primary,
                                         fontWeight = FontWeight.SemiBold,
                                         fontSize = 18.sp
@@ -249,20 +248,8 @@ fun AccountDetailsView(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    OutlineBouncingButton(
-                        onClick = { openDeactivateDialog.value = true },
-                        inputText = "Deactivate Acc.",
-                        contentColor = danger,
-                        borderColor = danger,
-                        inputIcon = Icons.Rounded.Delete
-                    )
-                    OutlineBouncingButton(
-                        onClick = { openBlockDialog.value = true },
-                        inputText = "Block",
-                        contentColor = warning,
-                        borderColor = warning,
-                        inputIcon = Icons.Rounded.Clear
-                    )
+                    DeactivateAccountButton(openDeactivateDialog)
+                    BlockAccountButton(openBlockDialog)
                 }
             }
         }
