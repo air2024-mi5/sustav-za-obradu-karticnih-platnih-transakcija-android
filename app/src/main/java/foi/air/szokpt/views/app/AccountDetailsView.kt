@@ -59,7 +59,7 @@ import foi.air.szokpt.viewmodels.AccountDetailsViewModel
 import hr.foi.air.szokpt.ws.models.responses.User
 
 @Composable
-fun UserAccountView(navController: NavController, providedAccount: User) {
+fun AccountDetailsView(navController: NavController, providedAccount: User) {
     val viewModel: AccountDetailsViewModel = viewModel()
 
     LaunchedEffect(Unit) {
