@@ -16,12 +16,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,6 +58,16 @@ import foi.air.szokpt.viewmodels.TransactionsViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+
+data class FilterResults(
+    val cardBrands: List<String>,
+    val trxTypes: List<String>,
+    val minAmount: String?,
+    val maxAmount: String?,
+    val afterDate: LocalDate?,
+    val beforeDate: LocalDate?
+)
+
 @Composable
 fun TransactionsView(navController: NavController) {
     val viewModel: TransactionsViewModel = viewModel()
@@ -74,21 +82,9 @@ fun TransactionsView(navController: NavController) {
     var isExpanded by remember { mutableStateOf(false) }
     var hasFilters by remember { mutableStateOf(false) }
     var isShowingFilters by remember { mutableStateOf(false) }
-    var minAmount by remember { mutableStateOf<String?>(null) }
-    var maxAmount by remember { mutableStateOf<String?>(null) }
-    var selectedBeforeDate by remember { mutableStateOf<LocalDate?>(null) }
-    var selectedAfterDate by remember { mutableStateOf<LocalDate?>(null) }
-    val cardBrands = listOf("Maestro", "Visa", "MasterCard", "Diners", "Discover")
-    val trxTypeMap = mapOf(
-        "sale" to "Sale",
-        "refund" to "Refund",
-        "void_sale" to "Void sale",
-        "void_refund" to "Void refund",
-        "reversal_sale" to "Reversal sale",
-        "reversal_refund" to "Reversal refund"
-    )
-    var selectedCardBrands = remember { mutableStateListOf<String>().apply { addAll(cardBrands) } }
-    var selectedTrxTypes = remember { mutableStateListOf<String>().apply { addAll(trxTypeMap.keys) } }
+
+    // Result of applied filters. Contains a list of filters that are applied
+    var filterResults by remember { mutableStateOf<FilterResults?>(null) }
 
     // Result of applied filters. Contains a list of filters that are applied
     var filterResults by remember { mutableStateOf<TransactionFilter?>(null) }
@@ -183,187 +179,19 @@ fun TransactionsView(navController: NavController) {
         },
         onRemoveFilters = {
             hasFilters = false
-            minAmount = null
-            maxAmount = null
-            selectedAfterDate = null
-            selectedBeforeDate = null
+            filterResults = null
             isExpanded = false
-            selectedCardBrands.clear()
-            selectedTrxTypes.clear()
         },
         filterOptionsContent = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                text = "Transaction types",
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-
-                            trxTypeMap.forEach { (key, displayValue) ->
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            if (selectedTrxTypes.contains(key)) {
-                                                selectedTrxTypes.remove(key)
-                                            } else {
-                                                selectedTrxTypes.add(key)
-                                            }
-                                        }
-                                        .padding(vertical = 4.dp)
-                                ) {
-                                    Checkbox(
-                                        checked = selectedTrxTypes.contains(key),
-                                        onCheckedChange = { isChecked ->
-                                            if (isChecked) selectedTrxTypes.add(key) else selectedTrxTypes.remove(key)
-                                        },
-                                        colors = CheckboxDefaults.colors(
-                                            checkedColor = Primary
-                                        )
-                                    )
-                                    Text(
-                                        text = displayValue,
-                                        fontSize = 14.sp,
-                                        modifier = Modifier.padding(start = 8.dp)
-                                    )
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        // Card Brands
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                text = "Card brands",
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-
-                            cardBrands.forEach { brand ->
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            if (selectedCardBrands.contains(brand)) {
-                                                selectedCardBrands.remove(brand)
-                                            } else {
-                                                selectedCardBrands.add(brand)
-                                            }
-                                        }
-                                        .padding(vertical = 4.dp)
-                                ) {
-                                    Checkbox(
-                                        checked = selectedCardBrands.contains(brand),
-                                        onCheckedChange = { isChecked ->
-                                            if (isChecked) selectedCardBrands.add(brand) else selectedCardBrands.remove(brand)
-                                        },
-                                        colors = CheckboxDefaults.colors(
-                                            checkedColor = Primary
-                                        )
-                                    )
-                                    Text(
-                                        text = brand,
-                                        fontSize = 14.sp,
-                                        modifier = Modifier.padding(start = 8.dp)
-                                    )
-                                }
-                            }
-                        }
-                    }
+            TransactionFilter(
+                initialFilter = filterResults,
+                onApplyFilter = { results ->
+                    filterResults = results
+                    hasFilters = true
+                    isShowingFilters = false
+                    isExpanded = false
                 }
-
-
-                Text(
-                    text = "Date range",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                ) {
-
-                    DatePickerField(
-                        onDateSelected = { date -> selectedAfterDate = date },
-                        label = "After date",
-                        initialDate = selectedAfterDate,
-                        maxWidth = 172.dp
-                    )
-                    DatePickerField(
-                        onDateSelected = { date -> selectedBeforeDate = date },
-                        label = "Before date",
-                        initialDate = selectedBeforeDate,
-                        maxWidth = 172.dp
-                    )
-                }
-
-                Text(
-                    text = "Amount value range",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                ) {
-                    InputNumberField(
-                        label = "Min",
-                        value = minAmount ?: "",
-                        onValueChange = { minAmount = it.takeIf { it.isNotEmpty() } },
-                        width = 160.dp,
-                    )
-                    InputNumberField(
-                        label = "Max",
-                        value = maxAmount ?: "",
-                        onValueChange = { maxAmount = it.takeIf { it.isNotEmpty() } },
-                        width = 160.dp,
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    OutlineBouncingButton(
-                        inputText = "Apply filter",
-                        inputIcon = Icons.Rounded.Add,
-                        contentColor = success,
-                        borderColor = success,
-                        onClick = {
-                            hasFilters = true
-                            isShowingFilters = false
-                            isExpanded = false
-                            println("FILTER SELECTED CARD BRANDS: $selectedCardBrands")
-                            println("FILTER SELECTED TRX TYPE: $selectedTrxTypes")
-                            println("FILTER DATE RANGE: $selectedAfterDate, $selectedBeforeDate")
-                            println("FILTER MIN MAX AMOUNT: $minAmount $maxAmount")
-                        },
-                    )
-                }
-            }
+            )
         }
     )
 }
