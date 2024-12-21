@@ -53,6 +53,7 @@ import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.TransactionsViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 data class FilterResults(
@@ -60,8 +61,8 @@ data class FilterResults(
     val trxTypes: List<String>,
     val minAmount: String?,
     val maxAmount: String?,
-    val afterDate: LocalDate?,
-    val beforeDate: LocalDate?
+    val afterDate: String?,
+    val beforeDate: String?
 )
 
 @Composable
@@ -272,8 +273,19 @@ fun TransactionFilter(
     val selectedTrxTypes = remember { mutableStateListOf<String>().apply { initialFilter?.trxTypes?.let { addAll(it) } } }
     var minAmount by remember { mutableStateOf(initialFilter?.minAmount) }
     var maxAmount by remember { mutableStateOf(initialFilter?.maxAmount) }
-    var selectedBeforeDate by remember { mutableStateOf(initialFilter?.beforeDate) }
-    var selectedAfterDate by remember { mutableStateOf(initialFilter?.afterDate) }
+
+    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
+    var selectedAfterDate by remember {
+        mutableStateOf(
+            initialFilter?.afterDate?.let { LocalDate.parse(it, dateFormatter) }
+        )
+    }
+    var selectedBeforeDate by remember {
+        mutableStateOf(
+            initialFilter?.beforeDate?.let { LocalDate.parse(it, dateFormatter) }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -439,8 +451,8 @@ fun TransactionFilter(
                         selectedTrxTypes.toList(),
                         minAmount,
                         maxAmount,
-                        selectedAfterDate,
-                        selectedBeforeDate
+                        afterDate = selectedAfterDate?.format(dateFormatter),
+                        beforeDate = selectedBeforeDate?.format(dateFormatter)
                     )
                     onApplyFilter(results)
                     println("FILTER RESULTS: $results")
