@@ -57,7 +57,6 @@ import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.TransactionsViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 
 data class FilterResults(
@@ -65,8 +64,8 @@ data class FilterResults(
     val trxTypes: List<String>,
     val minAmount: String?,
     val maxAmount: String?,
-    val afterDate: String?,
-    val beforeDate: String?
+    val afterDate: LocalDate?,
+    val beforeDate: LocalDate?
 )
 
 @Composable
