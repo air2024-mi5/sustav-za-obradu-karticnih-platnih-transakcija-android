@@ -21,6 +21,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,12 +36,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import foi.air.szokpt.R
 import foi.air.szokpt.ui.components.DatePickerField
 import foi.air.szokpt.ui.components.InputNumberField
 import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogButton
@@ -162,6 +167,8 @@ fun TransactionsView(navController: NavController) {
             BouncingFABDialogButton(
                 isExpanded = isExpanded,
                 onToggle = { isExpanded = !isExpanded },
+                baseIcon = ImageVector.vectorResource(id = R.drawable.rounded_filter_alt_24),
+                expandedIcon = ImageVector.vectorResource(id = R.drawable.round_filter_fill_alt_24)
             )
         }
     }
@@ -218,32 +225,56 @@ fun ModalBottomSheetFilter(
             ) {
                 if (!isShowingFilters) {
                     item {
-                        Text(
-                            text = if (hasFilters) "Change Current Filter" else "Apply New Filter",
-                            fontSize = 16.sp,
-                            color = success,
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(9.dp)
                                 .clickable {
-                                    onShowFilterOptions()
-                                }
-                        )
+                                    onRemoveFilters()
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_filter_alt_24),
+                                contentDescription = "Add Filters Icon",
+                                tint = success,
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
+                            Text(
+                                text = if (hasFilters) "Change Current Filter" else "Apply New Filter",
+                                fontSize = 18.sp,
+                                color = success,
+                                modifier = Modifier
+                                    .clickable {
+                                        onShowFilterOptions()
+                                    }
+                            )
+                        }
                     }
 
                     if (hasFilters) {
                         item {
-                            Text(
-                                text = "Remove Filters",
-                                fontSize = 16.sp,
-                                color = danger,
+                            Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(9.dp)
                                     .clickable {
                                         onRemoveFilters()
-                                    }
-                            )
+                                    },
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.rounded_filter_alt_off_24),
+                                    contentDescription = "Remove Filters Icon",
+                                    tint = danger,
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                                Text(
+                                    text = "Remove Filters",
+                                    fontSize = 18.sp,
+                                    color = danger
+                                )
+                            }
                         }
                     }
                 } else {
