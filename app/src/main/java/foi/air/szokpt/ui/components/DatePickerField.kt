@@ -1,14 +1,10 @@
 package foi.air.szokpt.ui.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,7 +32,7 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerField(
-    onDateSelected: (LocalDate) -> Unit,
+    onDateSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
     maxDate: LocalDate = LocalDate.now(),
     initialDate: LocalDate?,
@@ -48,13 +44,15 @@ fun DatePickerField(
     val calendar = Calendar.getInstance()
     val today = LocalDate.now()
 
+    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
     val datePickerDialog = android.app.DatePickerDialog(
         context,
         { _, year, month, dayOfMonth ->
             val date = LocalDate.of(year, month + 1, dayOfMonth)
             if (!date.isAfter(maxDate)) {
                 selectedDate = date
-                onDateSelected(date)
+                onDateSelected(date.format(dateFormatter))
             }
         },
         today.year,
@@ -65,7 +63,7 @@ fun DatePickerField(
     }
 
     OutlinedTextField(
-        value = selectedDate?.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) ?: "",
+        value = selectedDate?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "",
         onValueChange = {},
         readOnly = true,
         label = {
@@ -99,4 +97,9 @@ fun DatePickerField(
             focusedTrailingIconColor = Primary
         )
     )
+}
+
+fun getFormattedDate(selectedDate: String?): String {
+    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    return selectedDate?.format(dateFormatter) ?: ""
 }
