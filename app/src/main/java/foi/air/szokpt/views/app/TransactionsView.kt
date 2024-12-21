@@ -41,7 +41,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.DatePickerField
 import foi.air.szokpt.ui.components.InputNumberField
-import foi.air.szokpt.ui.components.getFormattedDate
 import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogButton
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.components.pagination_components.Pagination
@@ -54,7 +53,6 @@ import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.TransactionsViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 
 data class FilterResults(
@@ -62,8 +60,8 @@ data class FilterResults(
     val trxTypes: List<String>,
     val minAmount: String?,
     val maxAmount: String?,
-    val afterDate: String?,
-    val beforeDate: String?
+    val afterDate: LocalDate?,
+    val beforeDate: LocalDate?
 )
 
 @Composable
@@ -274,9 +272,8 @@ fun TransactionFilter(
     val selectedTrxTypes = remember { mutableStateListOf<String>().apply { initialFilter?.trxTypes?.let { addAll(it) } } }
     var minAmount by remember { mutableStateOf(initialFilter?.minAmount) }
     var maxAmount by remember { mutableStateOf(initialFilter?.maxAmount) }
-    var selectedAfterDate by remember { mutableStateOf<String?>(null) }
-    var selectedBeforeDate by remember { mutableStateOf<String?>(null) }
-
+    var selectedBeforeDate by remember { mutableStateOf(initialFilter?.beforeDate) }
+    var selectedAfterDate by remember { mutableStateOf(initialFilter?.afterDate) }
 
     Column(
         modifier = Modifier
@@ -391,14 +388,13 @@ fun TransactionFilter(
             DatePickerField(
                 onDateSelected = { date -> selectedAfterDate = date },
                 label = "After date",
-                initialDate = selectedAfterDate?.let { LocalDate.parse(it, DateTimeFormatter.ofPattern("dd/MM/yyyy")) },
+                initialDate = selectedAfterDate,
                 maxWidth = 172.dp
             )
-
             DatePickerField(
                 onDateSelected = { date -> selectedBeforeDate = date },
                 label = "Before date",
-                initialDate = selectedBeforeDate?.let { LocalDate.parse(it, DateTimeFormatter.ofPattern("dd/MM/yyyy")) },
+                initialDate = selectedBeforeDate,
                 maxWidth = 172.dp
             )
         }
@@ -438,18 +434,16 @@ fun TransactionFilter(
                 contentColor = success,
                 borderColor = success,
                 onClick = {
-                    val formattedAfterDate = getFormattedDate(selectedAfterDate)
-                    val formattedBeforeDate = getFormattedDate(selectedBeforeDate)
                     val results = FilterResults(
                         selectedCardBrands.toList(),
                         selectedTrxTypes.toList(),
                         minAmount,
                         maxAmount,
-                        formattedAfterDate,
-                        formattedBeforeDate
+                        selectedAfterDate,
+                        selectedBeforeDate
                     )
                     onApplyFilter(results)
-                    println("FILTER RESULTS: $results, $formattedAfterDate")
+                    println("FILTER RESULTS: $results")
                 },
             )
         }
