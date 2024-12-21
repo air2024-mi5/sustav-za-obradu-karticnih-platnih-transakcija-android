@@ -21,6 +21,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -168,6 +169,8 @@ fun TransactionsView(navController: NavController) {
             BouncingFABDialogButton(
                 isExpanded = isExpanded,
                 onToggle = { isExpanded = !isExpanded },
+                baseIcon = ImageVector.vectorResource(id = R.drawable.rounded_filter_alt_24),
+                expandedIcon = ImageVector.vectorResource(id = R.drawable.round_filter_fill_alt_24)
             )
         }
     }
