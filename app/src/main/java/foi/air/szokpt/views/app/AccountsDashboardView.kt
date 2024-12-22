@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import foi.air.szokpt.context.Auth
 import foi.air.szokpt.ui.components.accounts_components.accountViewComponents.AccountsSearchTile
 import foi.air.szokpt.ui.components.accounts_components.accountViewComponents.RegistrationTile
 
@@ -42,20 +41,13 @@ fun AccountView(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            if (Auth.logedInUserData!!.role == "admin") {
-                //TODO
-                //Add tile for going to "My Account"
-                item(span = { GridItemSpan(2) }) {
-                    RegistrationTile(navController)
-                }
-                item(span = { GridItemSpan(2) }) {
-                    AccountsSearchTile(navController)
-                }
-            } else {
-                //TODO
-                //Fetch loeggedInUser data
-                //Change nav route to details with loggedInUser
+            item(span = { GridItemSpan(2) }) {
+                RegistrationTile(navController)
+            }
+            item(span = { GridItemSpan(2) }) {
+                AccountsSearchTile(navController)
             }
         }
     }
 }
+
