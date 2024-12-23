@@ -47,6 +47,32 @@ class AccountViewModel : ViewModel() {
             })
     }
 
+    fun validateData(user: User): Boolean {
+        return when {
+            user.username.isBlank() || user.firstName.isBlank() ||
+                    user.lastName.isBlank() || user.email.isBlank() -> {
+                _message.value = "All fields must be filled!"
+                false
+            }
+
+            user.password.length in 1..2 -> {
+                _message.value = "Password must contain at least 3 characters."
+                false
+            }
+
+            !android.util.Patterns.EMAIL_ADDRESS.matcher(user.email).matches() -> {
+                _message.value = "The email must be in the correct format."
+                false
+            }
+
+            else -> {
+                _message.value = ""
+                true
+            }
+        }
+    }
+
+
     private fun updateView() {
         _storedUserAccountData.value = currentUserAccountData.value?.copy(password = "")
         _currentUserAccountData.value = _storedUserAccountData.value
@@ -79,5 +105,9 @@ class AccountViewModel : ViewModel() {
 
     fun clearMessage() {
         _message.value = ""
+    }
+
+    fun setMessage(newMessage: String) {
+        _message.value = newMessage
     }
 }

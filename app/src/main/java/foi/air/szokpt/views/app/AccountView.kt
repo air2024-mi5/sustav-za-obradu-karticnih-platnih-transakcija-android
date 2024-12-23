@@ -249,6 +249,7 @@ fun AccountView(
                             OutlineBouncingButton(
                                 onClick = {
                                     isEditTileVisible = false
+                                    viewModel.clearMessage()
                                     viewModel.resetUserAccountData()
                                 },
                                 contentColor = warning,
@@ -276,11 +277,14 @@ fun AccountView(
                 openEditDialog = openEditDialog,
                 user = currentUserAccountData!!,
                 onConfirm = {
-                    viewModel.updateAccountData(
-                        accountUpdateHandler = AccountUpdateHandler(),
-                        newUserData = currentUserAccountData!!
-                    )
-                    isEditTileVisible = false
+                    val isValid = viewModel.validateData(currentUserAccountData!!)
+                    if (isValid) {
+                        viewModel.updateAccountData(
+                            accountUpdateHandler = AccountUpdateHandler(),
+                            newUserData = currentUserAccountData!!
+                        )
+                        isEditTileVisible = false
+                    }
                 },
                 onDismiss = {
                     viewModel.resetUserAccountData()
