@@ -14,13 +14,17 @@ import hr.foi.air.szokpt.ws.models.responses.User
 fun EditConfirmationDialog(
     openEditDialog: MutableState<Boolean>,
     user: User,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
 ) {
     DialogComponent(
-        onDismissRequest = { openEditDialog.value = false },
-        onConfirmation = {
+        onDismissRequest = {
+            onDismiss()
             openEditDialog.value = false
+        },
+        onConfirmation = {
             onConfirm()
+            openEditDialog.value = false
         },
         dialogTitle = "Change user data?",
         dialogText = "Are you sure you want to change ${user.firstName} ${user.lastName}'s data?",
