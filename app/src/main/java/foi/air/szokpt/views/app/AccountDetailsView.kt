@@ -62,14 +62,10 @@ fun AccountDetailsView(
     viewModel: AccountDetailsViewModel = viewModel()
 ) {
     LaunchedEffect(Unit) {
-        viewModel.initializeAccountData(providedAccount)
+        viewModel.initializeUserAccountData(providedAccount)
     }
 
-    val username by viewModel.username.observeAsState("")
-    val name by viewModel.firstName.observeAsState("")
-    val lastName by viewModel.lastName.observeAsState("")
-    val email by viewModel.email.observeAsState("")
-    val password by viewModel.password.observeAsState("")
+    val currentUser by viewModel.currentUserAccountData.observeAsState()
 
     var isEditTileVisible by remember { mutableStateOf(false) }
     val openEditDialog = remember { mutableStateOf(false) }
@@ -198,35 +194,35 @@ fun AccountDetailsView(
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
                                 label = "Username",
-                                value = username,
+                                value = currentUser?.username ?: "",
                                 onValueChange = { viewModel.updateUsername(it) },
                                 isPasswordField = false
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
                                 label = "E-mail",
-                                value = email,
+                                value = currentUser?.email ?: "",
                                 onValueChange = { viewModel.updateEmail(it) },
                                 isPasswordField = false
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
-                                label = "Name",
-                                value = name,
+                                label = "First Name",
+                                value = currentUser?.firstName ?: "",
                                 onValueChange = { viewModel.updateFirstName(it) },
                                 isPasswordField = false
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
                                 label = "Last Name",
-                                value = lastName,
+                                value = currentUser?.lastName ?: "",
                                 onValueChange = { viewModel.updateLastName(it) },
                                 isPasswordField = false
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
                                 label = "Password",
-                                value = password,
+                                value = currentUser?.password ?: "",
                                 onValueChange = { viewModel.updatePassword(it) },
                                 isPasswordField = true
                             )
@@ -254,16 +250,16 @@ fun AccountDetailsView(
             }
         }
         if (openEditDialog.value) {
-            EditConfirmationDialog(openEditDialog, name, lastName) {
+            EditConfirmationDialog(openEditDialog, currentUser!!) {
                 isEditTileVisible = false
                 isEditConfirmed.value = true
             }
         }
         if (openDeactivateDialog.value) {
-            DeactivateAccountDialog(openDeactivateDialog, name, lastName, username)
+            DeactivateAccountDialog(openDeactivateDialog, currentUser!!)
         }
         if (openBlockDialog.value) {
-            BlockAccountDialog(openBlockDialog, name, lastName, username)
+            BlockAccountDialog(openBlockDialog, currentUser!!)
         }
     }
 }

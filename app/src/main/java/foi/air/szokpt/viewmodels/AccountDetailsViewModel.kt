@@ -1,52 +1,49 @@
 package foi.air.szokpt.viewmodels
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import hr.foi.air.szokpt.ws.models.responses.User
-import hr.foi.air.szokpt.ws.models.responses.UserRole
 
 class AccountDetailsViewModel : ViewModel() {
-    private val _username: MutableLiveData<String> = MutableLiveData()
-    private val _password: MutableLiveData<String> = MutableLiveData("")
-    private val _firstName: MutableLiveData<String> = MutableLiveData()
-    private val _lastName: MutableLiveData<String> = MutableLiveData()
-    private val _email: MutableLiveData<String> = MutableLiveData()
-    private val _role: MutableLiveData<UserRole> = MutableLiveData()
+    private val _providedUserAccount: MutableLiveData<User> = MutableLiveData()
+    val providedUserAccount: MutableLiveData<User> = _providedUserAccount
 
-    val username: LiveData<String> = _username
-    val password: LiveData<String> = _password
-    val firstName: LiveData<String> = _firstName
-    val lastName: LiveData<String> = _lastName
-    val email: LiveData<String> = _email
-    val role: MutableLiveData<UserRole> = _role
+    private val _currentUserAccountData: MutableLiveData<User> = MutableLiveData()
+    val currentUserAccountData: MutableLiveData<User> = _currentUserAccountData
 
-    fun initializeAccountData(user: User) {
-        _username.value = user.username
-        _password.value = ""
-        _email.value = user.email
-        _firstName.value = user.firstName
-        _lastName.value = user.lastName
-        _role.value = user.role
+
+    fun initializeUserAccountData(user: User) {
+        _providedUserAccount.value = user
+        _currentUserAccountData.value = _providedUserAccount.value?.copy(password = "")
+    }
+
+    fun updateAccountData() {
+
+    }
+
+
+    fun resetUserAccountData() {
+        _providedUserAccount.value = currentUserAccountData.value
     }
 
     fun updateUsername(newUsername: String) {
-        _username.value = newUsername
+        _currentUserAccountData.value = _currentUserAccountData.value?.copy(username = newUsername)
     }
 
     fun updatePassword(newPassword: String) {
-        _password.value = newPassword
+        _currentUserAccountData.value = _currentUserAccountData.value?.copy(password = newPassword)
     }
 
     fun updateFirstName(newFirstName: String) {
-        _firstName.value = newFirstName
+        _currentUserAccountData.value =
+            _currentUserAccountData.value?.copy(firstName = newFirstName)
     }
 
     fun updateLastName(newLastName: String) {
-        _lastName.value = newLastName
+        _currentUserAccountData.value = _currentUserAccountData.value?.copy(lastName = newLastName)
     }
 
     fun updateEmail(newEmail: String) {
-        _email.value = newEmail
+        _currentUserAccountData.value = _currentUserAccountData.value?.copy(email = newEmail)
     }
 }

@@ -7,13 +7,13 @@ import androidx.compose.runtime.MutableState
 import foi.air.szokpt.ui.components.dialog_components.DialogComponent
 import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.success
+import hr.foi.air.szokpt.ws.models.responses.User
 
 
 @Composable
 fun EditConfirmationDialog(
     openEditDialog: MutableState<Boolean>,
-    name: String,
-    lastName: String,
+    user: User,
     onConfirm: () -> Unit
 ) {
     DialogComponent(
@@ -23,7 +23,7 @@ fun EditConfirmationDialog(
             onConfirm()
         },
         dialogTitle = "Change user data?",
-        dialogText = "Are you sure you want to change ${name} ${lastName}'s data?",
+        dialogText = "Are you sure you want to change ${user.firstName} ${user.lastName}'s data?",
         iconTop = Icons.Rounded.CheckCircle,
         highlightColor = success,
         containerColor = BGLevelTwo
