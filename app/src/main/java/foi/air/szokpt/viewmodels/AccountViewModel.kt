@@ -2,28 +2,55 @@ package foi.air.szokpt.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import foi.air.szokpt.context.Auth
+import foi.air.szokpt.helpers.AccountUpdateHandler
+import hr.foi.air.core.accounts.AccountUpdateOutcomeListener
 import hr.foi.air.szokpt.ws.models.responses.User
 
 class AccountViewModel : ViewModel() {
-    private val _providedUserAccount: MutableLiveData<User> = MutableLiveData()
-    val providedUserAccount: MutableLiveData<User> = _providedUserAccount
+    private val _originalUserAccount: MutableLiveData<User> = MutableLiveData()
+    val storedUserAccountData: MutableLiveData<User> = _originalUserAccount
 
     private val _currentUserAccountData: MutableLiveData<User> = MutableLiveData()
     val currentUserAccountData: MutableLiveData<User> = _currentUserAccountData
 
 
     fun initializeUserAccountData(user: User) {
-        _providedUserAccount.value = user
-        _currentUserAccountData.value = _providedUserAccount.value?.copy(password = "")
+        _originalUserAccount.value = user
+        _currentUserAccountData.value = _originalUserAccount.value?.copy(password = "")
     }
 
-    fun updateAccountData() {
+    fun updateAccountData(
+        updateAccountHandler: AccountUpdateHandler,
+        newUserData: User,
+    ) {
+        println("TU SAM")
+        val jwtToken = Auth.logedInUserData?.token
+        if (jwtToken == null) {
+            //TODO Poruka
+            return
+        }
+        updateAccountHandler.update(
+            jwtToken,
+            newUserData,
+            object : AccountUpdateOutcomeListener {
+                override fun onSuccessfulAccountUpdate(successMessage: String) {
+                    updateView()
+                }
 
+                override fun onFailedAccountUpdate(failureMessage: String) {
+                    println("Neuspjeh" + failureMessage)
+                }
+            })
     }
 
 
-    fun updateUserAccountData() {
-        _providedUserAccount.value = currentUserAccountData.value
+    private fun updateView() {
+        _originalUserAccount.value = _currentUserAccountData.value
+    }
+
+    fun resetUserAccountData() {
+        _currentUserAccountData.value = _originalUserAccount.value
     }
 
     fun updateUsername(newUsername: String) {
