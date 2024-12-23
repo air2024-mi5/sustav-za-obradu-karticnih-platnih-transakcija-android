@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import hr.foi.air.szokpt.ws.models.responses.User
 
-class AccountDetailsViewModel : ViewModel() {
+class AccountViewModel : ViewModel() {
     private val _providedUserAccount: MutableLiveData<User> = MutableLiveData()
     val providedUserAccount: MutableLiveData<User> = _providedUserAccount
 
@@ -22,7 +22,7 @@ class AccountDetailsViewModel : ViewModel() {
     }
 
 
-    fun resetUserAccountData() {
+    fun updateUserAccountData() {
         _providedUserAccount.value = currentUserAccountData.value
     }
 

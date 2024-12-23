@@ -52,14 +52,14 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.ui.theme.warning
-import foi.air.szokpt.viewmodels.AccountDetailsViewModel
+import foi.air.szokpt.viewmodels.AccountViewModel
 import hr.foi.air.szokpt.ws.models.responses.User
 
 @Composable
-fun AccountDetailsView(
+fun AccountView(
     navController: NavController,
     providedAccount: User,
-    viewModel: AccountDetailsViewModel = viewModel()
+    viewModel: AccountViewModel = viewModel()
 ) {
     LaunchedEffect(Unit) {
         viewModel.initializeUserAccountData(providedAccount)

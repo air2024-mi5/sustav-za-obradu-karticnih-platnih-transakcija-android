@@ -16,7 +16,6 @@ import androidx.navigation.navArgument
 import com.google.gson.Gson
 import foi.air.szokpt.ui.LoginPage
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
-import foi.air.szokpt.views.app.AccountDetailsView
 import foi.air.szokpt.views.app.AccountSearchView
 import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DashboardView
@@ -96,7 +95,7 @@ fun MainScreen() {
 
                 val gson = Gson()
                 val user = gson.fromJson(userJson, User::class.java)
-                AccountDetailsView(navController = navController, providedAccount = user)
+                AccountView(navController = navController, providedAccount = user)
             }
         }
     }
