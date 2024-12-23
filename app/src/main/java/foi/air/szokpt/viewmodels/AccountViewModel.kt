@@ -9,11 +9,12 @@ import hr.foi.air.szokpt.ws.models.responses.User
 
 class AccountViewModel : ViewModel() {
     private val _originalUserAccount: MutableLiveData<User> = MutableLiveData()
-    val storedUserAccountData: MutableLiveData<User> = _originalUserAccount
-
     private val _currentUserAccountData: MutableLiveData<User> = MutableLiveData()
-    val currentUserAccountData: MutableLiveData<User> = _currentUserAccountData
+    private val _message: MutableLiveData<String> = MutableLiveData("")
 
+    val storedUserAccountData: MutableLiveData<User> = _originalUserAccount
+    val currentUserAccountData: MutableLiveData<User> = _currentUserAccountData
+    val message: MutableLiveData<String> = _message
 
     fun initializeUserAccountData(user: User) {
         _originalUserAccount.value = user
@@ -21,16 +22,16 @@ class AccountViewModel : ViewModel() {
     }
 
     fun updateAccountData(
-        updateAccountHandler: AccountUpdateHandler,
+        accountUpdateHandler: AccountUpdateHandler,
         newUserData: User,
     ) {
-        println("TU SAM")
         val jwtToken = Auth.logedInUserData?.token
         if (jwtToken == null) {
-            //TODO Poruka
+            resetUserAccountData()
+            _message.value = "Something went wrong! Please try logging in again!"
             return
         }
-        updateAccountHandler.update(
+        accountUpdateHandler.update(
             jwtToken,
             newUserData,
             object : AccountUpdateOutcomeListener {
@@ -39,7 +40,8 @@ class AccountViewModel : ViewModel() {
                 }
 
                 override fun onFailedAccountUpdate(failureMessage: String) {
-                    println("Neuspjeh" + failureMessage)
+                    resetUserAccountData()
+                    _message.value = "Something went wrong! Please try again!"
                 }
             })
     }
@@ -72,5 +74,9 @@ class AccountViewModel : ViewModel() {
 
     fun updateEmail(newEmail: String) {
         _currentUserAccountData.value = _currentUserAccountData.value?.copy(email = newEmail)
+    }
+
+    fun clearMessage() {
+        _message.value = ""
     }
 }

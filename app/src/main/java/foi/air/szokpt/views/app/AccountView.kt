@@ -68,12 +68,12 @@ fun AccountView(
 
     val currentUserAccountData by viewModel.currentUserAccountData.observeAsState()
     val storedUserAccountData by viewModel.storedUserAccountData.observeAsState()
+    val message by viewModel.message.observeAsState("")
 
     var isEditTileVisible by remember { mutableStateOf(false) }
     val openEditDialog = remember { mutableStateOf(false) }
     val openBlockDialog = remember { mutableStateOf(false) }
     val openDeactivateDialog = remember { mutableStateOf(false) }
-    val isEditConfirmed = remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
@@ -120,7 +120,8 @@ fun AccountView(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Icon(
-                                    imageVector = if (storedUserAccountData?.role?.name == "admin") Icons.Rounded.AccountCircle else Icons.Rounded.Person,
+                                    imageVector = if (storedUserAccountData?.role?.name == "admin")
+                                        Icons.Rounded.AccountCircle else Icons.Rounded.Person,
                                     contentDescription = null,
                                     tint = Color.White,
                                     modifier = Modifier.size(68.dp)
@@ -164,6 +165,7 @@ fun AccountView(
                                             if (isEditTileVisible) {
                                                 openEditDialog.value = true
                                             } else {
+                                                viewModel.clearMessage()
                                                 isEditTileVisible = true
                                             }
                                         },
@@ -176,6 +178,21 @@ fun AccountView(
                                 }
                             }
                         }
+                    }
+                }
+                if (message.isNotEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = message,
+                            color = Color.Red,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
                 }
             }
@@ -259,16 +276,14 @@ fun AccountView(
                 user = currentUserAccountData!!,
                 onConfirm = {
                     viewModel.updateAccountData(
-                        updateAccountHandler = AccountUpdateHandler(),
+                        accountUpdateHandler = AccountUpdateHandler(),
                         newUserData = currentUserAccountData!!
                     )
                     isEditTileVisible = false
-                    isEditConfirmed.value = true
                 },
                 onDismiss = {
                     viewModel.resetUserAccountData()
                     isEditTileVisible = false
-                    isEditConfirmed.value = false
                 }
             )
         }
