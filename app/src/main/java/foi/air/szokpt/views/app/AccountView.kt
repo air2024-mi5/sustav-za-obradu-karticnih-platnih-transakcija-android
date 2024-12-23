@@ -249,7 +249,10 @@ fun AccountView(
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             OutlineBouncingButton(
-                                onClick = { isEditTileVisible = false },
+                                onClick = {
+                                    isEditTileVisible = false
+                                    viewModel.resetUserAccountData()
+                                },
                                 contentColor = warning,
                                 borderColor = warning,
                                 inputIcon = Icons.Rounded.KeyboardArrowUp,

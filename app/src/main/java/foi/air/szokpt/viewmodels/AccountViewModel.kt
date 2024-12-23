@@ -53,6 +53,7 @@ class AccountViewModel : ViewModel() {
 
     fun resetUserAccountData() {
         _currentUserAccountData.value = _originalUserAccount.value
+        _currentUserAccountData.value = _originalUserAccount.value?.copy(password = "")
     }
 
     fun updateUsername(newUsername: String) {
