@@ -1,5 +1,6 @@
 package foi.air.szokpt.viewmodels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.context.Auth
@@ -8,17 +9,17 @@ import hr.foi.air.core.accounts.AccountUpdateOutcomeListener
 import hr.foi.air.szokpt.ws.models.responses.User
 
 class AccountViewModel : ViewModel() {
-    private val _originalUserAccount: MutableLiveData<User> = MutableLiveData()
+    private val _storedUserAccountData: MutableLiveData<User> = MutableLiveData()
     private val _currentUserAccountData: MutableLiveData<User> = MutableLiveData()
     private val _message: MutableLiveData<String> = MutableLiveData("")
 
-    val storedUserAccountData: MutableLiveData<User> = _originalUserAccount
-    val currentUserAccountData: MutableLiveData<User> = _currentUserAccountData
-    val message: MutableLiveData<String> = _message
+    val storedUserAccountData: LiveData<User> = _storedUserAccountData
+    val currentUserAccountData: LiveData<User> = _currentUserAccountData
+    val message: LiveData<String> = _message
 
     fun initializeUserAccountData(user: User) {
-        _originalUserAccount.value = user
-        _currentUserAccountData.value = _originalUserAccount.value?.copy(password = "")
+        _storedUserAccountData.value = user.copy(password = "")
+        _currentUserAccountData.value = _storedUserAccountData.value
     }
 
     fun updateAccountData(
@@ -48,12 +49,12 @@ class AccountViewModel : ViewModel() {
 
 
     private fun updateView() {
-        _originalUserAccount.value = _currentUserAccountData.value
+        _storedUserAccountData.value = currentUserAccountData.value?.copy(password = "")
+        _currentUserAccountData.value = _storedUserAccountData.value
     }
 
     fun resetUserAccountData() {
-        _currentUserAccountData.value = _originalUserAccount.value
-        _currentUserAccountData.value = _originalUserAccount.value?.copy(password = "")
+        _currentUserAccountData.value = _storedUserAccountData.value
     }
 
     fun updateUsername(newUsername: String) {
