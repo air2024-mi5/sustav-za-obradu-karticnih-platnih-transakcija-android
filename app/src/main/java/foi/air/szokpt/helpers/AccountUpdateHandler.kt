@@ -22,13 +22,13 @@ class AccountUpdateHandler() {
 
                 override fun onErrorResponse(response: ErrorResponseBody) {
                     accountUpdateOutcomeListener.onFailedAccountUpdate(
-                        response.message
+                        "Error while updating user!"
                     )
                 }
 
                 override fun onNetworkFailure(t: Throwable) {
                     accountUpdateOutcomeListener.onFailedAccountUpdate(
-                        t.message ?: "An unknown network error occurred."
+                        "Please check your internet connection!"
                     )
                 }
             }

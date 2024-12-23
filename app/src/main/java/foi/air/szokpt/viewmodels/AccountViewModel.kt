@@ -42,11 +42,10 @@ class AccountViewModel : ViewModel() {
 
                 override fun onFailedAccountUpdate(failureMessage: String) {
                     resetUserAccountData()
-                    _message.value = "Something went wrong! Please try again!"
+                    _message.value = failureMessage
                 }
             })
     }
-
 
     private fun updateView() {
         _storedUserAccountData.value = currentUserAccountData.value?.copy(password = "")
