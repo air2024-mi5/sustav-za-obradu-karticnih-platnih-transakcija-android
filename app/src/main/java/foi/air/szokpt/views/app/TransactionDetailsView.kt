@@ -159,3 +159,29 @@ fun TransactionDetailsView(
         }
     }
 }
+
+@Composable
+private fun TransactionDetailRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = label,
+            color = TextWhite.copy(alpha = 0.7f),
+            fontSize = 16.sp
+        )
+        Text(
+            text = value,
+            color = TextWhite,
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
+        )
+    }
+}
