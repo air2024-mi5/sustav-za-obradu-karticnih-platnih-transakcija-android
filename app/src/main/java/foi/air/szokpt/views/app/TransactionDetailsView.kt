@@ -1,5 +1,6 @@
 package foi.air.szokpt.views.app
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -153,6 +155,70 @@ fun TransactionDetailsView(
                                 }
                             }
                         }
+                    }
+                }
+            }
+
+            item {
+                TileSegment(
+                    tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
+                    innerPadding = 8.dp,
+                    outerMargin = 8.dp,
+                    minWidth = 250.dp,
+                    color = BGLevelOne
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp)
+                    ) {
+                        TransactionDetailRow("Date", transaction.transactionTimestamp)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row() {
+                                Text(
+                                    text = "Card",
+                                    color = TextWhite.copy(alpha = 0.7f),
+                                    fontSize = 16.sp
+                                )
+                            }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = transaction.maskedPan,
+                                    color = TextWhite,
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 16.sp,
+                                    modifier = Modifier.padding(horizontal = 5.dp)
+                                )
+                                Image(
+                                    painter = painterResource(id = cardBrandDrawable),
+                                    contentDescription = "Card Brand",
+                                    modifier = Modifier.size(45.dp)
+                                )
+                            }
+                        }
+                        TransactionDetailRow(
+                            "Type",
+                            trxTypeMap[transaction.trxType] ?: transaction.trxType
+                        )
+                        if (transaction.installmentsNumber > 0) {
+                            TransactionDetailRow(
+                                "Installments",
+                                transaction.installmentsNumber.toString()
+                            )
+                            TransactionDetailRow("Creditor", transaction.installmentsCreditor)
+                        }
+                        TransactionDetailRow("PIN Used", if (transaction.pinUsed) "Yes" else "No")
+                        TransactionDetailRow(
+                            "Status",
+                            if (transaction.processed) "Processed" else "Pending"
+                        )
+                        TransactionDetailRow("Response Code", transaction.responseCode)
                     }
                 }
             }
