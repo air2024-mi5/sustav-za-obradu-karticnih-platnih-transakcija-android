@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import foi.air.szokpt.R
 import foi.air.szokpt.ui.components.TileSegment
+import foi.air.szokpt.ui.components.transaction_components.TransactionDetailRow
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
@@ -223,31 +224,5 @@ fun TransactionDetailsView(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun TransactionDetailRow(
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = label,
-            color = TextWhite.copy(alpha = 0.7f),
-            fontSize = 16.sp
-        )
-        Text(
-            text = value,
-            color = TextWhite,
-            fontWeight = FontWeight.Medium,
-            fontSize = 16.sp
-        )
     }
 }
