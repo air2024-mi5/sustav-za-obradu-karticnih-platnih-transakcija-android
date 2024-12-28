@@ -27,7 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import foi.air.szokpt.R
+import foi.air.szokpt.helpers.TransactionUtils
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.transaction_components.TransactionDetailRow
 import foi.air.szokpt.ui.theme.BGLevelOne
@@ -41,30 +41,6 @@ fun TransactionDetailsView(
     navController: NavController,
     transaction: Transaction
 ) {
-    val currencySymbol = when (transaction.currency) {
-        "840" -> "$"
-        "978" -> "€"
-        else -> ""
-    }
-
-    val trxTypeMap = mapOf(
-        "sale" to "Sale",
-        "refund" to "Refund",
-        "void_sale" to "Void sale",
-        "void_refund" to "Void refund",
-        "reversal_sale" to "Reversal sale",
-        "reversal_refund" to "Reversal refund"
-    )
-
-    val cardBrandDrawable = when (transaction.cardBrand) {
-        "Maestro" -> R.drawable.maestro
-        "Visa" -> R.drawable.visa
-        "MasterCard" -> R.drawable.mastercard
-        "Diners" -> R.drawable.diners
-        "Discover" -> R.drawable.discover
-        else -> R.drawable.logo
-    }
-
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             modifier = Modifier.padding(16.dp),
@@ -140,6 +116,8 @@ fun TransactionDetailsView(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier.padding(10.dp)
                                 ) {
+                                    val currencySymbol =
+                                        TransactionUtils.getCurrencySymbol(transaction.currency)
                                     Text(
                                         text = currencySymbol,
                                         color = Color.White,
@@ -196,6 +174,8 @@ fun TransactionDetailsView(
                                     fontSize = 16.sp,
                                     modifier = Modifier.padding(horizontal = 5.dp)
                                 )
+                                val cardBrandDrawable =
+                                    TransactionUtils.getCardBrandDrawable(transaction.cardBrand)
                                 Image(
                                     painter = painterResource(id = cardBrandDrawable),
                                     contentDescription = "Card Brand",
@@ -203,9 +183,11 @@ fun TransactionDetailsView(
                                 )
                             }
                         }
+                        val transactionType =
+                            TransactionUtils.getTransactionTypeDisplay(transaction.trxType)
                         TransactionDetailRow(
                             "Type",
-                            trxTypeMap[transaction.trxType] ?: transaction.trxType
+                            transactionType ?: transaction.trxType
                         )
                         if (transaction.installmentsNumber > 0) {
                             TransactionDetailRow(

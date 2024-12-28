@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import foi.air.szokpt.R
+import foi.air.szokpt.helpers.TransactionUtils
 import foi.air.szokpt.ui.theme.BGLevelZeroHigh
 import hr.foi.air.szokpt.ws.models.responses.Transaction
 
@@ -31,36 +31,6 @@ import hr.foi.air.szokpt.ws.models.responses.Transaction
  */
 @Composable
 fun TransactionItem(transaction: Transaction) {
-    val currencyColor = when (transaction.currency) {
-        "840" -> Color.Green
-        "978" -> Color.Yellow
-        else -> Color.White
-    }
-    val currencySymbol = when (transaction.currency) {
-        "840" -> "$"
-        "978" -> "€"
-        else -> ""
-    }
-
-    val trxTypeMap = mapOf(
-        "sale" to "Sale",
-        "refund" to "Refund",
-        "void_sale" to "Void sale",
-        "void_refund" to "Void refund",
-        "reversal_sale" to "Reversal sale",
-        "reversal_refund" to "Reversal refund"
-    )
-
-    val cardBrandDrawable = when (transaction.cardBrand) {
-        "Maestro" -> R.drawable.maestro
-        "Visa" -> R.drawable.visa
-        "MasterCard" -> R.drawable.mastercard
-        "Diners" -> R.drawable.diners
-        "Discover" -> R.drawable.discover
-        else -> R.drawable.logo
-    }
-
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -84,6 +54,8 @@ fun TransactionItem(transaction: Transaction) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
+            val cardBrandDrawable =
+                TransactionUtils.getCardBrandDrawable(transaction.cardBrand)
             Image(
                 painter = painterResource(id = cardBrandDrawable),
                 contentDescription = "Card Brand",
@@ -108,6 +80,10 @@ fun TransactionItem(transaction: Transaction) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                val currencySymbol =
+                    TransactionUtils.getCurrencySymbol(transaction.currency)
+                val currencyColor =
+                    TransactionUtils.getCurrencyColor(transaction.currency)
                 Text(
                     text = currencySymbol,
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
@@ -127,8 +103,10 @@ fun TransactionItem(transaction: Transaction) {
                 color = Color.White,
                 overflow = TextOverflow.Ellipsis
             )
+            val transactionType =
+                TransactionUtils.getTransactionTypeDisplay(transaction.trxType)
             Text(
-                text = trxTypeMap[transaction.trxType]!!,
+                text = transactionType ?: transaction.trxType,
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.White
             )
