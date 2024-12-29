@@ -268,7 +268,9 @@ fun AccountView(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     DeactivateAccountButton(openDeactivateDialog)
-                    BlockAccountButton(openBlockDialog)
+                    currentUserAccountData?.let { user ->
+                        BlockAccountButton(openBlockDialog, user)
+                    }
                 }
             }
         }
@@ -296,7 +298,17 @@ fun AccountView(
             DeactivateAccountDialog(openDeactivateDialog, currentUserAccountData!!)
         }
         if (openBlockDialog.value) {
-            BlockAccountDialog(openBlockDialog, currentUserAccountData!!)
+            BlockAccountDialog(
+                openBlockDialog = openBlockDialog,
+                user = storedUserAccountData!!,
+                onConfirm = {
+                    viewModel.updateBlockedStatus(!storedUserAccountData!!.blocked)
+                    viewModel.updateAccountData(
+                        accountUpdateHandler = AccountUpdateHandler(),
+                        newUserData = currentUserAccountData!!
+                    )
+                }
+            )
         }
     }
 }
