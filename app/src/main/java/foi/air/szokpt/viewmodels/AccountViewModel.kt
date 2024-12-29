@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.context.Auth
 import foi.air.szokpt.helpers.AccountUpdateHandler
+import foi.air.szokpt.utils.UserDataValidator
 import hr.foi.air.core.accounts.AccountUpdateOutcomeListener
 import hr.foi.air.szokpt.ws.models.responses.User
 
@@ -48,27 +49,15 @@ class AccountViewModel : ViewModel() {
     }
 
     fun validateData(user: User): Boolean {
-        return when {
-            user.username.isBlank() || user.firstName.isBlank() ||
-                    user.lastName.isBlank() || user.email.isBlank() -> {
-                _message.value = "All fields must be filled!"
-                false
-            }
+        val validator = UserDataValidator()
+        val validationResult = validator.validate(user)
 
-            user.password.length in 1..2 -> {
-                _message.value = "Password must contain at least 3 characters."
-                false
-            }
-
-            !android.util.Patterns.EMAIL_ADDRESS.matcher(user.email).matches() -> {
-                _message.value = "The email must be in the correct format."
-                false
-            }
-
-            else -> {
-                _message.value = ""
-                true
-            }
+        return if (!validationResult.isValid) {
+            _message.value = validationResult.message!!
+            false
+        } else {
+            _message.value = ""
+            true
         }
     }
 
