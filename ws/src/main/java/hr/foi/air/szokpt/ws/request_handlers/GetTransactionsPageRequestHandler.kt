@@ -5,7 +5,7 @@ import hr.foi.air.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.ws.models.TransactionPageResponse
 import retrofit2.Call
 
-class TransactionPageRequestHandler(
+class GetTransactionsPageRequestHandler(
     private val jwtToken: String,
     private val page: Int
 ) :
