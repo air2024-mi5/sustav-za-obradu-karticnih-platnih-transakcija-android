@@ -41,11 +41,11 @@ import androidx.navigation.NavController
 import foi.air.szokpt.helpers.AccountUpdateHandler
 import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
-import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.BlockAccountButton
-import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.BlockAccountDialog
-import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.DeactivateAccountButton
-import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.DeactivateAccountDialog
-import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.EditConfirmationDialog
+import foi.air.szokpt.ui.components.accounts_components.accountView.BlockAccountButton
+import foi.air.szokpt.ui.components.accounts_components.accountView.BlockAccountDialog
+import foi.air.szokpt.ui.components.accounts_components.accountView.DeactivateAccountButton
+import foi.air.szokpt.ui.components.accounts_components.accountView.DeactivateAccountDialog
+import foi.air.szokpt.ui.components.accounts_components.accountView.EditConfirmationDialog
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary

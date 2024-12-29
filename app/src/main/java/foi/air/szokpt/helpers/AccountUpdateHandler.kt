@@ -21,9 +21,7 @@ class AccountUpdateHandler() {
                 }
 
                 override fun onErrorResponse(response: ErrorResponseBody) {
-                    accountUpdateOutcomeListener.onFailedAccountUpdate(
-                        "Error while updating user!"
-                    )
+                    accountUpdateOutcomeListener.onFailedAccountUpdate(response.message)
                 }
 
                 override fun onNetworkFailure(t: Throwable) {

@@ -1,4 +1,4 @@
-package foi.air.szokpt.ui.components.accounts_components.accountDetailsView
+package foi.air.szokpt.ui.components.accounts_components.accountView
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CheckCircle
