@@ -16,14 +16,16 @@ fun BlockAccountDialog(
     user: User,
     onConfirm: () -> Unit,
 ) {
+    val dialogTitle = if (user.blocked) "Unblock User Account" else "Block User Account"
+    val dialogTextBlockedStatus = if (user.blocked) "UNBLOCK" else "BLOCK"
     DialogComponent(
         onConfirmation = {
             onConfirm()
             openBlockDialog.value = false
         },
         onDismissRequest = { openBlockDialog.value = false },
-        dialogTitle = "Block User Account",
-        dialogText = "Are you sure you want to BLOCK ${user.firstName} ${user.lastName}, @${user.username}? \n \nBe cautious!",
+        dialogTitle = dialogTitle,
+        dialogText = "Are you sure you want to $dialogTextBlockedStatus ${user.firstName} ${user.lastName}, ${user.username}? \n",
         iconTop = Icons.Rounded.Close,
         highlightColor = warning,
         containerColor = BGLevelTwo,
