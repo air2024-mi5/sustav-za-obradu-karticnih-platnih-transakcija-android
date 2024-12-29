@@ -21,6 +21,7 @@ import foi.air.szokpt.views.app.AccountSearchView
 import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.RegistrationView
+import foi.air.szokpt.views.app.TransactionDetailsView
 import foi.air.szokpt.views.app.TransactionsView
 import foi.air.szokpt.views.test_views.DailyProcessScreen
 import hr.foi.air.szokpt.ws.models.responses.User
@@ -97,6 +98,19 @@ fun MainScreen() {
                 val gson = Gson()
                 val user = gson.fromJson(userJson, User::class.java)
                 AccountDetailsView(navController = navController, providedAccount = user)
+            }
+
+            composable(
+                route = "transaction_details/{transactionId}",
+                arguments = listOf(navArgument("transactionId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val transactionId =
+                    backStackEntry.arguments?.getInt("transactionId") ?: return@composable
+
+                TransactionDetailsView(
+                    navController = navController,
+                    transactionId = transactionId
+                )
             }
         }
     }

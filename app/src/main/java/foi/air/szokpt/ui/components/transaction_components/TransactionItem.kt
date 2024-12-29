@@ -2,6 +2,7 @@ package foi.air.szokpt.ui.components.transaction_components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +31,7 @@ import hr.foi.air.szokpt.ws.models.responses.Transaction
  * @param transaction is an object that provides the transaction data needed to display
  */
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(transaction: Transaction, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -50,6 +51,7 @@ fun TransactionItem(transaction: Transaction) {
                     size = Size(strokeWidth, size.height)
                 )
             }
+            .clickable { onClick() }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

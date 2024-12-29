@@ -68,7 +68,12 @@ fun TransactionsView(navController: NavController) {
         ) {
             transactionPage?.transactions?.forEach { transaction ->
                 item {
-                    TransactionItem(transaction = transaction)
+                    TransactionItem(
+                        transaction = transaction,
+                        onClick = {
+                            navController.navigate("transaction_details/${transaction.id}")
+                        }
+                    )
                 }
             }
         }
