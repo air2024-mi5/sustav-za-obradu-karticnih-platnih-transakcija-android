@@ -1,4 +1,4 @@
-package foi.air.szokpt.ui.components.accounts_components.accountViewComponents
+package foi.air.szokpt.ui.components.accounts_components.accountDashboardView
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

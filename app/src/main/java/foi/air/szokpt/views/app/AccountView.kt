@@ -38,13 +38,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import foi.air.szokpt.helpers.AccountUpdateHandler
 import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
-import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.BlockAccountButton
-import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.BlockAccountDialog
-import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.DeactivateAccountButton
-import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.DeactivateAccountDialog
-import foi.air.szokpt.ui.components.accounts_components.accountDetailsView.EditConfirmationDialog
+import foi.air.szokpt.ui.components.accounts_components.accountView.BlockAccountButton
+import foi.air.szokpt.ui.components.accounts_components.accountView.BlockAccountDialog
+import foi.air.szokpt.ui.components.accounts_components.accountView.DeactivateAccountButton
+import foi.air.szokpt.ui.components.accounts_components.accountView.DeactivateAccountDialog
+import foi.air.szokpt.ui.components.accounts_components.accountView.EditConfirmationDialog
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
@@ -52,30 +53,27 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.ui.theme.warning
-import foi.air.szokpt.viewmodels.AccountDetailsViewModel
+import foi.air.szokpt.viewmodels.AccountViewModel
 import hr.foi.air.szokpt.ws.models.responses.User
 
 @Composable
-fun AccountDetailsView(
+fun AccountView(
     navController: NavController,
     providedAccount: User,
-    viewModel: AccountDetailsViewModel = viewModel()
+    viewModel: AccountViewModel = viewModel()
 ) {
     LaunchedEffect(Unit) {
-        viewModel.initializeAccountData(providedAccount)
+        viewModel.initializeUserAccountData(providedAccount)
     }
 
-    val username by viewModel.username.observeAsState("")
-    val name by viewModel.firstName.observeAsState("")
-    val lastName by viewModel.lastName.observeAsState("")
-    val email by viewModel.email.observeAsState("")
-    val password by viewModel.password.observeAsState("")
+    val currentUserAccountData by viewModel.currentUserAccountData.observeAsState()
+    val storedUserAccountData by viewModel.storedUserAccountData.observeAsState()
+    val message by viewModel.message.observeAsState("")
 
     var isEditTileVisible by remember { mutableStateOf(false) }
     val openEditDialog = remember { mutableStateOf(false) }
     val openBlockDialog = remember { mutableStateOf(false) }
     val openDeactivateDialog = remember { mutableStateOf(false) }
-    val isEditConfirmed = remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
@@ -122,7 +120,8 @@ fun AccountDetailsView(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Icon(
-                                    imageVector = if (providedAccount.role.name == "admin") Icons.Rounded.AccountCircle else Icons.Rounded.Person,
+                                    imageVector = if (storedUserAccountData?.role?.name == "admin")
+                                        Icons.Rounded.AccountCircle else Icons.Rounded.Person,
                                     contentDescription = null,
                                     tint = Color.White,
                                     modifier = Modifier.size(68.dp)
@@ -141,19 +140,21 @@ fun AccountDetailsView(
                                         )
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
-                                    Text(
-                                        text = providedAccount.username,
-                                        color = Primary,
-                                        fontWeight = FontWeight.SemiBold,
-                                        fontSize = 18.sp
-                                    )
+                                    storedUserAccountData?.let {
+                                        Text(
+                                            text = it.username,
+                                            color = Primary,
+                                            fontWeight = FontWeight.SemiBold,
+                                            fontSize = 18.sp
+                                        )
+                                    }
                                 }
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        text = "${providedAccount.firstName} ${providedAccount.lastName}",
+                                        text = "${storedUserAccountData?.firstName} ${storedUserAccountData?.lastName}",
                                         color = TextWhite,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 20.sp,
@@ -164,6 +165,7 @@ fun AccountDetailsView(
                                             if (isEditTileVisible) {
                                                 openEditDialog.value = true
                                             } else {
+                                                viewModel.clearMessage()
                                                 isEditTileVisible = true
                                             }
                                         },
@@ -177,6 +179,19 @@ fun AccountDetailsView(
                             }
                         }
                     }
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = message,
+                        color = Color.Red,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             }
 
@@ -198,41 +213,45 @@ fun AccountDetailsView(
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
                                 label = "Username",
-                                value = username,
+                                value = currentUserAccountData?.username ?: "",
                                 onValueChange = { viewModel.updateUsername(it) },
                                 isPasswordField = false
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
                                 label = "E-mail",
-                                value = email,
+                                value = currentUserAccountData?.email ?: "",
                                 onValueChange = { viewModel.updateEmail(it) },
                                 isPasswordField = false
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
-                                label = "Name",
-                                value = name,
+                                label = "First Name",
+                                value = currentUserAccountData?.firstName ?: "",
                                 onValueChange = { viewModel.updateFirstName(it) },
                                 isPasswordField = false
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
                                 label = "Last Name",
-                                value = lastName,
+                                value = currentUserAccountData?.lastName ?: "",
                                 onValueChange = { viewModel.updateLastName(it) },
                                 isPasswordField = false
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
                                 label = "Password",
-                                value = password,
+                                value = currentUserAccountData?.password ?: "",
                                 onValueChange = { viewModel.updatePassword(it) },
                                 isPasswordField = true
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             OutlineBouncingButton(
-                                onClick = { isEditTileVisible = false },
+                                onClick = {
+                                    isEditTileVisible = false
+                                    viewModel.clearMessage()
+                                    viewModel.resetUserAccountData()
+                                },
                                 contentColor = warning,
                                 borderColor = warning,
                                 inputIcon = Icons.Rounded.KeyboardArrowUp,
@@ -254,16 +273,30 @@ fun AccountDetailsView(
             }
         }
         if (openEditDialog.value) {
-            EditConfirmationDialog(openEditDialog, name, lastName) {
-                isEditTileVisible = false
-                isEditConfirmed.value = true
-            }
+            EditConfirmationDialog(
+                openEditDialog = openEditDialog,
+                user = currentUserAccountData!!,
+                onConfirm = {
+                    val isValid = viewModel.validateData(currentUserAccountData!!)
+                    if (isValid) {
+                        viewModel.updateAccountData(
+                            accountUpdateHandler = AccountUpdateHandler(),
+                            newUserData = currentUserAccountData!!
+                        )
+                        isEditTileVisible = false
+                    }
+                },
+                onDismiss = {
+                    viewModel.resetUserAccountData()
+                    isEditTileVisible = false
+                }
+            )
         }
         if (openDeactivateDialog.value) {
-            DeactivateAccountDialog(openDeactivateDialog, name, lastName, username)
+            DeactivateAccountDialog(openDeactivateDialog, currentUserAccountData!!)
         }
         if (openBlockDialog.value) {
-            BlockAccountDialog(openBlockDialog, name, lastName, username)
+            BlockAccountDialog(openBlockDialog, currentUserAccountData!!)
         }
     }
 }
