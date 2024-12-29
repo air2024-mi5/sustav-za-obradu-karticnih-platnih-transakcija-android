@@ -1,18 +1,18 @@
 package foi.air.szokpt.viewmodels
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.helpers.TransactionDetailsHandler
 import hr.foi.air.core.transactions.TransactionData
 import hr.foi.air.core.transactions.TransactionDetailsOutcomeListener
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 class TransactionDetailsViewModel : ViewModel() {
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> get() = _errorMessage
+    private val _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?> get() = _errorMessage
 
-    private val _transactionData = MutableStateFlow<TransactionData?>(null)
-    val transactionData: StateFlow<TransactionData?> get() = _transactionData
+    private val _transactionData = MutableLiveData<TransactionData?>(null)
+    val transactionData: LiveData<TransactionData?> get() = _transactionData
 
     private val transactionDetailsHandler = TransactionDetailsHandler()
 
