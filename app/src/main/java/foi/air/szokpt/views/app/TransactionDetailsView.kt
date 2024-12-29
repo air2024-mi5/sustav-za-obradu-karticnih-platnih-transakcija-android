@@ -61,15 +61,18 @@ fun TransactionDetailsView(
 
         if (transaction == null) {
             errorMessage?.let {
-                Text(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .align(Alignment.CenterHorizontally),
-                    text = it,
-                    color = TextWhite,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(20.dp),
+                        text = it,
+                        color = TextWhite,
+                        fontSize = 18.sp,
+                    )
+                }
             }
         } else {
             LazyColumn(
