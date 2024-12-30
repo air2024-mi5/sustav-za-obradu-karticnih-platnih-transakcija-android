@@ -1,7 +1,7 @@
 package hr.foi.air.szokpt.ws.network
 
-import hr.foi.air.core.network.models.SuccessfulResponseBody
-import hr.foi.air.core.register.RegistrationBody
+import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
+import hr.foi.air.szokpt.core.register.RegistrationBody
 import hr.foi.air.szokpt.ws.models.RegistrationResponse
 import hr.foi.air.szokpt.ws.models.responses.User
 import retrofit2.Call

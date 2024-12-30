@@ -1,4 +1,4 @@
-package hr.foi.air.core
+package hr.foi.air.szokpt.core
 
 import org.junit.Test
 

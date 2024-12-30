@@ -1,4 +1,4 @@
-package hr.foi.air.core
+package hr.foi.air.szokpt.core
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

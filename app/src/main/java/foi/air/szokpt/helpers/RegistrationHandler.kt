@@ -1,11 +1,11 @@
 package foi.air.szokpt.helpers
 
 import android.util.Log
-import hr.foi.air.core.register.RegistrationBody
-import hr.foi.air.core.network.ResponseListener
-import hr.foi.air.core.network.models.ErrorResponseBody
-import hr.foi.air.core.network.models.SuccessfulResponseBody
-import hr.foi.air.core.register.RegistrationOutcomeListener
+import hr.foi.air.szokpt.core.register.RegistrationBody
+import hr.foi.air.szokpt.core.network.ResponseListener
+import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
+import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
+import hr.foi.air.szokpt.core.register.RegistrationOutcomeListener
 import hr.foi.air.szokpt.ws.models.RegistrationResponse
 import hr.foi.air.szokpt.ws.request_handlers.RegistrationRequestHandler
 

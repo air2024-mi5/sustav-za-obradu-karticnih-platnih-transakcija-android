@@ -41,7 +41,7 @@ import foi.air.szokpt.ui.theme.BackgroundColor
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.viewmodels.LoginViewModel
-import hr.foi.air.core.login.LoginBody
+import hr.foi.air.szokpt.core.login.LoginBody
 
 
 @Composable

@@ -1,4 +1,4 @@
-package hr.foi.air.core.register
+package hr.foi.air.szokpt.core.register
 
 interface RegistrationOutcomeListener {
     fun onSuccessfulRegistration(successMessage: String)

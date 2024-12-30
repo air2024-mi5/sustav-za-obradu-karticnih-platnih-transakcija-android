@@ -1,4 +1,4 @@
-package hr.foi.air.core.network.models
+package hr.foi.air.szokpt.core.network.models
 
 class ErrorResponseBody(
     success: Boolean,

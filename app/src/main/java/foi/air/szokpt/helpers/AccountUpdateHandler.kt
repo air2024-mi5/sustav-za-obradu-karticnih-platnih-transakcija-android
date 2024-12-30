@@ -1,9 +1,9 @@
 package foi.air.szokpt.helpers
 
-import hr.foi.air.core.accounts.AccountUpdateOutcomeListener
-import hr.foi.air.core.network.ResponseListener
-import hr.foi.air.core.network.models.ErrorResponseBody
-import hr.foi.air.core.network.models.SuccessfulResponseBody
+import hr.foi.air.szokpt.core.accounts.AccountUpdateOutcomeListener
+import hr.foi.air.szokpt.core.network.ResponseListener
+import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
+import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.ws.models.responses.User
 import hr.foi.air.szokpt.ws.request_handlers.AccountUpdateRequestHandler
 
