@@ -1,10 +1,10 @@
 package hr.foi.air.szokpt.ws.request_handlers
 
 import com.google.gson.Gson
-import hr.foi.air.core.network.RequestHandler
-import hr.foi.air.core.network.ResponseListener
-import hr.foi.air.core.network.models.ErrorResponseBody
-import hr.foi.air.core.network.models.SuccessfulResponseBody
+import hr.foi.air.szokpt.core.network.RequestHandler
+import hr.foi.air.szokpt.core.network.ResponseListener
+import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
+import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

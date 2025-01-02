@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.helpers.RegistrationHandler
-import foi.air.szokpt.ui.components.LoginTextField
+import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dialog_components.DialogComponent
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
@@ -47,8 +47,8 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.RegistrationViewModel
-import hr.foi.air.core.register.RegistrationBody
-import hr.foi.air.core.register.Role
+import hr.foi.air.szokpt.core.register.RegistrationBody
+import hr.foi.air.szokpt.core.register.Role
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -158,35 +158,35 @@ fun RegistrationView(navController: NavController, userType: String) {
 
                         val spacerHeight = 12.dp
                         Spacer(modifier = Modifier.height(spacerHeight))
-                        LoginTextField(
+                        StyledTextField(
                             label = "Username",
                             value = username,
                             onValueChange = { viewModel.username.value = it },
                             isPasswordField = false,
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
-                        LoginTextField(
+                        StyledTextField(
                             label = "Password",
                             value = password,
                             onValueChange = { viewModel.password.value = it },
                             isPasswordField = true,
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
-                        LoginTextField(
+                        StyledTextField(
                             label = "Name",
                             value = name,
                             onValueChange = { viewModel.firstName.value = it },
                             isPasswordField = false,
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
-                        LoginTextField(
+                        StyledTextField(
                             label = "Last Name",
                             value = lastName,
                             onValueChange = { viewModel.lastName.value = it },
                             isPasswordField = false,
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
-                        LoginTextField(
+                        StyledTextField(
                             label = "E-mail",
                             value = email,
                             onValueChange = { viewModel.email.value = it },

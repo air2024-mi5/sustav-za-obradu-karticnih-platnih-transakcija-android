@@ -21,7 +21,6 @@ import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.RegistrationView
 import foi.air.szokpt.views.app.TransactionsView
-import foi.air.szokpt.views.app.UserAccountView
 import foi.air.szokpt.views.test_views.DailyProcessScreen
 import hr.foi.air.szokpt.ws.models.responses.User
 import java.nio.charset.StandardCharsets
@@ -96,7 +95,7 @@ fun MainScreen() {
 
                 val gson = Gson()
                 val user = gson.fromJson(userJson, User::class.java)
-                UserAccountView(navController = navController, account = user)
+                AccountView(navController = navController, providedAccount = user)
             }
         }
     }

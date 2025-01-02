@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.context.Auth
 import foi.air.szokpt.helpers.LoginHandler
-import hr.foi.air.core.login.LoginOutcomeListener
-import hr.foi.air.core.login.LoginBody
-import hr.foi.air.core.login.LoginUserData
+import hr.foi.air.szokpt.core.login.LoginOutcomeListener
+import hr.foi.air.szokpt.core.login.LoginBody
+import hr.foi.air.szokpt.core.login.LoginUserData
 
 class LoginViewModel() : ViewModel() {
     val username: MutableLiveData<String> = MutableLiveData("")
