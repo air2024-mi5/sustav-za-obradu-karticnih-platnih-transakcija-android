@@ -22,5 +22,5 @@ interface TransactionsService {
         @Header("Authorization") authHeader: String,
         @Query("id") id: Int,
         @Body transaction: Transaction
-    ): Call<SuccessfulResponseBody<TransactionPageResponse>>
+    ): Call<SuccessfulResponseBody<Unit>>
 }
