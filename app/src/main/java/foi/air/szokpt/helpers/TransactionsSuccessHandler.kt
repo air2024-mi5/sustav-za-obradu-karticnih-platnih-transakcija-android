@@ -1,9 +1,9 @@
 package foi.air.szokpt.helpers
 
-import hr.foi.air.core.network.ResponseListener
-import hr.foi.air.core.network.models.ErrorResponseBody
-import hr.foi.air.core.network.models.SuccessfulResponseBody
-import hr.foi.air.core.transactions.TransactionsSuccessOutcomeListener
+import hr.foi.air.szokpt.core.network.ResponseListener
+import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
+import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
+import hr.foi.air.szokpt.core.transactions.TransactionsSuccessOutcomeListener
 import hr.foi.air.szokpt.ws.models.TransactionsSuccessResponse
 import hr.foi.air.szokpt.ws.request_handlers.TransactionsSuccessRequestHandler
 

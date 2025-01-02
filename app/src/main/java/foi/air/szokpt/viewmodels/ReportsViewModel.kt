@@ -6,7 +6,7 @@ import foi.air.szokpt.helpers.TransactionsSuccessHandler
 import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
-import hr.foi.air.core.transactions.TransactionsSuccessOutcomeListener
+import hr.foi.air.szokpt.core.transactions.TransactionsSuccessOutcomeListener
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
