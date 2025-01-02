@@ -1,7 +1,6 @@
 package foi.air.szokpt.utils
 
 import hr.foi.air.szokpt.ws.models.responses.Transaction
-import hr.foi.air.szokpt.ws.models.responses.User
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
