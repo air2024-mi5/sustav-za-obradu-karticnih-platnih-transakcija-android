@@ -1,5 +1,7 @@
 package foi.air.szokpt.ui.components
 
+import android.view.ContextThemeWrapper
+import android.view.View
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -28,6 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import foi.air.szokpt.R
 import foi.air.szokpt.ui.theme.Primary
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -49,7 +52,7 @@ fun DatePickerField(
     val today = LocalDate.now()
 
     val datePickerDialog = android.app.DatePickerDialog(
-        context,
+        ContextThemeWrapper(context, R.style.CustomDatePickerDialog),
         { _, year, month, dayOfMonth ->
             val date = LocalDate.of(year, month + 1, dayOfMonth)
             if (!date.isAfter(maxDate)) {
@@ -62,6 +65,20 @@ fun DatePickerField(
         today.dayOfMonth
     ).apply {
         datePicker.maxDate = calendar.timeInMillis
+
+        setOnShowListener {
+            try {
+                val datePicker = this.datePicker
+                this.getButton(android.app.DatePickerDialog.BUTTON_POSITIVE)?.setTextColor(
+                    android.graphics.Color.rgb(33, 150, 243)
+                )
+                this.getButton(android.app.DatePickerDialog.BUTTON_NEGATIVE)?.setTextColor(
+                    android.graphics.Color.rgb(222, 222, 222)
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     OutlinedTextField(
