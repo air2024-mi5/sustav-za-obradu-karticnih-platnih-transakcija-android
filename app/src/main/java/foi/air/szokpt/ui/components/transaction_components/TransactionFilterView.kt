@@ -1,5 +1,6 @@
 package foi.air.szokpt.ui.components.transaction_components
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,12 +37,13 @@ import foi.air.szokpt.ui.theme.success
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
 @Composable
 fun TransactionFilterView(
     initialFilter: TransactionFilter?,
     onApplyFilter: (TransactionFilter) -> Unit
 ) {
+    val context = LocalContext.current
+
     val cardBrands = listOf("Maestro", "Visa", "MasterCard", "Diners", "Discover")
     val trxTypeMap = mapOf(
         "sale" to "Sale",
@@ -75,12 +77,24 @@ fun TransactionFilterView(
         )
     }
     fun validateAndSetAfterDate(date: LocalDate) {
-        if (selectedBeforeDate == null || date.isBefore(selectedBeforeDate) || date.isEqual(selectedBeforeDate)) {
+        if (selectedBeforeDate != null && date.isAfter(selectedBeforeDate)) {
+            Toast.makeText(
+                context,
+                "'After Date' cannot be later than the 'Before Date'.",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
             selectedAfterDate = date
         }
     }
     fun validateAndSetBeforeDate(date: LocalDate) {
-        if (selectedAfterDate == null || date.isAfter(selectedAfterDate) || date.isEqual(selectedAfterDate)) {
+        if (selectedAfterDate != null && date.isBefore(selectedAfterDate)) {
+            Toast.makeText(
+                context,
+                "'Before Date' cannot be earlier than the 'After Date'",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
             selectedBeforeDate = date
         }
     }
@@ -220,20 +234,22 @@ fun TransactionFilterView(
         ) {
             InputNumberField(
                 label = "Min",
-                value = minAmount ?: "", // Provide an empty string if null
+                value = minAmount ?: "",
                 onValueChange = { minAmount = it.takeIf { it.isNotEmpty() } },
                 width = 160.dp,
             )
             InputNumberField(
                 label = "Max",
-                value = maxAmount ?: "", // Provide an empty string if null
-                onValueChange = { maxAmount = it.takeIf { it.isNotEmpty() } },
+                value = maxAmount ?: "",
+                onValueChange = {
+                    maxAmount = it.takeIf { it.isNotEmpty() }
+                    Log.i("valuechange", "test")
+                },
                 width = 160.dp,
             )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-        val context = LocalContext.current
         Row(
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.Center,
@@ -255,6 +271,8 @@ fun TransactionFilterView(
                             beforeDate = selectedBeforeDate?.format(dateFormatter)
                         )
                         onApplyFilter(results)
+                        // Theese are the results!
+                        Log.i("filtervalues", results.toString())
                     } else {
                         println("Invalid amount range: min=$minAmount, max=$maxAmount")
                         Toast.makeText(context, "Invalid amount range: Min must be less than or equal to Max", Toast.LENGTH_SHORT).show()

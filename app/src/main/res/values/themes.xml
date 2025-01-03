@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.SZOKPT" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.SZOKPT" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:datePickerDialogTheme">@style/CustomDatePickerDialog</item>
+    </style>
+<!--
+    <style name="CustomDatePickerDialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="android:background">#393939</item>
+
+        <item name="colorPrimary">#2196F3</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+    </style>
+-->
+    <style name="CustomDatePickerDialog" parent="ThemeOverlay.AppCompat.Dialog">
+        <!--header background-->
+        <item name="colorAccent">#282828</item>
+        <!--header textcolor-->
+        <item name="android:textColorPrimaryInverse">#FFFFFF</item>
+        <!--body background-->
+        <item name="android:windowBackground">#353535</item>
+        <!--selected day-->
+        <item name="android:colorControlActivated">#2196F3</item>
+        <!--days of the month-->
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <!--days of the week-->
+        <item name="android:textColorSecondary">#2196F3</item>
+        <!--cancel&ok-->
+        <!-- <item name="android:textColor">#00ffff</item>-->
+    </style>
 </resources>
