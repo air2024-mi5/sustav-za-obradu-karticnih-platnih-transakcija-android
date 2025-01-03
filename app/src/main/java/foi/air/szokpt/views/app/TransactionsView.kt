@@ -1,7 +1,5 @@
 package foi.air.szokpt.views.app
 
-import android.widget.Toast
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,24 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,29 +35,12 @@ import foi.air.szokpt.R
 import foi.air.szokpt.models.TransactionFilter
 import foi.air.szokpt.ui.components.filter_components.ModalBottomSheetFilter
 import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogButton
-import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.components.pagination_components.Pagination
 import foi.air.szokpt.ui.components.transaction_components.TransactionFilterView
 import foi.air.szokpt.ui.components.transaction_components.TransactionItem
-import foi.air.szokpt.ui.theme.BGLevelOne
-import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
-import foi.air.szokpt.ui.theme.danger
-import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.TransactionsViewModel
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
-
-data class FilterResults(
-    val cardBrands: List<String>,
-    val trxTypes: List<String>,
-    val minAmount: String?,
-    val maxAmount: String?,
-    val afterDate: String?,
-    val beforeDate: String?
-)
 
 @Composable
 fun TransactionsView(navController: NavController) {
@@ -87,7 +58,7 @@ fun TransactionsView(navController: NavController) {
     var isShowingFilters by remember { mutableStateOf(false) }
 
     // Result of applied filters. Contains a list of filters that are applied
-    var filterResults by remember { mutableStateOf<FilterResults?>(null) }
+    var filterResults by remember { mutableStateOf<TransactionFilter?>(null) }
 
     // Result of applied filters. Contains a list of filters that are applied
     var filterResults by remember { mutableStateOf<TransactionFilter?>(null) }
@@ -188,7 +159,7 @@ fun TransactionsView(navController: NavController) {
             isExpanded = false
         },
         filterOptionsContent = {
-            TransactionFilter(
+            TransactionFilterView(
                 initialFilter = filterResults,
                 onApplyFilter = { results ->
                     filterResults = results
