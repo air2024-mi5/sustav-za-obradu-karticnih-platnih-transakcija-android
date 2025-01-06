@@ -6,12 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.warning
+import hr.foi.air.szokpt.ws.models.responses.User
 
 @Composable
-fun BlockAccountButton(openBlockDialog: MutableState<Boolean>) {
+fun BlockAccountButton(openBlockDialog: MutableState<Boolean>, user: User) {
+    val buttonText = if (user.blocked) "Unblock" else "Block"
     OutlineBouncingButton(
         onClick = { openBlockDialog.value = true },
-        inputText = "Block",
+        inputText = buttonText,
         contentColor = warning,
         borderColor = warning,
         inputIcon = Icons.Rounded.Clear

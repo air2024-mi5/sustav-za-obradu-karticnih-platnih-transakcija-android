@@ -61,7 +61,6 @@ class AccountViewModel : ViewModel() {
         }
     }
 
-
     private fun updateView() {
         _storedUserAccountData.value = currentUserAccountData.value?.copy(password = "")
         _currentUserAccountData.value = _storedUserAccountData.value
@@ -92,11 +91,14 @@ class AccountViewModel : ViewModel() {
         _currentUserAccountData.value = _currentUserAccountData.value?.copy(email = newEmail)
     }
 
-    fun clearMessage() {
-        _message.value = ""
+    fun updateBlockedStatus(newBlockedStatus: Boolean) {
+        _currentUserAccountData.value =
+            _currentUserAccountData.value?.copy(blocked = newBlockedStatus)
+        _storedUserAccountData.value =
+            _storedUserAccountData.value?.copy(blocked = newBlockedStatus)
     }
 
-    fun setMessage(newMessage: String) {
-        _message.value = newMessage
+    fun clearMessage() {
+        _message.value = ""
     }
 }
