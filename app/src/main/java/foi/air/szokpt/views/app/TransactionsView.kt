@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -84,6 +85,20 @@ fun TransactionsView(navController: NavController) {
             state = listState,
             modifier = Modifier.weight(3f)
         ) {
+            if (transactionPage?.transactions.isNullOrEmpty()) {
+                item {
+                    Text(
+                        text = "No results found",
+                        color = TextWhite,
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
             transactionPage?.transactions?.forEach { transaction ->
                 item {
                     TransactionItem(
@@ -107,22 +122,6 @@ fun TransactionsView(navController: NavController) {
                 )
             }
         }
-
-        if (totalPages == 0) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                Text(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = "No results found",
-                    color = TextWhite,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
-
 
         Row(
             modifier = Modifier
