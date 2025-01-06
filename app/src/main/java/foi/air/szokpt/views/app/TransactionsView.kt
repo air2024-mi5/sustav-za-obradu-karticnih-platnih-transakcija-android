@@ -108,6 +108,21 @@ fun TransactionsView(navController: NavController) {
             }
         }
 
+        if (totalPages == 0) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "No results found",
+                    color = TextWhite,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+
 
         Row(
             modifier = Modifier
