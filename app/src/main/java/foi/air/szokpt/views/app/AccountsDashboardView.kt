@@ -15,8 +15,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import foi.air.szokpt.ui.components.accounts_components.accountViewComponents.AccountsSearchTile
-import foi.air.szokpt.ui.components.accounts_components.accountViewComponents.RegistrationTile
+import foi.air.szokpt.ui.components.accounts_components.accountDashboardView.AccountsSearchTile
+import foi.air.szokpt.ui.components.accounts_components.accountDashboardView.RegistrationTile
 
 @Composable
 fun AccountView(navController: NavController) {

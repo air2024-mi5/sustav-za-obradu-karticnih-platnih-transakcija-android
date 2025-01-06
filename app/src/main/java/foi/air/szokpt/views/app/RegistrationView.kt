@@ -47,8 +47,8 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.RegistrationViewModel
-import hr.foi.air.core.register.RegistrationBody
-import hr.foi.air.core.register.Role
+import hr.foi.air.szokpt.core.register.RegistrationBody
+import hr.foi.air.szokpt.core.register.Role
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

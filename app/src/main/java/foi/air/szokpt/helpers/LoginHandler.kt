@@ -2,13 +2,13 @@ package foi.air.szokpt.helpers
 
 import android.util.Log
 import foi.air.szokpt.context.Auth
-import hr.foi.air.core.network.ResponseListener
-import hr.foi.air.core.network.models.ErrorResponseBody
-import hr.foi.air.core.network.models.SuccessfulResponseBody
-import hr.foi.air.core.login.LoginBody
-import hr.foi.air.core.login.LoginOutcomeListener
+import hr.foi.air.szokpt.core.network.ResponseListener
+import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
+import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
+import hr.foi.air.szokpt.core.login.LoginBody
+import hr.foi.air.szokpt.core.login.LoginOutcomeListener
 import hr.foi.air.szokpt.ws.models.LoginResponse
-import hr.foi.air.core.login.LoginUserData
+import hr.foi.air.szokpt.core.login.LoginUserData
 import hr.foi.air.szokpt.ws.request_handlers.LoginRequestHandler
 
 

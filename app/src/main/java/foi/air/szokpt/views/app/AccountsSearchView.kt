@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.TileSegment
-import foi.air.szokpt.ui.components.accounts_components.accountSearchView.AccountsSearchPanel
+import foi.air.szokpt.ui.components.accounts_components.accountsSearchView.AccountsSearchPanel
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
