@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.helpers.TransactionDetailsHandler
-import hr.foi.air.core.transactions.TransactionData
-import hr.foi.air.core.transactions.TransactionDetailsOutcomeListener
+import hr.foi.air.szokpt.core.transactions.TransactionData
+import hr.foi.air.szokpt.core.transactions.TransactionDetailsOutcomeListener
 
 class TransactionDetailsViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String?>(null)

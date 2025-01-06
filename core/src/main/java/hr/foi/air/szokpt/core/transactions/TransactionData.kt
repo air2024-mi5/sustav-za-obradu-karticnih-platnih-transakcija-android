@@ -1,4 +1,4 @@
-package hr.foi.air.core.transactions
+package hr.foi.air.szokpt.core.transactions
 
 data class TransactionData(
     val id: Int,
