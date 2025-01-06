@@ -17,8 +17,8 @@ import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,8 +45,8 @@ fun TransactionDetailsView(
     transactionId: Int,
     viewModel: TransactionDetailsViewModel = viewModel()
 ) {
-    val transaction by viewModel.transactionData.collectAsState()
-    val errorMessage by viewModel.errorMessage.collectAsState()
+    val transaction by viewModel.transactionData.observeAsState()
+    val errorMessage by viewModel.errorMessage.observeAsState()
 
     viewModel.fetchTransactionDetails(transactionId = transactionId)
 
