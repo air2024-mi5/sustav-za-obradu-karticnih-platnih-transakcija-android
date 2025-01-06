@@ -60,9 +60,6 @@ fun TransactionsView(navController: NavController) {
     // Result of applied filters. Contains a list of filters that are applied
     var filterResults by remember { mutableStateOf<TransactionFilter?>(null) }
 
-    // Result of applied filters. Contains a list of filters that are applied
-    var filterResults by remember { mutableStateOf<TransactionFilter?>(null) }
-
     LaunchedEffect(currentPage) {
         if (transactionPage == null) {
             viewModel.fetchTransactionPage(1)
@@ -114,63 +111,6 @@ fun TransactionsView(navController: NavController) {
             }
         }
 
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                modifier = Modifier.weight(1f),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Pagination(
-                    currentPage = currentPage,
-                    totalPages = totalPages,
-                    onPageSelected = { page ->
-                        viewModel.fetchTransactionPage(page)
-                        coroutineScope.launch {
-                            listState.scrollToItem(0)
-                        }
-                    }
-                )
-            }
-            BouncingFABDialogButton(
-                isExpanded = isExpanded,
-                onToggle = { isExpanded = !isExpanded },
-                baseIcon = ImageVector.vectorResource(id = R.drawable.rounded_filter_alt_24),
-                expandedIcon = ImageVector.vectorResource(id = R.drawable.round_filter_fill_alt_24)
-            )
-        }
-    }
-    ModalBottomSheetFilter(
-        isVisible = isExpanded,
-        onDismiss = { isExpanded = false },
-        hasFilters = hasFilters,
-        isShowingFilters = isShowingFilters,
-        onShowFilterOptions = {
-            isShowingFilters = true
-        },
-        onRemoveFilters = {
-            hasFilters = false
-            filterResults = null
-            isExpanded = false
-        },
-        filterOptionsContent = {
-            TransactionFilterView(
-                initialFilter = filterResults,
-                onApplyFilter = { results ->
-                    filterResults = results
-                    hasFilters = true
-                    isShowingFilters = false
-                    isExpanded = false
-                }
-            )
-        }
-    )
-}
 
         Row(
             modifier = Modifier
