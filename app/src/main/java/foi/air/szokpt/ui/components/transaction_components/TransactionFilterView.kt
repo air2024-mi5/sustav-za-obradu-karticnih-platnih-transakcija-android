@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,25 +39,29 @@ import foi.air.szokpt.ui.components.InputTimePicker
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.success
+import foi.air.szokpt.viewmodels.TransactionsViewModel
 import hr.foi.air.szokpt.core.transactions.TransactionFilter
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.Calendar
 
 @Composable
 fun TransactionFilterView(
     initialFilter: TransactionFilter?,
+    viewModel: TransactionsViewModel,
     onApplyFilter: (TransactionFilter) -> Unit
 ) {
     val context = LocalContext.current
 
+    // Observe the existing filter from the ViewModel
+    val transactionsFilter = viewModel.transactionsFilter.observeAsState().value
+
     var showAfterTimePicker by remember { mutableStateOf(false) }
     var showBeforeTimePicker by remember { mutableStateOf(false) }
 
-    var selectedAfterTime by remember { mutableStateOf<LocalTime?>(null) }
-    var selectedBeforeTime by remember { mutableStateOf<LocalTime?>(null) }
     var selectedAfterDateTime by remember { mutableStateOf<LocalDateTime?>(null) }
     var selectedBeforeDateTime by remember { mutableStateOf<LocalDateTime?>(null) }
     val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
@@ -83,15 +88,54 @@ fun TransactionFilterView(
         return min == null || max == null || min <= max
     }
 
-    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 00:00:00")
+    val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+    val dateOnlyFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
     var selectedAfterDate by remember {
         mutableStateOf(
-            initialFilter?.afterDate?.let { LocalDate.parse(it, dateFormatter) }
+            transactionsFilter?.afterDate?.let {
+                try {
+                    LocalDateTime.parse(it, dateTimeFormatter).toLocalDate()
+                } catch (e: DateTimeParseException) {
+                    LocalDate.parse(it, dateOnlyFormatter)
+                }
+            }
         )
     }
+
     var selectedBeforeDate by remember {
         mutableStateOf(
-            initialFilter?.beforeDate?.let { LocalDate.parse(it, dateFormatter) }
+            transactionsFilter?.beforeDate?.let {
+                try {
+                    LocalDateTime.parse(it, dateTimeFormatter).toLocalDate()
+                } catch (e: DateTimeParseException) {
+                    LocalDate.parse(it, dateOnlyFormatter)
+                }
+            }
+        )
+    }
+
+    var selectedAfterTime by remember {
+        mutableStateOf(
+            transactionsFilter?.afterDate?.let {
+                try {
+                    LocalDateTime.parse(it, dateTimeFormatter).toLocalTime()
+                } catch (e: DateTimeParseException) {
+                    null
+                }
+            }
+        )
+    }
+
+    var selectedBeforeTime by remember {
+        mutableStateOf(
+            transactionsFilter?.beforeDate?.let {
+                try {
+                    LocalDateTime.parse(it, dateTimeFormatter).toLocalTime()
+                } catch (e: DateTimeParseException) {
+                    null
+                }
+            }
         )
     }
 
@@ -112,7 +156,7 @@ fun TransactionFilterView(
         if (selectedAfterDate != null && date.isBefore(selectedAfterDate)) {
             Toast.makeText(
                 context,
-                "'Before Date' cannot be earlier than the 'After Date'",
+                "'Before Date' cannot be earlier than the 'After Date'.",
                 Toast.LENGTH_SHORT
             ).show()
         } else {
@@ -120,6 +164,7 @@ fun TransactionFilterView(
             showBeforeTimePicker = true
         }
     }
+
 
     Column(
         modifier = Modifier
@@ -263,16 +308,14 @@ fun TransactionFilterView(
                         )
                     }
                 }
+                // After Time Picker
                 if (showAfterTimePicker) {
                     InputTimePicker(
                         onConfirm = { hour, minute ->
-                            selectedAfterTime = LocalTime.of(hour, minute, 0)
+                            selectedAfterTime = LocalTime.of(hour, minute)
                             showAfterTimePicker = false
                             if (selectedAfterDate != null) {
-                                selectedAfterDateTime = LocalDateTime.of(
-                                    selectedAfterDate,
-                                    LocalTime.of(hour, minute)
-                                )
+                                selectedAfterDateTime = LocalDateTime.of(selectedAfterDate, selectedAfterTime)
                             }
                         },
                         onDismiss = {
@@ -282,6 +325,7 @@ fun TransactionFilterView(
                 }
             }
             Column {
+                Log.i("filter-time", "Before Date Value: $selectedBeforeDate")
                 DatePickerField(
                     onDateSelected = { date -> validateAndSetBeforeDate(date) },
                     label = "Before date",
@@ -372,22 +416,6 @@ fun TransactionFilterView(
                 contentColor = success,
                 borderColor = success,
                 onClick = {
-                    val tempSelectedAfterDate = if (selectedAfterDate != null && selectedAfterTime != null) {
-                        LocalDateTime.of(selectedAfterDate, selectedAfterTime)
-                    } else null
-                    val tempDateFormater = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-                    val tempSelectedBeforeDate = if (selectedBeforeDate != null && selectedBeforeTime != null) {
-                        LocalDateTime.of(selectedBeforeDate, selectedBeforeTime)
-                    } else null
-
-                    // Apply formatter to tempSelectedBeforeDate
-                    val formattedBeforeDate = tempSelectedBeforeDate?.format(tempDateFormater)
-
-                    // Log formatted values
-                    Log.i("filter-time", "After Date: ${tempSelectedAfterDate?.format(dateFormatter)}")
-                    Log.i("filter-time", "Before Date: $formattedBeforeDate")
-
-                    val temp = selectedBeforeDate?.format(dateFormatter)
                     if (isValidAmountRange(minAmount, maxAmount)) {
                         val results = TransactionFilter(
                             cardBrands = selectedCardBrands.toList(),
