@@ -27,12 +27,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.R
-import foi.air.szokpt.models.TransactionFilter
 import foi.air.szokpt.ui.components.filter_components.ModalBottomSheetFilter
 import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogButton
 import foi.air.szokpt.ui.components.pagination_components.Pagination
@@ -49,16 +49,14 @@ fun TransactionsView(navController: NavController) {
     val currentPage by viewModel.currentPage.observeAsState()
     val totalPages by viewModel.totalPages.observeAsState()
     val loading by viewModel.loading.observeAsState(true)
+    val filterResults by viewModel.transactionsFilter.observeAsState()
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     var isExpanded by remember { mutableStateOf(false) }
-    var hasFilters by remember { mutableStateOf(false) }
+    var hasFilters by remember { mutableStateOf(filterResults != null) }
     var isShowingFilters by remember { mutableStateOf(false) }
-
-    // Result of applied filters. Contains a list of filters that are applied
-    var filterResults by remember { mutableStateOf<TransactionFilter?>(null) }
 
     LaunchedEffect(currentPage) {
         if (transactionPage == null) {
@@ -87,6 +85,20 @@ fun TransactionsView(navController: NavController) {
             state = listState,
             modifier = Modifier.weight(3f)
         ) {
+            if (transactionPage?.transactions.isNullOrEmpty()) {
+                item {
+                    Text(
+                        text = "No results found",
+                        color = TextWhite,
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
             transactionPage?.transactions?.forEach { transaction ->
                 item {
                     TransactionItem(
@@ -110,7 +122,6 @@ fun TransactionsView(navController: NavController) {
                 )
             }
         }
-
 
         Row(
             modifier = Modifier
@@ -152,17 +163,19 @@ fun TransactionsView(navController: NavController) {
         },
         onRemoveFilters = {
             hasFilters = false
-            filterResults = null
             isExpanded = false
+            viewModel.setFilter(null)
+            viewModel.fetchTransactionPage(0)
         },
         filterOptionsContent = {
             TransactionFilterView(
                 initialFilter = filterResults,
                 onApplyFilter = { results ->
-                    filterResults = results
+                    viewModel.setFilter(results)
                     hasFilters = true
                     isShowingFilters = false
                     isExpanded = false
+                    viewModel.fetchTransactionPage(0)
                 }
             )
         }

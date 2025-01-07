@@ -14,6 +14,12 @@ interface TransactionsService {
     fun getTransactionPage(
         @Header("Authorization") authHeader: String,
         @Query("page") page: Int,
+        @Query("card_brand") cardBrands: List<String>?,
+        @Query("trx_type") trxTypes: List<String>?,
+        @Query("before") beforeDate: String?,
+        @Query("after") afterDate: String?,
+        @Query("amount_greater_than") minAmount: Int?,
+        @Query("amount_less_than") maxAmount: Int?,
     ): Call<SuccessfulResponseBody<TransactionPageResponse>>
 
     @GET("transactions/{id}")

@@ -1,10 +1,10 @@
-package foi.air.szokpt.models
+package hr.foi.air.szokpt.core.transactions
 
 data class TransactionFilter(
     val cardBrands: List<String>,
     val trxTypes: List<String>,
-    val minAmount: String?,
-    val maxAmount: String?,
+    val minAmount: Int?,
+    val maxAmount: Int?,
     val afterDate: String?,
     val beforeDate: String?
 )

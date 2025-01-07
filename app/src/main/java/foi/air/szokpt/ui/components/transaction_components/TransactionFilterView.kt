@@ -1,6 +1,5 @@
 package foi.air.szokpt.ui.components.transaction_components
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,12 +27,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import foi.air.szokpt.models.TransactionFilter
 import foi.air.szokpt.ui.components.DatePickerField
 import foi.air.szokpt.ui.components.InputNumberField
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.success
+import hr.foi.air.szokpt.core.transactions.TransactionFilter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -54,18 +53,19 @@ fun TransactionFilterView(
         "reversal_refund" to "Reversal refund"
     )
 
-    val selectedCardBrands = remember { mutableStateListOf<String>().apply { initialFilter?.cardBrands?.let { addAll(it) } } }
-    val selectedTrxTypes = remember { mutableStateListOf<String>().apply { initialFilter?.trxTypes?.let { addAll(it) } } }
+    val selectedCardBrands =
+        remember { mutableStateListOf<String>().apply { initialFilter?.cardBrands?.let { addAll(it) } } }
+    val selectedTrxTypes =
+        remember { mutableStateListOf<String>().apply { initialFilter?.trxTypes?.let { addAll(it) } } }
 
     var minAmount by remember { mutableStateOf(initialFilter?.minAmount) }
     var maxAmount by remember { mutableStateOf(initialFilter?.maxAmount) }
-    fun isValidAmountRange(min: String?, max: String?): Boolean {
-        val minValue = min?.toDoubleOrNull()
-        val maxValue = max?.toDoubleOrNull()
-        return minValue == null || maxValue == null || minValue <= maxValue
+
+    fun isValidAmountRange(min: Int?, max: Int?): Boolean {
+        return min == null || max == null || min <= max
     }
 
-    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 00:00:00")
     var selectedAfterDate by remember {
         mutableStateOf(
             initialFilter?.afterDate?.let { LocalDate.parse(it, dateFormatter) }
@@ -76,6 +76,7 @@ fun TransactionFilterView(
             initialFilter?.beforeDate?.let { LocalDate.parse(it, dateFormatter) }
         )
     }
+
     fun validateAndSetAfterDate(date: LocalDate) {
         if (selectedBeforeDate != null && date.isAfter(selectedBeforeDate)) {
             Toast.makeText(
@@ -87,6 +88,7 @@ fun TransactionFilterView(
             selectedAfterDate = date
         }
     }
+
     fun validateAndSetBeforeDate(date: LocalDate) {
         if (selectedAfterDate != null && date.isBefore(selectedAfterDate)) {
             Toast.makeText(
@@ -138,7 +140,9 @@ fun TransactionFilterView(
                             Checkbox(
                                 checked = selectedTrxTypes.contains(key),
                                 onCheckedChange = { isChecked ->
-                                    if (isChecked) selectedTrxTypes.add(key) else selectedTrxTypes.remove(key)
+                                    if (isChecked) selectedTrxTypes.add(key) else selectedTrxTypes.remove(
+                                        key
+                                    )
                                 },
                                 colors = CheckboxDefaults.colors(
                                     checkedColor = Primary
@@ -182,7 +186,9 @@ fun TransactionFilterView(
                             Checkbox(
                                 checked = selectedCardBrands.contains(brand),
                                 onCheckedChange = { isChecked ->
-                                    if (isChecked) selectedCardBrands.add(brand) else selectedCardBrands.remove(brand)
+                                    if (isChecked) selectedCardBrands.add(brand) else selectedCardBrands.remove(
+                                        brand
+                                    )
                                 },
                                 colors = CheckboxDefaults.colors(
                                     checkedColor = Primary
@@ -234,16 +240,15 @@ fun TransactionFilterView(
         ) {
             InputNumberField(
                 label = "Min",
-                value = minAmount ?: "",
-                onValueChange = { minAmount = it.takeIf { it.isNotEmpty() } },
+                value = minAmount?.toString() ?: "",
+                onValueChange = { minAmount = it.takeIf { it.isNotEmpty() }?.toIntOrNull() },
                 width = 160.dp,
             )
             InputNumberField(
                 label = "Max",
-                value = maxAmount ?: "",
+                value = maxAmount?.toString() ?: "",
                 onValueChange = {
-                    maxAmount = it.takeIf { it.isNotEmpty() }
-                    Log.i("valuechange", "test")
+                    maxAmount = it.takeIf { it.isNotEmpty() }?.toIntOrNull()
                 },
                 width = 160.dp,
             )
@@ -251,7 +256,9 @@ fun TransactionFilterView(
 
         Spacer(modifier = Modifier.height(8.dp))
         Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.Center,
         ) {
             OutlineBouncingButton(
@@ -265,17 +272,18 @@ fun TransactionFilterView(
                         val results = TransactionFilter(
                             cardBrands = selectedCardBrands.toList(),
                             trxTypes = selectedTrxTypes.toList(),
-                            minAmount = minAmount?.takeIf { it.isNotEmpty() },
-                            maxAmount = maxAmount?.takeIf { it.isNotEmpty() },
+                            minAmount = minAmount,
+                            maxAmount = maxAmount,
                             afterDate = selectedAfterDate?.format(dateFormatter),
                             beforeDate = selectedBeforeDate?.format(dateFormatter)
                         )
                         onApplyFilter(results)
-                        // Theese are the results!
-                        Log.i("filtervalues", results.toString())
                     } else {
-                        println("Invalid amount range: min=$minAmount, max=$maxAmount")
-                        Toast.makeText(context, "Invalid amount range: Min must be less than or equal to Max", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Invalid amount range: Min must be less than or equal to Max",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 },
             )
