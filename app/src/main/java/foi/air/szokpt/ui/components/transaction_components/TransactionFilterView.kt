@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,17 +26,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import foi.air.szokpt.R
 import foi.air.szokpt.ui.components.DatePickerField
 import foi.air.szokpt.ui.components.InputNumberField
+import foi.air.szokpt.ui.components.InputTimePicker
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.success
 import hr.foi.air.szokpt.core.transactions.TransactionFilter
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 @Composable
 fun TransactionFilterView(
@@ -42,6 +50,12 @@ fun TransactionFilterView(
     onApplyFilter: (TransactionFilter) -> Unit
 ) {
     val context = LocalContext.current
+
+    var showAfterTimePicker by remember { mutableStateOf(false) }
+    var showBeforeTimePicker by remember { mutableStateOf(false) }
+    var selectedAfterDateTime by remember { mutableStateOf<LocalDateTime?>(null) }
+    var selectedBeforeDateTime by remember { mutableStateOf<LocalDateTime?>(null) }
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
     val cardBrands = listOf("Maestro", "Visa", "MasterCard", "Diners", "Discover")
     val trxTypeMap = mapOf(
@@ -86,6 +100,7 @@ fun TransactionFilterView(
             ).show()
         } else {
             selectedAfterDate = date
+            showAfterTimePicker = true
         }
     }
 
@@ -98,6 +113,7 @@ fun TransactionFilterView(
             ).show()
         } else {
             selectedBeforeDate = date
+            showBeforeTimePicker = true
         }
     }
 
@@ -107,7 +123,7 @@ fun TransactionFilterView(
             .padding(8.dp)
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -115,7 +131,7 @@ fun TransactionFilterView(
             ) {
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(
                         text = "Transaction types",
@@ -161,7 +177,7 @@ fun TransactionFilterView(
 
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(
                         text = "Card brands",
@@ -211,22 +227,105 @@ fun TransactionFilterView(
             fontWeight = FontWeight.Medium,
         )
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .padding(bottom = 2.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
-
-            DatePickerField(
-                onDateSelected = { date -> validateAndSetAfterDate(date) },
-                label = "After date",
-                initialDate = selectedAfterDate,
-                maxWidth = 172.dp
-            )
-            DatePickerField(
-                onDateSelected = { date -> validateAndSetBeforeDate(date) },
-                label = "Before date",
-                initialDate = selectedBeforeDate,
-                maxWidth = 172.dp
-            )
+            Column {
+                DatePickerField(
+                    onDateSelected = { date -> validateAndSetAfterDate(date) },
+                    label = "After date",
+                    initialDate = selectedAfterDate,
+                    maxWidth = 172.dp
+                )
+                selectedAfterDateTime?.let {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier
+                            .padding(end = 20.dp)
+                            .align(Alignment.End)
+                    ) {
+                        Text(
+                            text = it.format(timeFormatter),
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(end = 10.dp)
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.round_schedule_24),
+                            contentDescription = "Time Icon",
+                            modifier = Modifier.size(16.dp),
+                            tint = Primary
+                        )
+                    }
+                }
+                if (showAfterTimePicker) {
+                    InputTimePicker(
+                        onConfirm = { hour, minute ->
+                            showAfterTimePicker = false
+                            if (selectedAfterDate != null) {
+                                selectedAfterDateTime = LocalDateTime.of(
+                                    selectedAfterDate,
+                                    LocalTime.of(hour, minute)
+                                )
+                            }
+                        },
+                        onDismiss = {
+                            showAfterTimePicker = false
+                        }
+                    )
+                }
+            }
+            Column {
+                DatePickerField(
+                    onDateSelected = { date -> validateAndSetBeforeDate(date) },
+                    label = "Before date",
+                    initialDate = selectedBeforeDate,
+                    maxWidth = 172.dp
+                )
+                selectedBeforeDateTime?.let {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier
+                            .padding(end = 20.dp)
+                            .align(Alignment.End)
+                    ) {
+                        Text(
+                            text = it.format(timeFormatter),
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(end = 10.dp)
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.round_schedule_24),
+                            contentDescription = "Time Icon",
+                            modifier = Modifier.size(16.dp),
+                            tint = Primary
+                        )
+                    }
+                }
+                if (showBeforeTimePicker) {
+                    InputTimePicker(
+                        onConfirm = { hour, minute ->
+                            showBeforeTimePicker = false
+                            if (selectedBeforeDate != null) {
+                                selectedBeforeDateTime = LocalDateTime.of(
+                                    selectedBeforeDate,
+                                    LocalTime.of(hour, minute)
+                                )
+                            }
+                        },
+                        onDismiss = {
+                            // Set time to 00:00 when InputTimePicker is dismissed
+                            selectedBeforeDateTime = LocalDateTime.of(
+                                selectedBeforeDate ?: LocalDate.now(),
+                                LocalTime.MIDNIGHT
+                            )
+                            showBeforeTimePicker = false
+                        }
+                    )
+                }
+            }
         }
 
         Text(
