@@ -292,7 +292,7 @@ fun TransactionFilterView(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier
-                            .padding(end = 20.dp)
+                            .padding(end = 10.dp)
                             .align(Alignment.End)
                     ) {
                         Text(
@@ -334,7 +334,7 @@ fun TransactionFilterView(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier
-                            .padding(end = 20.dp)
+                            .padding(end = 10.dp)
                             .align(Alignment.End)
                     ) {
                         Text(
