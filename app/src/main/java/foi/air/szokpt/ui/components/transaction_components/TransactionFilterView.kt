@@ -9,14 +9,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,24 +27,42 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import foi.air.szokpt.R
 import foi.air.szokpt.ui.components.DatePickerField
 import foi.air.szokpt.ui.components.InputNumberField
+import foi.air.szokpt.ui.components.InputTimePicker
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.Primary
+import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.success
+import foi.air.szokpt.viewmodels.TransactionsViewModel
 import hr.foi.air.szokpt.core.transactions.TransactionFilter
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
+/**
+ * A composable function that provides a UI for filtering transactions based on various criteria.
+ *
+ * @param viewModel The instance of `TransactionsViewModel` used to observe and update transaction filter data.
+ * @param onApplyFilter A callback function triggered when the user applies the filters. It provides the updated `TransactionFilter`.
+ */
 @Composable
 fun TransactionFilterView(
-    initialFilter: TransactionFilter?,
+    viewModel: TransactionsViewModel,
     onApplyFilter: (TransactionFilter) -> Unit
 ) {
+    // For the toast message
     val context = LocalContext.current
+
+    // ViewModel for persistence of the filter
+    val transactionsFilter = viewModel.transactionsFilter.observeAsState().value
 
     val cardBrands = listOf("Maestro", "Visa", "MasterCard", "Diners", "Discover")
     val trxTypeMap = mapOf(
@@ -53,30 +74,66 @@ fun TransactionFilterView(
         "reversal_refund" to "Reversal refund"
     )
 
-    val selectedCardBrands =
-        remember { mutableStateListOf<String>().apply { initialFilter?.cardBrands?.let { addAll(it) } } }
-    val selectedTrxTypes =
-        remember { mutableStateListOf<String>().apply { initialFilter?.trxTypes?.let { addAll(it) } } }
+    // State managment for Card Brands and Transaction Types
+    val selectedCardBrands = remember { mutableStateListOf<String>().apply {transactionsFilter?.cardBrands?.let { addAll(it) } } }
+    val selectedTrxTypes = remember { mutableStateListOf<String>().apply {transactionsFilter?.trxTypes?.let { addAll(it) } } }
 
-    var minAmount by remember { mutableStateOf(initialFilter?.minAmount) }
-    var maxAmount by remember { mutableStateOf(initialFilter?.maxAmount) }
+    // Show a bonus dialog to pick the time HH:mm
+    var showAfterTimePicker by remember { mutableStateOf(false) }
+    var showBeforeTimePicker by remember { mutableStateOf(false) }
 
-    fun isValidAmountRange(min: Int?, max: Int?): Boolean {
-        return min == null || max == null || min <= max
-    }
+    // Formatters to format LocalDate and LocalTime
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+    val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+    val dateOnlyFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
-    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 00:00:00")
+    // Selected filters for date and time
     var selectedAfterDate by remember {
         mutableStateOf(
-            initialFilter?.afterDate?.let { LocalDate.parse(it, dateFormatter) }
+            transactionsFilter?.afterDate?.let {
+                try {
+                    LocalDateTime.parse(it, dateTimeFormatter).toLocalDate()
+                } catch (e: DateTimeParseException) {
+                    LocalDate.parse(it, dateOnlyFormatter)
+                }
+            }
         )
     }
     var selectedBeforeDate by remember {
         mutableStateOf(
-            initialFilter?.beforeDate?.let { LocalDate.parse(it, dateFormatter) }
+            transactionsFilter?.beforeDate?.let {
+                try {
+                    LocalDateTime.parse(it, dateTimeFormatter).toLocalDate()
+                } catch (e: DateTimeParseException) {
+                    LocalDate.parse(it, dateOnlyFormatter)
+                }
+            }
+        )
+    }
+    var selectedAfterTime by remember {
+        mutableStateOf(
+            transactionsFilter?.afterDate?.let {
+                try {
+                    LocalDateTime.parse(it, dateTimeFormatter).toLocalTime()
+                } catch (e: DateTimeParseException) {
+                    null
+                }
+            }
+        )
+    }
+    var selectedBeforeTime by remember {
+        mutableStateOf(
+            transactionsFilter?.beforeDate?.let {
+                try {
+                    LocalDateTime.parse(it, dateTimeFormatter).toLocalTime()
+                } catch (e: DateTimeParseException) {
+                    null
+                }
+            }
         )
     }
 
+    // Validation of incorrect time range between After and Before date
     fun validateAndSetAfterDate(date: LocalDate) {
         if (selectedBeforeDate != null && date.isAfter(selectedBeforeDate)) {
             Toast.makeText(
@@ -86,6 +143,7 @@ fun TransactionFilterView(
             ).show()
         } else {
             selectedAfterDate = date
+            showAfterTimePicker = true
         }
     }
 
@@ -93,12 +151,20 @@ fun TransactionFilterView(
         if (selectedAfterDate != null && date.isBefore(selectedAfterDate)) {
             Toast.makeText(
                 context,
-                "'Before Date' cannot be earlier than the 'After Date'",
+                "'Before Date' cannot be earlier than the 'After Date'.",
                 Toast.LENGTH_SHORT
             ).show()
         } else {
             selectedBeforeDate = date
+            showBeforeTimePicker = true
         }
+    }
+
+    var minAmount by remember { mutableStateOf(transactionsFilter?.minAmount) }
+    var maxAmount by remember { mutableStateOf(transactionsFilter?.maxAmount) }
+
+    fun isValidAmountRange(min: Int?, max: Int?): Boolean {
+        return min == null || max == null || min <= max
     }
 
     Column(
@@ -107,7 +173,7 @@ fun TransactionFilterView(
             .padding(8.dp)
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -115,10 +181,11 @@ fun TransactionFilterView(
             ) {
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(
                         text = "Transaction types",
+                        color = TextWhite,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -151,6 +218,7 @@ fun TransactionFilterView(
                             Text(
                                 text = displayValue,
                                 fontSize = 14.sp,
+                                color = TextWhite,
                                 modifier = Modifier.padding(start = 8.dp)
                             )
                         }
@@ -161,11 +229,12 @@ fun TransactionFilterView(
 
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(
                         text = "Card brands",
                         fontSize = 18.sp,
+                        color = TextWhite,
                         fontWeight = FontWeight.Medium
                     )
 
@@ -197,6 +266,7 @@ fun TransactionFilterView(
                             Text(
                                 text = brand,
                                 fontSize = 14.sp,
+                                color = TextWhite,
                                 modifier = Modifier.padding(start = 8.dp)
                             )
                         }
@@ -208,30 +278,103 @@ fun TransactionFilterView(
         Text(
             text = "Date range",
             fontSize = 18.sp,
+            color = TextWhite,
             fontWeight = FontWeight.Medium,
         )
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .padding(bottom = 2.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
-
-            DatePickerField(
-                onDateSelected = { date -> validateAndSetAfterDate(date) },
-                label = "After date",
-                initialDate = selectedAfterDate,
-                maxWidth = 172.dp
-            )
-            DatePickerField(
-                onDateSelected = { date -> validateAndSetBeforeDate(date) },
-                label = "Before date",
-                initialDate = selectedBeforeDate,
-                maxWidth = 172.dp
-            )
+            Column {
+                DatePickerField(
+                    onDateSelected = { date -> validateAndSetAfterDate(date) },
+                    label = "After date",
+                    initialDate = selectedAfterDate,
+                    maxWidth = 172.dp
+                )
+                if (selectedAfterDate != null && selectedAfterTime != null) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier
+                            .padding(end = 10.dp)
+                            .align(Alignment.End)
+                    ) {
+                        Text(
+                            text = selectedAfterTime!!.format(timeFormatter),
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(end = 10.dp)
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.round_schedule_24),
+                            contentDescription = "Time Icon",
+                            modifier = Modifier.size(16.dp),
+                            tint = Primary
+                        )
+                    }
+                }
+                // After Time Picker
+                if (showAfterTimePicker) {
+                    InputTimePicker(
+                        onConfirm = { hour, minute ->
+                            selectedAfterTime = LocalTime.of(hour, minute)
+                            showAfterTimePicker = false
+                        },
+                        onDismiss = {
+                            selectedAfterTime = LocalTime.MIDNIGHT
+                            showAfterTimePicker = false
+                        }
+                    )
+                }
+            }
+            Column {
+                DatePickerField(
+                    onDateSelected = { date -> validateAndSetBeforeDate(date) },
+                    label = "Before date",
+                    initialDate = selectedBeforeDate,
+                    maxWidth = 172.dp
+                )
+                if (selectedBeforeDate != null && selectedBeforeTime != null) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier
+                            .padding(end = 10.dp)
+                            .align(Alignment.End)
+                    ) {
+                        Text(
+                            text = selectedBeforeTime!!.format(timeFormatter),
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(end = 10.dp)
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.round_schedule_24),
+                            contentDescription = "Time Icon",
+                            modifier = Modifier.size(16.dp),
+                            tint = Primary
+                        )
+                    }
+                }
+                if (showBeforeTimePicker) {
+                    InputTimePicker(
+                        onConfirm = { hour, minute ->
+                            selectedBeforeTime = LocalTime.of(hour, minute, 0)
+                            showBeforeTimePicker = false
+                        },
+                        onDismiss = {
+                            selectedBeforeTime = LocalTime.MIDNIGHT
+                            showBeforeTimePicker = false
+                        }
+                    )
+                }
+            }
         }
 
         Text(
             text = "Amount value range",
             fontSize = 18.sp,
+            color = TextWhite,
             fontWeight = FontWeight.Medium,
         )
         Row(
@@ -267,15 +410,14 @@ fun TransactionFilterView(
                 contentColor = success,
                 borderColor = success,
                 onClick = {
-
                     if (isValidAmountRange(minAmount, maxAmount)) {
                         val results = TransactionFilter(
                             cardBrands = selectedCardBrands.toList(),
                             trxTypes = selectedTrxTypes.toList(),
                             minAmount = minAmount,
                             maxAmount = maxAmount,
-                            afterDate = selectedAfterDate?.format(dateFormatter),
-                            beforeDate = selectedBeforeDate?.format(dateFormatter)
+                            afterDate = formatTime(selectedAfterDate, selectedAfterTime),
+                            beforeDate = formatTime(selectedBeforeDate, selectedBeforeTime)
                         )
                         onApplyFilter(results)
                     } else {
@@ -289,4 +431,18 @@ fun TransactionFilterView(
             )
         }
     }
+}
+
+/**
+ * Formats a given date and time into a string representation.
+ *
+ * @param date The date component of the `LocalDateTime` to format. This should be of type `LocalDate` or `null` if no date is provided.
+ * @param time The time component of the `LocalDateTime` to format. This should be of type `LocalTime` or `null` if no time is provided.
+ * @return A formatted string in the pattern "dd/MM/yyyy HH:mm:ss" if both `date` and `time` are non-null, or `null` if either is null.
+ */
+fun formatTime(date: LocalDate?, time: LocalTime?): String? {
+    val tempDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+    return if (date != null && time != null) {
+        LocalDateTime.of(date, time).format(tempDateFormatter)
+    } else null
 }
