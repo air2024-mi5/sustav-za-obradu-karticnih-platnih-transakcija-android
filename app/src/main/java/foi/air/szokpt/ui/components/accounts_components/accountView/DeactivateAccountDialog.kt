@@ -14,11 +14,15 @@ import hr.foi.air.szokpt.ws.models.responses.User
 @Composable
 fun DeactivateAccountDialog(
     openDeactivateDialog: MutableState<Boolean>,
-    user: User
+    user: User,
+    onConfirm: () -> Unit,
 ) {
     DialogComponent(
+        onConfirmation = {
+            onConfirm()
+            openDeactivateDialog.value = false
+        },
         onDismissRequest = { openDeactivateDialog.value = false },
-        onConfirmation = { openDeactivateDialog.value = false },
         dialogTitle = "Deactivate User Account",
         dialogText = "Are you sure you want to PERMANENTLY DEACTIVATE ${user.firstName} ${user.lastName}, @${user.username}? \n \nBe cautious!",
         iconTop = Icons.Rounded.Delete,
