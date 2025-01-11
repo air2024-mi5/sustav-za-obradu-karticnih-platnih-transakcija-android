@@ -21,7 +21,7 @@ import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 
 @Composable
-fun ContentUnavailable(
+fun IconMessage(
     title: String,
     description: String,
     icon: ImageVector

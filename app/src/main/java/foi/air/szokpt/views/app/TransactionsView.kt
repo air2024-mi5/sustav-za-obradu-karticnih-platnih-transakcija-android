@@ -29,13 +29,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.R
-import foi.air.szokpt.ui.components.ContentUnavailable
+import foi.air.szokpt.ui.components.IconMessage
 import foi.air.szokpt.ui.components.filter_components.ModalBottomSheetFilter
 import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogButton
 import foi.air.szokpt.ui.components.pagination_components.Pagination
@@ -90,7 +89,7 @@ fun TransactionsView(navController: NavController) {
         ) {
             if (transactionPage?.transactions.isNullOrEmpty()) {
                 item {
-                    ContentUnavailable(
+                    IconMessage(
                         title = "No results found",
                         description = "No results were found that matched your request. Please change the filter or remove it.",
                         icon = Icons.Rounded.Search

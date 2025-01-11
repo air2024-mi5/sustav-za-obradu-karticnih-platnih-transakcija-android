@@ -37,6 +37,7 @@ import foi.air.szokpt.ui.components.InputNumberField
 import foi.air.szokpt.ui.components.InputTimePicker
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.Primary
+import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.TransactionsViewModel
 import hr.foi.air.szokpt.core.transactions.TransactionFilter
@@ -184,6 +185,7 @@ fun TransactionFilterView(
                 ) {
                     Text(
                         text = "Transaction types",
+                        color = TextWhite,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -216,6 +218,7 @@ fun TransactionFilterView(
                             Text(
                                 text = displayValue,
                                 fontSize = 14.sp,
+                                color = TextWhite,
                                 modifier = Modifier.padding(start = 8.dp)
                             )
                         }
@@ -231,6 +234,7 @@ fun TransactionFilterView(
                     Text(
                         text = "Card brands",
                         fontSize = 18.sp,
+                        color = TextWhite,
                         fontWeight = FontWeight.Medium
                     )
 
@@ -262,6 +266,7 @@ fun TransactionFilterView(
                             Text(
                                 text = brand,
                                 fontSize = 14.sp,
+                                color = TextWhite,
                                 modifier = Modifier.padding(start = 8.dp)
                             )
                         }
@@ -273,6 +278,7 @@ fun TransactionFilterView(
         Text(
             text = "Date range",
             fontSize = 18.sp,
+            color = TextWhite,
             fontWeight = FontWeight.Medium,
         )
         Row(
@@ -357,7 +363,6 @@ fun TransactionFilterView(
                             showBeforeTimePicker = false
                         },
                         onDismiss = {
-                            // Set time to 00:00 when InputTimePicker is dismissed
                             selectedBeforeTime = LocalTime.MIDNIGHT
                             showBeforeTimePicker = false
                         }
@@ -369,6 +374,7 @@ fun TransactionFilterView(
         Text(
             text = "Amount value range",
             fontSize = 18.sp,
+            color = TextWhite,
             fontWeight = FontWeight.Medium,
         )
         Row(
