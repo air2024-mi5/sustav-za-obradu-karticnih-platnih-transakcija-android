@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import foi.air.szokpt.helpers.TransactionDetailsHandler
 import hr.foi.air.szokpt.core.transactions.TransactionData
 import hr.foi.air.szokpt.core.transactions.TransactionDetailsOutcomeListener
+import java.util.UUID
 
 class TransactionDetailsViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String?>(null)
@@ -16,9 +17,9 @@ class TransactionDetailsViewModel : ViewModel() {
     private val transactionDetailsHandler = TransactionDetailsHandler()
 
     fun fetchTransactionDetails(
-        transactionId: Int,
+        transactionGuid: UUID,
     ) {
-        transactionDetailsHandler.getTransactionDetails(transactionId, object :
+        transactionDetailsHandler.getTransactionDetails(transactionGuid, object :
             TransactionDetailsOutcomeListener {
             override fun onSuccessfulTransactionDetailsFetch(transactionData: TransactionData) {
                 _transactionData.value = transactionData

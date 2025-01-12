@@ -4,12 +4,13 @@ import NetworkService
 import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.ws.models.responses.Transaction
 import retrofit2.Call
+import java.util.UUID
 
 class TransactionDetailsRequestHandler(
-    private val transactionId: Int,
+    private val transactionGuid: UUID,
 ) : TemplateRequestHandler<Transaction>() {
     override fun getServiceCall(): Call<SuccessfulResponseBody<Transaction>> {
         val service = NetworkService.transactionsService
-        return service.getTransactionDetails(transactionId)
+        return service.getTransactionDetails(transactionGuid)
     }
 }

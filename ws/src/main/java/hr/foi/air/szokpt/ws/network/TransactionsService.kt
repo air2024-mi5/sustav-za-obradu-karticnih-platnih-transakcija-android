@@ -8,6 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.util.UUID
 
 interface TransactionsService {
     @GET("transactions")
@@ -22,8 +23,8 @@ interface TransactionsService {
         @Query("amount_less_than") maxAmount: Int?,
     ): Call<SuccessfulResponseBody<TransactionPageResponse>>
 
-    @GET("transactions/{id}")
+    @GET("transactions/{guid}")
     fun getTransactionDetails(
-        @Path("id") transactionId: Int
+        @Path("guid") transactionGuid: UUID
     ): Call<SuccessfulResponseBody<Transaction>>
 }

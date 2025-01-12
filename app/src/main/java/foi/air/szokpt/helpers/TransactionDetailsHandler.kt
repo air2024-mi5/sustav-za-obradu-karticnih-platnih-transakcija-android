@@ -7,13 +7,14 @@ import hr.foi.air.szokpt.core.transactions.TransactionData
 import hr.foi.air.szokpt.core.transactions.TransactionDetailsOutcomeListener
 import hr.foi.air.szokpt.ws.models.responses.Transaction
 import hr.foi.air.szokpt.ws.request_handlers.TransactionDetailsRequestHandler
+import java.util.UUID
 
 class TransactionDetailsHandler() {
     fun getTransactionDetails(
-        transactionId: Int,
+        transactionGuid: UUID,
         transactionDetailsListener: TransactionDetailsOutcomeListener
     ) {
-        val transactionDetailsRequestHandler = TransactionDetailsRequestHandler(transactionId)
+        val transactionDetailsRequestHandler = TransactionDetailsRequestHandler(transactionGuid)
 
         transactionDetailsRequestHandler.sendRequest(
             object : ResponseListener<Transaction> {
@@ -22,7 +23,7 @@ class TransactionDetailsHandler() {
                     if (transaction != null) {
                         transactionDetailsListener.onSuccessfulTransactionDetailsFetch(
                             transactionData = TransactionData(
-                                id = transaction.id,
+                                guid = transaction.guid,
                                 amount = transaction.amount,
                                 currency = transaction.currency,
                                 trxType = transaction.trxType,
@@ -33,6 +34,7 @@ class TransactionDetailsHandler() {
                                 maskedPan = transaction.maskedPan,
                                 pinUsed = transaction.pinUsed,
                                 responseCode = transaction.responseCode,
+                                approvalCode = transaction.approvalCode,
                                 processed = transaction.processed
                             )
                         )

@@ -102,7 +102,7 @@ fun TransactionsView(navController: NavController) {
                     TransactionItem(
                         transaction = transaction,
                         onClick = {
-                            navController.navigate("transaction_details/${transaction.id}")
+                            navController.navigate("transaction_details/${transaction.guid}")
                         }
                     )
                 }

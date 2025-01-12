@@ -38,17 +38,18 @@ import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.viewmodels.TransactionDetailsViewModel
+import java.util.UUID
 
 @Composable
 fun TransactionDetailsView(
     navController: NavController,
-    transactionId: Int,
+    transactionGuid: UUID,
     viewModel: TransactionDetailsViewModel = viewModel()
 ) {
     val transaction by viewModel.transactionData.observeAsState()
     val errorMessage by viewModel.errorMessage.observeAsState()
 
-    viewModel.fetchTransactionDetails(transactionId = transactionId)
+    viewModel.fetchTransactionDetails(transactionGuid = transactionGuid)
 
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
@@ -131,7 +132,7 @@ fun TransactionDetailsView(
                                             .padding(horizontal = 12.dp, vertical = 8.dp)
                                     ) {
                                         Text(
-                                            text = "Transaction #${transaction!!.id}",
+                                            text = "Transaction #${transaction!!.guid}",
                                             color = Primary,
                                             fontWeight = FontWeight.SemiBold,
                                             fontSize = 18.sp
