@@ -51,7 +51,7 @@ fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewMod
     }
 
     val searchQuery by viewModel.searchQuery.observeAsState("")
-    val isPanelActive by viewModel.isPanelActive.observeAsState(false)
+    val isSearchPanelActive by viewModel.isSearchPanelActive.observeAsState(false)
     val loading by viewModel.loading.observeAsState(true)
     val message by viewModel.message.observeAsState("")
     val filteredAccounts by viewModel.filteredAccounts.observeAsState(emptyList())
@@ -67,8 +67,8 @@ fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewMod
             query = searchQuery,
             onQueryChange = { viewModel.onSearchQueryChanged(it) },
             onSearch = {},
-            active = isPanelActive,
-            onActiveChange = { viewModel.setActiveState(it) },
+            active = isSearchPanelActive,
+            onActiveChange = { viewModel.setSearchPanelActiveStatus(it) },
             placeholder = { Text("Search accounts...") },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             trailingIcon = {
@@ -102,7 +102,7 @@ fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewMod
                     )
                 }
             }
-            if (isPanelActive) {
+            if (isSearchPanelActive) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

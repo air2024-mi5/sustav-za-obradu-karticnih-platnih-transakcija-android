@@ -14,11 +14,12 @@ class AccountsViewModel : ViewModel() {
     private val _accounts: MutableLiveData<List<User>> = MutableLiveData(mutableListOf())
     private val _loading = MutableLiveData(true)
     private val _message: MutableLiveData<String> = MutableLiveData("")
-    var isPanelActive = MutableLiveData(false)
     val filteredAccounts: MutableLiveData<List<User>> = MutableLiveData(emptyList())
     val searchQuery: MutableLiveData<String> = MutableLiveData("")
     val loading: LiveData<Boolean> = _loading
     val message: MutableLiveData<String> = _message
+
+    var isSearchPanelActive = MutableLiveData(false)
 
     fun fetchUsers() {
         val token = Auth.logedInUserData?.token
@@ -62,8 +63,8 @@ class AccountsViewModel : ViewModel() {
         }
     }
 
-    fun setActiveState(isActive: Boolean) {
-        isPanelActive.value = isActive
+    fun setSearchPanelActiveStatus(isActive: Boolean) {
+        isSearchPanelActive.value = isActive
     }
 
     private fun showErrorMessage(message: String) {
