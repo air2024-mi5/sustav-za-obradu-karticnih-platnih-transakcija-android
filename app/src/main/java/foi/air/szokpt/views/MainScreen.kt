@@ -25,6 +25,7 @@ import foi.air.szokpt.views.app.TransactionsView
 import foi.air.szokpt.views.test_views.DailyProcessScreen
 import hr.foi.air.szokpt.ws.models.responses.User
 import java.nio.charset.StandardCharsets
+import java.util.UUID
 
 const val ROUTE_DASHBOARD = "dashboard"
 const val ROUTE_REPORTS = "reports"
@@ -100,15 +101,15 @@ fun MainScreen() {
             }
 
             composable(
-                route = "transaction_details/{transactionId}",
-                arguments = listOf(navArgument("transactionId") { type = NavType.IntType })
+                route = "transaction_details/{transactionGuid}",
+                arguments = listOf(navArgument("transactionGuid") { type = NavType.StringType })
             ) { backStackEntry ->
-                val transactionId =
-                    backStackEntry.arguments?.getInt("transactionId") ?: return@composable
-
+                val transactionGuidString = backStackEntry.arguments?.getString("transactionGuid")
+                val transactionGuid = transactionGuidString?.let { UUID.fromString(it) }
+                    ?: return@composable
                 TransactionDetailsView(
                     navController = navController,
-                    transactionId = transactionId
+                    transactionGuid = transactionGuid
                 )
             }
         }
