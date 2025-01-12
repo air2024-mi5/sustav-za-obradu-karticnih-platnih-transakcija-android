@@ -28,11 +28,11 @@ object TransactionUtils {
     )
 
     fun getCardBrandDrawable(cardBrand: String): Int = when (cardBrand) {
-        "Maestro" -> R.drawable.maestro
-        "Visa" -> R.drawable.visa
-        "MasterCard" -> R.drawable.mastercard
-        "Diners" -> R.drawable.diners
-        "Discover" -> R.drawable.discover
+        "MAESTRO" -> R.drawable.maestro
+        "VISA" -> R.drawable.visa
+        "MASTERCARD" -> R.drawable.mastercard
+        "DIBERS" -> R.drawable.diners
+        "DISCOVER" -> R.drawable.discover
         else -> R.drawable.logo
     }
 }

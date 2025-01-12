@@ -1,7 +1,9 @@
 package hr.foi.air.szokpt.core.transactions
 
+import java.util.UUID
+
 data class TransactionData(
-    val id: Int,
+    val guid: UUID,
     val amount: Double,
     val currency: String,
     val trxType: String,
@@ -12,5 +14,6 @@ data class TransactionData(
     val maskedPan: String,
     val pinUsed: Boolean,
     val responseCode: String,
+    val approvalCode: String,
     val processed: Boolean
 )
