@@ -14,7 +14,7 @@ class AccountsViewModel : ViewModel() {
     private val _accounts: MutableLiveData<List<User>> = MutableLiveData(mutableListOf())
     private val _loading = MutableLiveData(true)
     private val _message: MutableLiveData<String> = MutableLiveData("")
-
+    var isPanelActive = MutableLiveData(false)
     val filteredAccounts: MutableLiveData<List<User>> = MutableLiveData(emptyList())
     val searchQuery: MutableLiveData<String> = MutableLiveData("")
     val loading: LiveData<Boolean> = _loading
@@ -60,6 +60,10 @@ class AccountsViewModel : ViewModel() {
                         it.username.contains(query, ignoreCase = true)
             }
         }
+    }
+
+    fun setActiveState(isActive: Boolean) {
+        isPanelActive.value = isActive
     }
 
     private fun showErrorMessage(message: String) {

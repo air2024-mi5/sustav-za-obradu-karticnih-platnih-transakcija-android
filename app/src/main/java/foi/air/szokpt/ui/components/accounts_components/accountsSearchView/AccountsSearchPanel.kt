@@ -24,9 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,7 +51,7 @@ fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewMod
     }
 
     val searchQuery by viewModel.searchQuery.observeAsState("")
-    var active by remember { mutableStateOf(false) }
+    val isPanelActive by viewModel.isPanelActive.observeAsState(false)
     val loading by viewModel.loading.observeAsState(true)
     val message by viewModel.message.observeAsState("")
     val filteredAccounts by viewModel.filteredAccounts.observeAsState(emptyList())
@@ -70,8 +67,8 @@ fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewMod
             query = searchQuery,
             onQueryChange = { viewModel.onSearchQueryChanged(it) },
             onSearch = {},
-            active = active,
-            onActiveChange = { active = it },
+            active = isPanelActive,
+            onActiveChange = { viewModel.setActiveState(it) },
             placeholder = { Text("Search accounts...") },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             trailingIcon = {
@@ -85,7 +82,8 @@ fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewMod
                 containerColor = BGLevelOne,
                 dividerColor = BGLevelTwo,
                 inputFieldColors = TextFieldDefaults.colors(
-                    focusedTextColor = Color.White
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
             ),
             modifier = Modifier
@@ -104,7 +102,7 @@ fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewMod
                     )
                 }
             }
-            if (active) {
+            if (isPanelActive) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
