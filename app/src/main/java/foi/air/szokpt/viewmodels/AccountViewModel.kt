@@ -45,7 +45,8 @@ class AccountViewModel : ViewModel() {
                     resetUserAccountData()
                     _message.value = failureMessage
                 }
-            })
+            }
+        )
     }
 
     fun validateData(user: User): Boolean {
@@ -70,28 +71,32 @@ class AccountViewModel : ViewModel() {
         _currentUserAccountData.value = _storedUserAccountData.value
     }
 
-    fun updateUsername(newUsername: String) {
+    fun setUsername(newUsername: String) {
         _currentUserAccountData.value = _currentUserAccountData.value?.copy(username = newUsername)
     }
 
-    fun updatePassword(newPassword: String) {
+    fun setPassword(newPassword: String) {
         _currentUserAccountData.value = _currentUserAccountData.value?.copy(password = newPassword)
     }
 
-    fun updateFirstName(newFirstName: String) {
+    fun setFirstName(newFirstName: String) {
         _currentUserAccountData.value =
             _currentUserAccountData.value?.copy(firstName = newFirstName)
     }
 
-    fun updateLastName(newLastName: String) {
+    fun setLastName(newLastName: String) {
         _currentUserAccountData.value = _currentUserAccountData.value?.copy(lastName = newLastName)
     }
 
-    fun updateEmail(newEmail: String) {
+    fun setEmail(newEmail: String) {
         _currentUserAccountData.value = _currentUserAccountData.value?.copy(email = newEmail)
     }
 
-    fun updateBlockedStatus(newBlockedStatus: Boolean) {
+    fun setDeactivatedStatus(deactivated: Boolean) {
+        _storedUserAccountData.value = _storedUserAccountData.value?.copy(deactivated = deactivated)
+    }
+
+    fun setBlockedStatus(newBlockedStatus: Boolean) {
         _currentUserAccountData.value =
             _currentUserAccountData.value?.copy(blocked = newBlockedStatus)
         _storedUserAccountData.value =
