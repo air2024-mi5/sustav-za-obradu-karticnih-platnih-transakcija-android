@@ -115,13 +115,12 @@ fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewMod
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(8.dp)
                         ) {
-                            items(filteredAccounts) { account ->
+                            items(filteredAccounts.filter { !it.deactivated }) { account ->
                                 AccountListItem(
                                     account = account,
                                     onClick = {
                                         val gson = Gson()
-                                        val userJson =
-                                            gson.toJson(account)
+                                        val userJson = gson.toJson(account)
                                         val encodedUserJson = URLEncoder.encode(
                                             userJson,
                                             StandardCharsets.UTF_8.toString()
