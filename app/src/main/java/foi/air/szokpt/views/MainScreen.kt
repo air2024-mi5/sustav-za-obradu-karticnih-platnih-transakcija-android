@@ -22,6 +22,7 @@ import foi.air.szokpt.views.app.DailyProcessesDashboardView
 import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.RegistrationView
 import foi.air.szokpt.views.app.TransactionDetailsView
+import foi.air.szokpt.views.app.TransactionsCandidatesView
 import foi.air.szokpt.views.app.TransactionsView
 import hr.foi.air.szokpt.ws.models.responses.User
 import java.nio.charset.StandardCharsets
@@ -34,6 +35,8 @@ const val ROUTE_ACCOUNT = "account"
 const val ROUTE_REGISTRATION = "registration"
 const val ROUTE_ALL_ACCOUNT_SEARCH = "all_account_search"
 const val ROUTE_USER_ACCOUNT_OVERVIEW = "user_account"
+const val ROUTE_TRANSACTION_DETAILS = "transaction_details"
+const val ROUTE_TRANSACTIONS_CANDIDATES = "processing_candidates"
 
 @Composable
 fun MainScreen() {
@@ -68,24 +71,24 @@ fun MainScreen() {
                     }
                 )
             }
-            composable("dashboard") { DashboardView(navController) }
-            composable("reports") { TransactionsView(navController) }
-            composable("daily_processing") { DailyProcessesDashboardView(navController) }
-            composable("account") { AccountView(navController) }
+            composable(ROUTE_DASHBOARD) { DashboardView(navController) }
+            composable(ROUTE_REPORTS) { TransactionsView(navController) }
+            composable(ROUTE_DAILY_PROCESSING) { DailyProcessesDashboardView(navController) }
+            composable(ROUTE_ACCOUNT) { AccountView(navController) }
             composable(
-                route = "registration/{userType}",
+                route = ROUTE_REGISTRATION + "/{userType}",
                 arguments = listOf(navArgument("userType") { type = NavType.StringType })
             ) { backStackEntry ->
                 val userType = backStackEntry.arguments?.getString("userType") ?: "Unknown"
                 RegistrationView(navController = navController, userType = userType)
             }
-            composable("all_account_search") {
+            composable(ROUTE_ALL_ACCOUNT_SEARCH) {
                 AccountSearchView(
                     navController,
                 )
             }
             composable(
-                route = "user_account/{userJson}",
+                route = ROUTE_USER_ACCOUNT_OVERVIEW + "/{userJson}",
                 arguments = listOf(navArgument("userJson") { type = NavType.StringType })
             ) { backStackEntry ->
                 val encodedUserJson = backStackEntry.arguments?.getString("userJson")
@@ -100,7 +103,7 @@ fun MainScreen() {
             }
 
             composable(
-                route = "transaction_details/{transactionGuid}",
+                route = ROUTE_TRANSACTION_DETAILS + "/{transactionGuid}",
                 arguments = listOf(navArgument("transactionGuid") { type = NavType.StringType })
             ) { backStackEntry ->
                 val transactionGuidString = backStackEntry.arguments?.getString("transactionGuid")
@@ -111,6 +114,8 @@ fun MainScreen() {
                     transactionGuid = transactionGuid
                 )
             }
+
+            composable(ROUTE_TRANSACTIONS_CANDIDATES) { TransactionsCandidatesView(navController) }
         }
     }
 }
