@@ -35,4 +35,10 @@ object TransactionUtils {
         "DISCOVER" -> R.drawable.discover
         else -> R.drawable.logo
     }
+
+    fun getBorderColor(status: String): Color = when (status) {
+        "00" -> Color.Green
+        "11" -> Color.Green
+        else -> Color.Red
+    }
 }

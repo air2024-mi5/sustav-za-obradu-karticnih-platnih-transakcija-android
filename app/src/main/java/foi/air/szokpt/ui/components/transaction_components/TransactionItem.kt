@@ -40,11 +40,7 @@ fun TransactionItem(transaction: Transaction, onClick: () -> Unit) {
             .drawBehind {
                 val strokeWidth = 4.dp.toPx()
                 val borderColor =
-                    if (transaction.responseCode == "00" || transaction.responseCode == "11") {
-                        Color.Green
-                    } else {
-                        Color.Red
-                    }
+                    TransactionUtils.getBorderColor(transaction.responseCode)
                 drawRect(
                     color = borderColor,
                     topLeft = Offset(size.width - strokeWidth, 0f),
