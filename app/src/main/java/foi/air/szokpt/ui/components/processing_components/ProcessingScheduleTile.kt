@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foi.air.szokpt.ui.components.TileSegment
-import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.BGLevelZeroHigh
 import foi.air.szokpt.ui.theme.TileSizeMode
 
 @Composable
@@ -25,7 +25,7 @@ fun ProcessingScheduleTile() {
         outerMargin = 4.dp,
         minWidth = 250.dp,
         minHeight = 20.dp,
-        color = BGLevelOne
+        color = BGLevelZeroHigh
     ) {
         Column(
             modifier = Modifier
