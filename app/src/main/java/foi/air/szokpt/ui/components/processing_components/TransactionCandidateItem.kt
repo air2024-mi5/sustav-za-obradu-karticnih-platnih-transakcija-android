@@ -36,12 +36,7 @@ fun TransactionCandidateItem(
             .padding(8.dp)
             .background(color = BGLevelZeroHigh, shape = RoundedCornerShape(8.dp))
             .drawBehind {
-                val borderColor =
-                    if (transaction.responseCode == "00" || transaction.responseCode == "11") {
-                        Color.Green
-                    } else {
-                        Color.Red
-                    }
+                val borderColor = TransactionUtils.getBorderColor(transaction.responseCode)
                 drawRect(
                     color = borderColor,
                     topLeft = Offset(0f, 0f),
