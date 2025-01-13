@@ -21,7 +21,7 @@ import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
-import foi.air.szokpt.views.ROUTE_PROCESSING_CANDIDATES
+import foi.air.szokpt.views.ROUTE_TRANSACTIONS_CANDIDATES
 
 @Composable
 fun TransactionsCandidatesTile(navController: NavController) {
@@ -55,7 +55,7 @@ fun TransactionsCandidatesTile(navController: NavController) {
                     contentColor = Primary,
                     borderColor = Secondary,
                 ) {
-                    navController.navigate(ROUTE_PROCESSING_CANDIDATES)
+                    navController.navigate(ROUTE_TRANSACTIONS_CANDIDATES)
                 }
             }
         }
