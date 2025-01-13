@@ -24,7 +24,7 @@ import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.views.ROUTE_PROCESSING_CANDIDATES
 
 @Composable
-fun TransactionCandidatesTile(navController: NavController) {
+fun TransactionsCandidatesTile(navController: NavController) {
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 10.dp,
