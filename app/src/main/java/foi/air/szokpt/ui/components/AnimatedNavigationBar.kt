@@ -54,7 +54,6 @@ fun AnimatedNavigationBar(
         unselectedTextColor = unselectedColor
     )
 
-    // Track the current back stack entry to know the selected destination
     val currentBackStackEntry = navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry.value?.destination?.route
 
@@ -67,8 +66,6 @@ fun AnimatedNavigationBar(
             containerColor = Color.Transparent,
             modifier = Modifier.padding(bottom = 8.dp)
         ) {
-
-            // Dashboard
             val (homeIconContent, homeLabelContent) = AnimatedNavigationBarItem(
                 icon = Icons.Rounded.Home,
                 label = "Dashboard",
@@ -86,7 +83,6 @@ fun AnimatedNavigationBar(
                 colors = itemColors
             )
 
-            // Reports & Transactyions
             val (reportsIconContent, reportsLabelContent) = AnimatedNavigationBarItem(
                 icon = Icons.Rounded.Email,
                 label = "Transactions",
@@ -104,10 +100,9 @@ fun AnimatedNavigationBar(
                 colors = itemColors
             )
 
-            // Daily Process
             val (dailyProcessIconContent, dailyProcessLabelContent) = AnimatedNavigationBarItem(
                 icon = Icons.AutoMirrored.Rounded.ExitToApp,
-                label = "Daily Process",
+                label = "Processing",
                 isSelected = currentDestination == ROUTE_DAILY_PROCESSING
             )
             NavigationBarItem(
@@ -124,7 +119,7 @@ fun AnimatedNavigationBar(
             if (Auth.logedInUserData!!.role == "admin") {
                 val (accountIconContent, accountLableContent) = AnimatedNavigationBarItem(
                     icon = Icons.Rounded.AccountCircle,
-                    label = "Account",
+                    label = "Accounts",
                     isSelected = currentDestination == ROUTE_ACCOUNT
                 )
                 NavigationBarItem(

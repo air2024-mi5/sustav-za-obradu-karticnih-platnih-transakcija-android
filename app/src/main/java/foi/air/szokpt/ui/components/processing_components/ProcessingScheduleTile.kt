@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.TileSizeMode
@@ -36,6 +37,7 @@ fun ProcessingScheduleTile() {
             Text(
                 text = "Processing starts at 6 PM",
                 style = MaterialTheme.typography.bodyLarge,
+                fontSize = 18.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold
             )
