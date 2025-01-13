@@ -18,18 +18,18 @@ import foi.air.szokpt.ui.LoginPage
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
 import foi.air.szokpt.views.app.AccountSearchView
 import foi.air.szokpt.views.app.AccountView
+import foi.air.szokpt.views.app.DailyProcessesDashboardView
 import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.RegistrationView
 import foi.air.szokpt.views.app.TransactionDetailsView
 import foi.air.szokpt.views.app.TransactionsView
-import foi.air.szokpt.views.test_views.DailyProcessScreen
 import hr.foi.air.szokpt.ws.models.responses.User
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 
 const val ROUTE_DASHBOARD = "dashboard"
 const val ROUTE_REPORTS = "reports"
-const val ROUTE_DAILY_PROCESS = "daily_process"
+const val ROUTE_DAILY_PROCESSING = "daily_processing"
 const val ROUTE_ACCOUNT = "account"
 const val ROUTE_REGISTRATION = "registration"
 const val ROUTE_ALL_ACCOUNT_SEARCH = "all_account_search"
@@ -40,7 +40,6 @@ fun MainScreen() {
     val navController = rememberNavController()
     val isAuthenticated = remember { mutableStateOf(false) }
 
-    // For the top status bar to be white on a back background of the app
     val view = LocalView.current
     if (!view.isInEditMode) {
         val window = (view.context as android.app.Activity).window
@@ -71,7 +70,7 @@ fun MainScreen() {
             }
             composable("dashboard") { DashboardView(navController) }
             composable("reports") { TransactionsView(navController) }
-            composable("daily_process") { DailyProcessScreen(navController) }
+            composable("daily_processing") { DailyProcessesDashboardView(navController) }
             composable("account") { AccountView(navController) }
             composable(
                 route = "registration/{userType}",

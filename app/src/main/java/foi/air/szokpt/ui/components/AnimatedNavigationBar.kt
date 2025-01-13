@@ -33,7 +33,7 @@ import foi.air.szokpt.ui.theme.BGLevelThree
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.views.ROUTE_ACCOUNT
-import foi.air.szokpt.views.ROUTE_DAILY_PROCESS
+import foi.air.szokpt.views.ROUTE_DAILY_PROCESSING
 import foi.air.szokpt.views.ROUTE_DASHBOARD
 import foi.air.szokpt.views.ROUTE_REPORTS
 
@@ -108,15 +108,15 @@ fun AnimatedNavigationBar(
             val (dailyProcessIconContent, dailyProcessLabelContent) = AnimatedNavigationBarItem(
                 icon = Icons.AutoMirrored.Rounded.ExitToApp,
                 label = "Daily Process",
-                isSelected = currentDestination == ROUTE_DAILY_PROCESS
+                isSelected = currentDestination == ROUTE_DAILY_PROCESSING
             )
             NavigationBarItem(
                 icon = dailyProcessIconContent,
                 label = dailyProcessLabelContent,
-                selected = currentDestination == ROUTE_DAILY_PROCESS,
+                selected = currentDestination == ROUTE_DAILY_PROCESSING,
                 onClick = {
-                    if (currentDestination != ROUTE_DAILY_PROCESS) {
-                        navController.navigate(ROUTE_DAILY_PROCESS)
+                    if (currentDestination != ROUTE_DAILY_PROCESSING) {
+                        navController.navigate(ROUTE_DAILY_PROCESSING)
                     }
                 },
                 colors = itemColors
