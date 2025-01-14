@@ -58,10 +58,8 @@ fun TransactionFilterView(
     viewModel: TransactionsViewModel,
     onApplyFilter: (TransactionFilter) -> Unit
 ) {
-    // For the toast message
     val context = LocalContext.current
 
-    // ViewModel for persistence of the filter
     val transactionsFilter = viewModel.transactionsFilter.observeAsState().value
 
     val cardBrands = listOf("Maestro", "Visa", "MasterCard", "Diners", "Discover")
@@ -74,20 +72,28 @@ fun TransactionFilterView(
         "reversal_refund" to "Reversal refund"
     )
 
-    // State managment for Card Brands and Transaction Types
-    val selectedCardBrands = remember { mutableStateListOf<String>().apply {transactionsFilter?.cardBrands?.let { addAll(it) } } }
-    val selectedTrxTypes = remember { mutableStateListOf<String>().apply {transactionsFilter?.trxTypes?.let { addAll(it) } } }
+    val selectedCardBrands = remember {
+        mutableStateListOf<String>().apply {
+            transactionsFilter?.cardBrands?.let {
+                addAll(it)
+            }
+        }
+    }
+    val selectedTrxTypes = remember {
+        mutableStateListOf<String>().apply {
+            transactionsFilter?.trxTypes?.let {
+                addAll(it)
+            }
+        }
+    }
 
-    // Show a bonus dialog to pick the time HH:mm
     var showAfterTimePicker by remember { mutableStateOf(false) }
     var showBeforeTimePicker by remember { mutableStateOf(false) }
 
-    // Formatters to format LocalDate and LocalTime
     val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
     val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
     val dateOnlyFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
-    // Selected filters for date and time
     var selectedAfterDate by remember {
         mutableStateOf(
             transactionsFilter?.afterDate?.let {
@@ -133,7 +139,6 @@ fun TransactionFilterView(
         )
     }
 
-    // Validation of incorrect time range between After and Before date
     fun validateAndSetAfterDate(date: LocalDate) {
         if (selectedBeforeDate != null && date.isAfter(selectedBeforeDate)) {
             Toast.makeText(
@@ -282,7 +287,8 @@ fun TransactionFilterView(
             fontWeight = FontWeight.Medium,
         )
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(bottom = 2.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
@@ -314,7 +320,6 @@ fun TransactionFilterView(
                         )
                     }
                 }
-                // After Time Picker
                 if (showAfterTimePicker) {
                     InputTimePicker(
                         onConfirm = { hour, minute ->
@@ -417,7 +422,8 @@ fun TransactionFilterView(
                             minAmount = minAmount,
                             maxAmount = maxAmount,
                             afterDate = formatTime(selectedAfterDate, selectedAfterTime),
-                            beforeDate = formatTime(selectedBeforeDate, selectedBeforeTime)
+                            beforeDate = formatTime(selectedBeforeDate, selectedBeforeTime),
+                            processed = null
                         )
                         onApplyFilter(results)
                     } else {
