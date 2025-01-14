@@ -1,5 +1,6 @@
 package foi.air.szokpt.views.app
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -39,6 +43,7 @@ import foi.air.szokpt.ui.components.DatePickerField
 import foi.air.szokpt.ui.components.InputTimePicker
 import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
+import foi.air.szokpt.ui.components.dialog_components.DialogComponent
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
@@ -61,6 +66,9 @@ fun EditTransactionView(
     val errorMessage by viewModel.errorMessage.observeAsState()
 
     viewModel.fetchTransactionDetails(transactionGuid = transactionGuid)
+
+    var showDialog by remember { mutableStateOf(false) }
+    var updatedTransactionTimestamp by remember { mutableStateOf("originalTimestamp") }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
@@ -165,7 +173,7 @@ fun EditTransactionView(
                                         )
                                         OutlineBouncingButton(
                                             onClick = {
-                                                //navController.navigate("$ROUTE_EDIT_TRANSACTION/${transactionGuid}")
+                                                showDialog = true
                                             },
                                             contentColor = success,
                                             borderColor = success,
@@ -213,6 +221,8 @@ fun EditTransactionView(
                             )
 
                             val originalTimestamp = transaction!!.transactionTimestamp
+                            updatedTransactionTimestamp = originalTimestamp
+
                             val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                             val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
 
@@ -221,7 +231,6 @@ fun EditTransactionView(
 
                             var selectedDate by remember { mutableStateOf<LocalDate?>(initialDate) }
                             var selectedTime by remember { mutableStateOf<LocalTime?>(initialTime) }
-                            var updatedTransactionTimestamp by remember { mutableStateOf(originalTimestamp) }
                             var showTimePicker by remember { mutableStateOf(false) }
 
                             fun updateTransactionTimestamp() {
@@ -285,6 +294,24 @@ fun EditTransactionView(
                     }
                 }
             }
+        }
+
+        if (showDialog) {
+            DialogComponent(
+                onDismissRequest = { showDialog = false },
+                onConfirmation = {
+                    Log.i("TIME-update", updatedTransactionTimestamp)
+                    showDialog = false
+                },
+                dialogTitle = "Confirm Save",
+                dialogText = "Are you sure you want to change ${transaction!!.guid}?",
+                iconTop = Icons.Rounded.CheckCircle,
+                highlightColor = success,
+                confirmationText = "Save",
+                dismissText = "Cancel",
+                iconConfirm = Icons.Rounded.Check,
+                iconDismiss = Icons.Rounded.Close
+            )
         }
     }
 }
