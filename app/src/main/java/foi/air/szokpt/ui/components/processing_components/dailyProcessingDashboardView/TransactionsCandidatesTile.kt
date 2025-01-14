@@ -43,7 +43,7 @@ fun TransactionsCandidatesTile(navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Processing Candidates",
+                    text = "Transactions Candidates",
                     color = TextWhite,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold
