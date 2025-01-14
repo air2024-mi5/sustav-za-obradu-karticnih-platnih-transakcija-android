@@ -22,7 +22,8 @@ class GetTransactionsPageRequestHandler(
             minAmount = filter?.minAmount,
             maxAmount = filter?.maxAmount,
             beforeDate = filter?.beforeDate,
-            afterDate = filter?.afterDate
+            afterDate = filter?.afterDate,
+            processed = filter?.processed,
         )
     }
 }
