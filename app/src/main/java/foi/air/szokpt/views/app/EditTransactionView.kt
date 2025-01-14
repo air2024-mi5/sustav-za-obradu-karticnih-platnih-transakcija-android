@@ -13,13 +13,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.helpers.TransactionUtils
+import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.components.transaction_components.TransactionDetailRow
@@ -56,7 +59,7 @@ fun EditTransactionView(
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             modifier = Modifier.padding(16.dp),
-            text = "Transaction Details",
+            text = "Transaction Edit",
             color = TextWhite,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
@@ -114,7 +117,7 @@ fun EditTransactionView(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Rounded.Edit,
+                                        imageVector = Icons.Outlined.Edit,
                                         contentDescription = null,
                                         tint = Color.White,
                                         modifier = Modifier.size(60.dp)
@@ -134,7 +137,7 @@ fun EditTransactionView(
                                             .padding(horizontal = 12.dp, vertical = 8.dp)
                                     ) {
                                         Text(
-                                            text = "Transaction #${transaction!!.guid}",
+                                            text = "#${transaction!!.guid}",
                                             color = TextWhite.copy(alpha = 0.85f),
                                             fontWeight = FontWeight.SemiBold,
                                             fontSize = 18.sp
@@ -170,13 +173,13 @@ fun EditTransactionView(
                         }
                     }
                 }
-
                 item {
                     TileSegment(
                         tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
                         innerPadding = 8.dp,
                         outerMargin = 8.dp,
                         minWidth = 250.dp,
+                        minHeight = 100.dp,
                         color = BGLevelOne
                     ) {
                         Column(
@@ -184,76 +187,25 @@ fun EditTransactionView(
                                 .fillMaxSize()
                                 .padding(16.dp)
                         ) {
-                            TransactionDetailRow("Date", transaction!!.transactionTimestamp)
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                            ) {
-                                Row() {
-                                    Text(
-                                        text = "Card",
-                                        color = TextWhite.copy(alpha = 0.7f),
-                                        fontSize = 16.sp
-                                    )
-                                }
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = transaction!!.maskedPan,
-                                        color = TextWhite,
-                                        fontWeight = FontWeight.Medium,
-                                        fontSize = 16.sp,
-                                        modifier = Modifier.padding(horizontal = 5.dp)
-                                    )
-                                    val cardBrandDrawable =
-                                        TransactionUtils.getCardBrandDrawable(transaction!!.cardBrand)
-                                    Image(
-                                        painter = painterResource(id = cardBrandDrawable),
-                                        contentDescription = "Card Brand",
-                                        modifier = Modifier.size(45.dp)
-                                    )
-                                }
-                            }
-                            val transactionType =
-                                TransactionUtils.getTransactionTypeDisplay(transaction!!.trxType)
-                            TransactionDetailRow(
-                                "Type",
-                                transactionType ?: transaction!!.trxType
+                            val currencySymbol =
+                                TransactionUtils.getCurrencySymbol(transaction!!.currency)
+                            val editableTransactionAmount = remember { mutableStateOf(transaction!!.copy()) }
+                            StyledTextField(
+                                label = "New $currencySymbol Amount",
+                                value = if (editableTransactionAmount.value.amount > 0) editableTransactionAmount.value.amount.toString() else "",
+                                onValueChange = { newValue ->
+                                    if (newValue.isBlank()) {
+                                        editableTransactionAmount.value = editableTransactionAmount.value.copy(amount = 0.0)
+                                    } else {
+                                        newValue.toDoubleOrNull()?.let { newAmount ->
+                                            editableTransactionAmount.value = editableTransactionAmount.value.copy(amount = newAmount)
+                                        }
+                                    }
+                                },
+                                isPasswordField = false,
+                                modifier = Modifier.padding(vertical = 8.dp)
                             )
-                            if (transaction!!.installmentsNumber > 0) {
-                                val monthlyAmount =
-                                    transaction!!.amount / transaction!!.installmentsNumber
-                                TransactionDetailRow(
-                                    "Payment Method",
-                                    "Installments - ${transaction!!.installmentsNumber} months"
-                                )
-                                TransactionDetailRow(
-                                    "Monthly Amount",
-                                    "$monthlyAmount ${transaction!!.currency}"
-                                )
-                                TransactionDetailRow(
-                                    "Total Amount",
-                                    "${transaction!!.amount} ${transaction!!.currency}"
-                                )
-                                TransactionDetailRow("Creditor", transaction!!.installmentsCreditor)
-                            } else {
-                                TransactionDetailRow(
-                                    "Payment Method",
-                                    "One-time payment"
-                                )
-                            }
-                            TransactionDetailRow(
-                                "PIN Used",
-                                if (transaction!!.pinUsed) "Yes" else "No"
-                            )
-                            TransactionDetailRow(
-                                "Status",
-                                if (transaction!!.processed) "Processed" else "Pending"
-                            )
-                            TransactionDetailRow("Response Code", transaction!!.responseCode)
+
                         }
                     }
                 }
