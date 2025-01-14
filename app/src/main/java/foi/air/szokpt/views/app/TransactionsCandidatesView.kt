@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +30,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import foi.air.szokpt.ui.components.processing_components.TransactionCandidateItem
+import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectCandidatesButton
+import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.TransactionCandidateItem
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import hr.foi.air.szokpt.ws.models.responses.Transaction
@@ -124,7 +126,7 @@ fun TransactionsCandidatesView(navController: NavController) {
                 modifier = Modifier
                     .size(32.dp),
                 shape = RectangleShape,
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                colors = buttonColors(
                     containerColor = Color.Black
                 ),
                 contentPadding = PaddingValues(0.dp)
@@ -162,6 +164,13 @@ fun TransactionsCandidatesView(navController: NavController) {
                     }
                 )
             }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            SelectCandidatesButton()
         }
     }
 }

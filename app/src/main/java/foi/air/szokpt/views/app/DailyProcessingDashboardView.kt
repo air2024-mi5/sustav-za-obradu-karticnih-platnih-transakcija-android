@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import foi.air.szokpt.ui.components.processing_components.ProcessingScheduleTile
-import foi.air.szokpt.ui.components.processing_components.TransactionsCandidatesTile
+import foi.air.szokpt.ui.components.processing_components.dailyProcessingDashboardView.ProcessingScheduleTile
+import foi.air.szokpt.ui.components.processing_components.dailyProcessingDashboardView.TransactionsCandidatesTile
 
 @Composable
 fun DailyProcessesDashboardView(navController: NavController) {

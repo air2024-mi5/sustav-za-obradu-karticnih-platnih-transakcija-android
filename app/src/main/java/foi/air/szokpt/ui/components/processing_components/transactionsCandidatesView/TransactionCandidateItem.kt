@@ -1,4 +1,4 @@
-package foi.air.szokpt.ui.components.processing_components
+package foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

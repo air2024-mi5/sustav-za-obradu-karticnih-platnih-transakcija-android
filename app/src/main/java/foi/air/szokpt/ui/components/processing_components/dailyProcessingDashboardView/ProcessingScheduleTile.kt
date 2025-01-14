@@ -1,4 +1,4 @@
-package foi.air.szokpt.ui.components.processing_components
+package foi.air.szokpt.ui.components.processing_components.dailyProcessingDashboardView
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
