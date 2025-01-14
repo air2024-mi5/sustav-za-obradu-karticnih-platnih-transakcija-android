@@ -70,7 +70,11 @@ fun TransactionsCandidatesView(navController: NavController) {
 
             Button(
                 onClick = {
-                    selectedTransactionIds = mockTransactions.map { it.guid }.toSet()
+                    if (selectedTransactionIds.size == mockTransactions.size) {
+                        selectedTransactionIds = emptySet()
+                    } else {
+                        selectedTransactionIds = mockTransactions.map { it.guid }.toSet()
+                    }
                 },
                 modifier = Modifier
                     .size(24.dp),
