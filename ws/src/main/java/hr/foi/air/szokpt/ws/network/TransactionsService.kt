@@ -21,6 +21,7 @@ interface TransactionsService {
         @Query("after") afterDate: String?,
         @Query("amount_greater_than") minAmount: Int?,
         @Query("amount_less_than") maxAmount: Int?,
+        @Query("processed") processed: Boolean?,
     ): Call<SuccessfulResponseBody<TransactionPageResponse>>
 
     @GET("transactions/{guid}")
