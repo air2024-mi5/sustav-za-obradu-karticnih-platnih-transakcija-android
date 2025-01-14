@@ -58,10 +58,8 @@ fun TransactionFilterView(
     viewModel: TransactionsViewModel,
     onApplyFilter: (TransactionFilter) -> Unit
 ) {
-    // For the toast message
     val context = LocalContext.current
 
-    // ViewModel for persistence of the filter
     val transactionsFilter = viewModel.transactionsFilter.observeAsState().value
 
     val cardBrands = listOf("Maestro", "Visa", "MasterCard", "Diners", "Discover")
@@ -74,20 +72,16 @@ fun TransactionFilterView(
         "reversal_refund" to "Reversal refund"
     )
 
-    // State managment for Card Brands and Transaction Types
     val selectedCardBrands = remember { mutableStateListOf<String>().apply {transactionsFilter?.cardBrands?.let { addAll(it) } } }
     val selectedTrxTypes = remember { mutableStateListOf<String>().apply {transactionsFilter?.trxTypes?.let { addAll(it) } } }
 
-    // Show a bonus dialog to pick the time HH:mm
     var showAfterTimePicker by remember { mutableStateOf(false) }
     var showBeforeTimePicker by remember { mutableStateOf(false) }
 
-    // Formatters to format LocalDate and LocalTime
     val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
     val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
     val dateOnlyFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
-    // Selected filters for date and time
     var selectedAfterDate by remember {
         mutableStateOf(
             transactionsFilter?.afterDate?.let {
@@ -133,7 +127,6 @@ fun TransactionFilterView(
         )
     }
 
-    // Validation of incorrect time range between After and Before date
     fun validateAndSetAfterDate(date: LocalDate) {
         if (selectedBeforeDate != null && date.isAfter(selectedBeforeDate)) {
             Toast.makeText(
@@ -291,7 +284,9 @@ fun TransactionFilterView(
                     onDateSelected = { date -> validateAndSetAfterDate(date) },
                     label = "After date",
                     initialDate = selectedAfterDate,
-                    maxWidth = 172.dp
+                    maxWidth = 164.dp,
+                    modifier = Modifier.padding(start = 6.dp)
+
                 )
                 if (selectedAfterDate != null && selectedAfterTime != null) {
                     Row(
@@ -304,6 +299,7 @@ fun TransactionFilterView(
                         Text(
                             text = selectedAfterTime!!.format(timeFormatter),
                             fontSize = 16.sp,
+                            color = TextWhite,
                             modifier = Modifier.padding(end = 10.dp)
                         )
                         Icon(
@@ -333,7 +329,8 @@ fun TransactionFilterView(
                     onDateSelected = { date -> validateAndSetBeforeDate(date) },
                     label = "Before date",
                     initialDate = selectedBeforeDate,
-                    maxWidth = 172.dp
+                    maxWidth = 172.dp,
+                    modifier = Modifier.padding(end = 6.dp, start = 4.dp)
                 )
                 if (selectedBeforeDate != null && selectedBeforeTime != null) {
                     Row(
@@ -346,6 +343,7 @@ fun TransactionFilterView(
                         Text(
                             text = selectedBeforeTime!!.format(timeFormatter),
                             fontSize = 16.sp,
+                            color = TextWhite,
                             modifier = Modifier.padding(end = 10.dp)
                         )
                         Icon(

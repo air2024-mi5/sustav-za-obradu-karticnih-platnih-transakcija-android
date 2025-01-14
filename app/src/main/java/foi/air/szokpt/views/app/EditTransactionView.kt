@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,16 +34,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import foi.air.szokpt.R
 import foi.air.szokpt.helpers.TransactionUtils
+import foi.air.szokpt.ui.components.DatePickerField
+import foi.air.szokpt.ui.components.InputTimePicker
 import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.components.transaction_components.TransactionDetailRow
 import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.TransactionDetailsViewModel
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 @Composable
@@ -205,6 +213,78 @@ fun EditTransactionView(
                                 isPasswordField = false,
                                 modifier = Modifier.padding(vertical = 8.dp)
                             )
+
+                            // Extract date and time parts from the timestamp
+                            val originalTimestamp = transaction!!.transactionTimestamp
+                            val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                            val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+
+                            val initialDate = LocalDate.parse(originalTimestamp.split(" ")[0], dateFormatter)
+                            val initialTime = LocalTime.parse(originalTimestamp.split(" ")[1], timeFormatter)
+
+// State variables
+                            var selectedAfterDate by remember { mutableStateOf<LocalDate?>(initialDate) }
+                            var selectedAfterTime by remember { mutableStateOf<LocalTime?>(initialTime) }
+                            var updatedTransactionTimestamp by remember { mutableStateOf(originalTimestamp) }
+                            var showAfterTimePicker by remember { mutableStateOf(false) }
+
+                            // Function to update the transaction timestamp
+                            fun updateTransactionTimestamp() {
+                                val date = selectedAfterDate?.format(dateFormatter) ?: ""
+                                val time = selectedAfterTime?.format(timeFormatter) ?: ""
+                                updatedTransactionTimestamp = "$date $time"
+                            }
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                DatePickerField(
+                                    onDateSelected = { date ->
+                                        selectedAfterDate = date
+                                        updateTransactionTimestamp()
+                                        showAfterTimePicker = true
+                                    },
+                                    label = "Choose Date & Time",
+                                    initialDate = LocalDate.parse(initialDate.toString()),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(end = 4.dp)
+                                )
+                                if (selectedAfterDate != null && selectedAfterTime != null) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.End,
+                                        modifier = Modifier
+                                            .padding(top = 4.dp)
+                                    ) {
+                                        Text(
+                                            text = selectedAfterTime!!.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                                            color = TextWhite,
+                                            fontSize = 16.sp,
+                                        )
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.round_schedule_24),
+                                            contentDescription = "Time Icon",
+                                            modifier = Modifier.size(32.dp),
+                                            tint = Primary
+                                        )
+                                    }
+                                }
+                            }
+                            if (showAfterTimePicker) {
+                                InputTimePicker(
+                                    onConfirm = { hour, minute ->
+                                        selectedAfterTime = LocalTime.of(hour, minute)
+                                        showAfterTimePicker = false
+                                    },
+                                    onDismiss = {
+                                        showAfterTimePicker = false
+                                    }
+                                )
+                            }
 
                         }
                     }
