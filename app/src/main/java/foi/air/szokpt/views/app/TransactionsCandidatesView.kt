@@ -35,7 +35,6 @@ import foi.air.szokpt.ui.components.processing_components.transactionsCandidates
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.TransactionCandidateItem
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextBlack
-import foi.air.szokpt.ui.theme.TextWhite
 import hr.foi.air.szokpt.ws.models.responses.Transaction
 import java.util.UUID
 
@@ -61,18 +60,19 @@ fun TransactionsCandidatesView(navController: NavController) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Select All",
-                color = TextWhite,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Normal,
+                text = "Select all",
+                color = Primary,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
                 modifier = Modifier.padding(end = 8.dp)
             )
+
             Button(
                 onClick = {
                     selectedTransactionIds = mockTransactions.map { it.guid }.toSet()
                 },
                 modifier = Modifier
-                    .size(28.dp),
+                    .size(24.dp),
                 shape = RoundedCornerShape(4.dp),
                 border = BorderStroke(1.dp, Color.White),
                 colors = ButtonDefaults.buttonColors(
@@ -82,7 +82,7 @@ fun TransactionsCandidatesView(navController: NavController) {
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Check,
-                    contentDescription = "Select All",
+                    contentDescription = "",
                     tint = iconTintColor,
                 )
             }
