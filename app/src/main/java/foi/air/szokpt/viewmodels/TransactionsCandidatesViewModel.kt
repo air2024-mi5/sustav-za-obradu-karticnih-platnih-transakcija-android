@@ -11,6 +11,7 @@ import hr.foi.air.szokpt.core.transactions.TransactionFilter
 import hr.foi.air.szokpt.ws.models.TransactionPageResponse
 import hr.foi.air.szokpt.ws.models.responses.SelectedTransaction
 import hr.foi.air.szokpt.ws.models.responses.Transaction
+import hr.foi.air.szokpt.ws.request_handlers.AddSelectedTransactions
 import hr.foi.air.szokpt.ws.request_handlers.GetSelectedTransactionsRequestHandler
 import hr.foi.air.szokpt.ws.request_handlers.GetTransactionsPageRequestHandler
 import java.util.UUID
@@ -80,6 +81,26 @@ class TransactionsCandidatesViewModel : ViewModel() {
         })
     }
 
+    fun addSelectedTransactions() {
+        val jwtToken = Auth.logedInUserData?.token ?: return
+
+        val addSelectedTransactionsRequestHandler =
+            AddSelectedTransactions(jwtToken, _selectedGuids.value!!)
+        addSelectedTransactionsRequestHandler.sendRequest(object :
+            ResponseListener<Unit> {
+            override fun onSuccessfulResponse(response: SuccessfulResponseBody<Unit>) {
+                println("Success")
+            }
+
+            override fun onErrorResponse(response: ErrorResponseBody) {
+                println("Error receiving response: ${response.error_message}")
+            }
+
+            override fun onNetworkFailure(t: Throwable) {
+                println("Error contacting network...")
+            }
+        })
+    }
 
     fun toggleSelectAllTransactions(pageGuids: Set<UUID>) {
         _selectedGuids.value = _selectedGuids.value.orEmpty().let { currentSelectedGuids ->
