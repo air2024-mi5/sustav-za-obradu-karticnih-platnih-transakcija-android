@@ -31,8 +31,14 @@ object TransactionUtils {
         "MAESTRO" -> R.drawable.maestro
         "VISA" -> R.drawable.visa
         "MASTERCARD" -> R.drawable.mastercard
-        "DIBERS" -> R.drawable.diners
+        "DINERS" -> R.drawable.diners
         "DISCOVER" -> R.drawable.discover
         else -> R.drawable.logo
+    }
+
+    fun getBorderColor(status: String): Color = when (status) {
+        "00" -> Color.Green
+        "11" -> Color.Green
+        else -> Color.Red
     }
 }

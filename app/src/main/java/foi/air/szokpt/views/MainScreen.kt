@@ -18,29 +18,32 @@ import foi.air.szokpt.ui.LoginPage
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
 import foi.air.szokpt.views.app.AccountSearchView
 import foi.air.szokpt.views.app.AccountView
+import foi.air.szokpt.views.app.DailyProcessesDashboardView
 import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.RegistrationView
 import foi.air.szokpt.views.app.TransactionDetailsView
+import foi.air.szokpt.views.app.TransactionsCandidatesView
 import foi.air.szokpt.views.app.TransactionsView
-import foi.air.szokpt.views.test_views.DailyProcessScreen
 import hr.foi.air.szokpt.ws.models.responses.User
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 
 const val ROUTE_DASHBOARD = "dashboard"
 const val ROUTE_REPORTS = "reports"
-const val ROUTE_DAILY_PROCESS = "daily_process"
+const val ROUTE_DAILY_PROCESSING = "daily_processing"
 const val ROUTE_ACCOUNT = "account"
+const val ROUTE_LOGIN = "login"
 const val ROUTE_REGISTRATION = "registration"
 const val ROUTE_ALL_ACCOUNT_SEARCH = "all_account_search"
 const val ROUTE_USER_ACCOUNT_OVERVIEW = "user_account"
+const val ROUTE_TRANSACTION_DETAILS = "transaction_details"
+const val ROUTE_TRANSACTIONS_CANDIDATES = "processing_candidates"
 
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
     val isAuthenticated = remember { mutableStateOf(false) }
 
-    // For the top status bar to be white on a back background of the app
     val view = LocalView.current
     if (!view.isInEditMode) {
         val window = (view.context as android.app.Activity).window
@@ -56,10 +59,10 @@ fun MainScreen() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "login",
+            startDestination = ROUTE_LOGIN,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("login") {
+            composable(ROUTE_LOGIN) {
                 LoginPage(
                     onSuccessfulLogin = {
                         isAuthenticated.value = true
@@ -69,24 +72,24 @@ fun MainScreen() {
                     }
                 )
             }
-            composable("dashboard") { DashboardView(navController) }
-            composable("reports") { TransactionsView(navController) }
-            composable("daily_process") { DailyProcessScreen(navController) }
-            composable("account") { AccountView(navController) }
+            composable(ROUTE_DASHBOARD) { DashboardView(navController) }
+            composable(ROUTE_REPORTS) { TransactionsView(navController) }
+            composable(ROUTE_DAILY_PROCESSING) { DailyProcessesDashboardView(navController) }
+            composable(ROUTE_ACCOUNT) { AccountView(navController) }
             composable(
-                route = "registration/{userType}",
+                route = ROUTE_REGISTRATION + "/{userType}",
                 arguments = listOf(navArgument("userType") { type = NavType.StringType })
             ) { backStackEntry ->
                 val userType = backStackEntry.arguments?.getString("userType") ?: "Unknown"
                 RegistrationView(navController = navController, userType = userType)
             }
-            composable("all_account_search") {
+            composable(ROUTE_ALL_ACCOUNT_SEARCH) {
                 AccountSearchView(
                     navController,
                 )
             }
             composable(
-                route = "user_account/{userJson}",
+                route = ROUTE_USER_ACCOUNT_OVERVIEW + "/{userJson}",
                 arguments = listOf(navArgument("userJson") { type = NavType.StringType })
             ) { backStackEntry ->
                 val encodedUserJson = backStackEntry.arguments?.getString("userJson")
@@ -101,7 +104,7 @@ fun MainScreen() {
             }
 
             composable(
-                route = "transaction_details/{transactionGuid}",
+                route = ROUTE_TRANSACTION_DETAILS + "/{transactionGuid}",
                 arguments = listOf(navArgument("transactionGuid") { type = NavType.StringType })
             ) { backStackEntry ->
                 val transactionGuidString = backStackEntry.arguments?.getString("transactionGuid")
@@ -112,6 +115,8 @@ fun MainScreen() {
                     transactionGuid = transactionGuid
                 )
             }
+
+            composable(ROUTE_TRANSACTIONS_CANDIDATES) { TransactionsCandidatesView(navController) }
         }
     }
 }
