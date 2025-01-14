@@ -31,7 +31,7 @@ fun TransactionsCandidatesView(
     navController: NavController
 ) {
     val viewModel: TransactionsCandidatesViewModel = viewModel()
-    val transactionPage by viewModel.transactionPage.observeAsState()
+    val transactions by viewModel.transactions.observeAsState()
     val currentPage by viewModel.currentPage.observeAsState()
     val totalPages by viewModel.totalPages.observeAsState()
     val selectedGuids by viewModel.selectedGuids.observeAsState()
@@ -39,7 +39,8 @@ fun TransactionsCandidatesView(
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(currentPage) {
-        if (transactionPage == null) {
+        if (transactions!!.isEmpty()) {
+            viewModel.fetchSelectedTransactions()
             viewModel.fetchTransactionPage(1)
         }
         coroutineScope.launch {
@@ -49,7 +50,7 @@ fun TransactionsCandidatesView(
 
     val areAllSelected by remember {
         derivedStateOf {
-            transactionPage?.transactions?.map { it.guid }?.all { it in selectedGuids.orEmpty() }
+            transactions?.map { it.guid }?.all { it in selectedGuids.orEmpty() }
                 ?: false
         }
     }
@@ -61,7 +62,7 @@ fun TransactionsCandidatesView(
     Column(modifier = Modifier.fillMaxSize()) {
 
         SelectAllTransactionsButton(
-            transactionPage?.transactions,
+            transactions,
             viewModel,
             allTransactionsSelected
         )
@@ -71,7 +72,7 @@ fun TransactionsCandidatesView(
                 .padding(8.dp)
                 .weight(1f)
         ) {
-            transactionPage?.transactions?.forEach { transaction ->
+            transactions?.forEach { transaction ->
                 item {
                     TransactionCandidateItem(
                         transaction = transaction,
