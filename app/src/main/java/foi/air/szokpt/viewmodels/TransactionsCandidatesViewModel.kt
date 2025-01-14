@@ -9,16 +9,23 @@ import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
 import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.core.transactions.TransactionFilter
 import hr.foi.air.szokpt.ws.models.TransactionPageResponse
+import hr.foi.air.szokpt.ws.models.responses.SelectedTransaction
+import hr.foi.air.szokpt.ws.models.responses.Transaction
+import hr.foi.air.szokpt.ws.request_handlers.GetSelectedTransactionsRequestHandler
 import hr.foi.air.szokpt.ws.request_handlers.GetTransactionsPageRequestHandler
 import java.util.UUID
 
 class TransactionsCandidatesViewModel : ViewModel() {
-    private val _transactionPage: MutableLiveData<TransactionPageResponse> = MutableLiveData(null)
+    private val _transactions: MutableLiveData<List<Transaction>> = MutableLiveData(emptyList())
+
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(1)
     private val _totalPages: MutableLiveData<Int> = MutableLiveData(1)
     private val _selectedGuids: MutableLiveData<List<UUID>> = MutableLiveData(mutableListOf())
 
-    val transactionPage: LiveData<TransactionPageResponse?> = _transactionPage
+    private val _selectedTransactions: MutableLiveData<List<SelectedTransaction>> =
+        MutableLiveData(mutableListOf())
+
+    val transactions: LiveData<List<Transaction>> = _transactions
     val currentPage: LiveData<Int> = _currentPage
     val totalPages: LiveData<Int> = _totalPages
     val selectedGuids: LiveData<List<UUID>> = _selectedGuids
@@ -30,10 +37,17 @@ class TransactionsCandidatesViewModel : ViewModel() {
             GetTransactionsPageRequestHandler(jwtToken, page, filter = setFilter())
         transactionsRequestHandler.sendRequest(object : ResponseListener<TransactionPageResponse> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<TransactionPageResponse>) {
-                val transactionPage = response.data
-                _transactionPage.value = transactionPage?.first()
-                _currentPage.value = _transactionPage.value?.currentPage
-                _totalPages.value = _transactionPage.value?.totalPages
+                val transactionPage = response.data?.firstOrNull()
+
+                val selectedGuids = _selectedTransactions.value?.map { it.guid }?.toSet().orEmpty()
+
+                val filteredTransactions = transactionPage?.transactions?.filter { transaction ->
+                    transaction.guid !in selectedGuids
+                } ?: emptyList()
+
+                _transactions.value = filteredTransactions
+                _currentPage.value = transactionPage?.currentPage
+                _totalPages.value = transactionPage?.totalPages
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {
@@ -45,6 +59,27 @@ class TransactionsCandidatesViewModel : ViewModel() {
             }
         })
     }
+
+    fun fetchSelectedTransactions() {
+        val jwtToken = Auth.logedInUserData?.token ?: return
+
+        val selectedTransactionsRequestHandler = GetSelectedTransactionsRequestHandler(jwtToken)
+        selectedTransactionsRequestHandler.sendRequest(object :
+            ResponseListener<SelectedTransaction> {
+            override fun onSuccessfulResponse(response: SuccessfulResponseBody<SelectedTransaction>) {
+                _selectedTransactions.value = response.data!!.toMutableList()
+            }
+
+            override fun onErrorResponse(response: ErrorResponseBody) {
+                println("Error receiving response: ${response.error_message}")
+            }
+
+            override fun onNetworkFailure(t: Throwable) {
+                println("Error contacting network...")
+            }
+        })
+    }
+
 
     fun toggleSelectAllTransactions(pageGuids: Set<UUID>) {
         _selectedGuids.value = _selectedGuids.value.orEmpty().let { currentSelectedGuids ->
