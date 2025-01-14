@@ -1,6 +1,5 @@
 package foi.air.szokpt.views.app
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,7 +40,6 @@ import foi.air.szokpt.ui.components.InputTimePicker
 import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
-import foi.air.szokpt.ui.components.transaction_components.TransactionDetailRow
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
@@ -214,7 +212,6 @@ fun EditTransactionView(
                                 modifier = Modifier.padding(vertical = 8.dp)
                             )
 
-                            // Extract date and time parts from the timestamp
                             val originalTimestamp = transaction!!.transactionTimestamp
                             val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                             val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
@@ -222,16 +219,14 @@ fun EditTransactionView(
                             val initialDate = LocalDate.parse(originalTimestamp.split(" ")[0], dateFormatter)
                             val initialTime = LocalTime.parse(originalTimestamp.split(" ")[1], timeFormatter)
 
-// State variables
-                            var selectedAfterDate by remember { mutableStateOf<LocalDate?>(initialDate) }
-                            var selectedAfterTime by remember { mutableStateOf<LocalTime?>(initialTime) }
+                            var selectedDate by remember { mutableStateOf<LocalDate?>(initialDate) }
+                            var selectedTime by remember { mutableStateOf<LocalTime?>(initialTime) }
                             var updatedTransactionTimestamp by remember { mutableStateOf(originalTimestamp) }
-                            var showAfterTimePicker by remember { mutableStateOf(false) }
+                            var showTimePicker by remember { mutableStateOf(false) }
 
-                            // Function to update the transaction timestamp
                             fun updateTransactionTimestamp() {
-                                val date = selectedAfterDate?.format(dateFormatter) ?: ""
-                                val time = selectedAfterTime?.format(timeFormatter) ?: ""
+                                val date = selectedDate?.format(dateFormatter) ?: ""
+                                val time = selectedTime?.format(timeFormatter) ?: ""
                                 updatedTransactionTimestamp = "$date $time"
                             }
 
@@ -243,9 +238,9 @@ fun EditTransactionView(
                             ) {
                                 DatePickerField(
                                     onDateSelected = { date ->
-                                        selectedAfterDate = date
+                                        selectedDate = date
                                         updateTransactionTimestamp()
-                                        showAfterTimePicker = true
+                                        showTimePicker = true
                                     },
                                     label = "Choose Date & Time",
                                     initialDate = LocalDate.parse(initialDate.toString()),
@@ -253,7 +248,7 @@ fun EditTransactionView(
                                         .weight(1f)
                                         .padding(end = 4.dp)
                                 )
-                                if (selectedAfterDate != null && selectedAfterTime != null) {
+                                if (selectedDate != null && selectedTime != null) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.End,
@@ -261,7 +256,7 @@ fun EditTransactionView(
                                             .padding(top = 4.dp)
                                     ) {
                                         Text(
-                                            text = selectedAfterTime!!.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                                            text = selectedTime!!.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
                                             color = TextWhite,
                                             fontSize = 16.sp,
                                         )
@@ -274,14 +269,14 @@ fun EditTransactionView(
                                     }
                                 }
                             }
-                            if (showAfterTimePicker) {
+                            if (showTimePicker) {
                                 InputTimePicker(
                                     onConfirm = { hour, minute ->
-                                        selectedAfterTime = LocalTime.of(hour, minute)
-                                        showAfterTimePicker = false
+                                        selectedTime = LocalTime.of(hour, minute)
+                                        showTimePicker = false
                                     },
                                     onDismiss = {
-                                        showAfterTimePicker = false
+                                        showTimePicker = false
                                     }
                                 )
                             }
