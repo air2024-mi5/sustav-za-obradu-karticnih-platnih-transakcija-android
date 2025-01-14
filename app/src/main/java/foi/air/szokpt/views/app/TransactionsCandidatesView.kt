@@ -1,5 +1,6 @@
 package foi.air.szokpt.views.app
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,10 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults.buttonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,7 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,13 +34,91 @@ import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectCandidatesButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.TransactionCandidateItem
 import foi.air.szokpt.ui.theme.Primary
+import foi.air.szokpt.ui.theme.TextBlack
 import foi.air.szokpt.ui.theme.TextWhite
 import hr.foi.air.szokpt.ws.models.responses.Transaction
 import java.util.UUID
 
 @Composable
 fun TransactionsCandidatesView(navController: NavController) {
-    val mockTransactions = listOf(
+    val mockTransactions = getMockTransactions()
+
+    var selectedTransactionIds by remember { mutableStateOf(setOf<UUID>()) }
+    val areAllSelected by remember {
+        derivedStateOf { selectedTransactionIds.size == mockTransactions.size }
+    }
+
+    val iconTintColor by remember {
+        derivedStateOf { if (!areAllSelected) TextBlack else Primary }
+    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Select All",
+                color = TextWhite,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Button(
+                onClick = {
+                    selectedTransactionIds = mockTransactions.map { it.guid }.toSet()
+                },
+                modifier = Modifier
+                    .size(28.dp),
+                shape = RoundedCornerShape(4.dp),
+                border = BorderStroke(1.dp, Color.White),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent
+                ),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Check,
+                    contentDescription = "Select All",
+                    tint = iconTintColor,
+                )
+            }
+        }
+
+        LazyColumn(
+            modifier = Modifier.padding(8.dp)
+        ) {
+            items(mockTransactions) { transaction ->
+                val isSelected = selectedTransactionIds.contains(transaction.guid)
+
+                TransactionCandidateItem(
+                    transaction = transaction,
+                    isSelected = isSelected,
+                    onSelectionChanged = { isSelectedNow ->
+                        selectedTransactionIds = if (isSelectedNow) {
+                            selectedTransactionIds + transaction.guid
+                        } else {
+                            selectedTransactionIds - transaction.guid
+                        }
+                    }
+                )
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            SelectCandidatesButton()
+        }
+    }
+}
+
+fun getMockTransactions(): List<Transaction> {
+    return listOf(
         Transaction(
             guid = UUID.randomUUID(),
             maskedPan = "165650****0054",
@@ -99,78 +178,6 @@ fun TransactionsCandidatesView(navController: NavController) {
             pinUsed = false,
             approvalCode = "00",
             processed = false
-        ),
+        )
     )
-
-    var selectedTransactionIds by remember { mutableStateOf(setOf<UUID>()) }
-    val areAllSelected by remember {
-        derivedStateOf { selectedTransactionIds.size == mockTransactions.size }
-    }
-
-    val iconTintColor by remember {
-        derivedStateOf { if (areAllSelected) Primary else Color.LightGray }
-    }
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 24.dp, top = 16.dp, bottom = 16.dp),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Button(
-                onClick = {
-                    selectedTransactionIds = mockTransactions.map { it.guid }.toSet()
-                },
-                modifier = Modifier
-                    .size(32.dp),
-                shape = RectangleShape,
-                colors = buttonColors(
-                    containerColor = Color.Black
-                ),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Check,
-                    contentDescription = "Select All",
-                    tint = iconTintColor,
-                )
-            }
-            Text(
-                text = "Select All",
-                color = TextWhite,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Normal,
-                modifier = Modifier.padding(start = 8.dp)
-            )
-        }
-
-        LazyColumn(
-            modifier = Modifier.padding(8.dp)
-        ) {
-            items(mockTransactions) { transaction ->
-                val isSelected = selectedTransactionIds.contains(transaction.guid)
-
-                TransactionCandidateItem(
-                    transaction = transaction,
-                    isSelected = isSelected,
-                    onSelectionChanged = { isSelectedNow ->
-                        selectedTransactionIds = if (isSelectedNow) {
-                            selectedTransactionIds + transaction.guid
-                        } else {
-                            selectedTransactionIds - transaction.guid
-                        }
-                    }
-                )
-            }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            SelectCandidatesButton()
-        }
-    }
 }
