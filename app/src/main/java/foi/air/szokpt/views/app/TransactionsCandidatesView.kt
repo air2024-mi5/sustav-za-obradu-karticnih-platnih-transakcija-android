@@ -75,7 +75,7 @@ fun TransactionsCandidatesView(navController: NavController) {
                 modifier = Modifier
                     .size(24.dp),
                 shape = RoundedCornerShape(4.dp),
-                border = BorderStroke(1.dp, Color.White),
+                border = BorderStroke(1.dp, Primary),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent
                 ),
