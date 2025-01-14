@@ -20,6 +20,7 @@ import foi.air.szokpt.views.app.AccountSearchView
 import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DailyProcessesDashboardView
 import foi.air.szokpt.views.app.DashboardView
+import foi.air.szokpt.views.app.EditTransactionView
 import foi.air.szokpt.views.app.RegistrationView
 import foi.air.szokpt.views.app.TransactionDetailsView
 import foi.air.szokpt.views.app.TransactionsCandidatesView
