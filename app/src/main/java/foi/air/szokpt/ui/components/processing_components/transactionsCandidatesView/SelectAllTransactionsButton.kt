@@ -29,7 +29,7 @@ import hr.foi.air.szokpt.ws.models.responses.Transaction
 fun SelectAllTransactionsButton(
     transactions: List<Transaction>?,
     viewModel: TransactionsCandidatesViewModel,
-    iconTintColor: Color
+    allTransactionsSelected: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -62,11 +62,13 @@ fun SelectAllTransactionsButton(
             ),
             contentPadding = PaddingValues(0.dp)
         ) {
-            Icon(
-                imageVector = Icons.Outlined.Check,
-                contentDescription = "",
-                tint = iconTintColor,
-            )
+            if (allTransactionsSelected) {
+                Icon(
+                    imageVector = Icons.Outlined.Check,
+                    contentDescription = "",
+                    tint = Primary,
+                )
+            }
         }
     }
 }
