@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import foi.air.szokpt.helpers.TransactionUtils
 import foi.air.szokpt.ui.theme.BGLevelZeroHigh
+import foi.air.szokpt.ui.theme.Primary
 import hr.foi.air.szokpt.ws.models.responses.Transaction
 
 @Composable
@@ -79,7 +81,11 @@ fun TransactionCandidateItem(
         Spacer(modifier = Modifier.width(8.dp))
         Checkbox(
             checked = isSelected,
-            onCheckedChange = { onSelectionChanged(it) }
+            onCheckedChange = { onSelectionChanged(it) },
+            colors = CheckboxDefaults.colors(
+                uncheckedColor = Primary,
+                checkedColor = Primary
+            )
         )
     }
 }
