@@ -35,12 +35,13 @@ import foi.air.szokpt.ui.components.processing_components.transactionsCandidates
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.TransactionCandidateItem
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextBlack
-import hr.foi.air.szokpt.ws.models.responses.Transaction
+import foi.air.szokpt.utils.MockTransactionsLoader
 import java.util.UUID
 
 @Composable
 fun TransactionsCandidatesView(navController: NavController) {
-    val mockTransactions = getMockTransactions()
+    val mockTransactionsLoader = MockTransactionsLoader()
+    val mockTransactions = mockTransactionsLoader.getMockTransactions()
 
     var selectedTransactionIds by remember { mutableStateOf(setOf<UUID>()) }
     val areAllSelected by remember {
@@ -115,69 +116,4 @@ fun TransactionsCandidatesView(navController: NavController) {
             SelectCandidatesButton()
         }
     }
-}
-
-fun getMockTransactions(): List<Transaction> {
-    return listOf(
-        Transaction(
-            guid = UUID.randomUUID(),
-            maskedPan = "165650****0054",
-            responseCode = "00",
-            cardBrand = "Visa",
-            currency = "840",
-            amount = 50.0,
-            transactionTimestamp = "12/01/2025 10:03:17",
-            trxType = "Purchase",
-            installmentsNumber = 1,
-            installmentsCreditor = "",
-            pinUsed = false,
-            approvalCode = "00",
-            processed = false
-        ),
-        Transaction(
-            guid = UUID.randomUUID(),
-            maskedPan = "165650****0054",
-            responseCode = "00",
-            cardBrand = "Visa",
-            currency = "840",
-            amount = 50.0,
-            transactionTimestamp = "12/01/2025 10:03:17",
-            trxType = "Purchase",
-            installmentsNumber = 1,
-            installmentsCreditor = "",
-            pinUsed = false,
-            approvalCode = "00",
-            processed = false
-        ),
-        Transaction(
-            guid = UUID.randomUUID(),
-            maskedPan = "165650****0054",
-            responseCode = "00",
-            cardBrand = "Visa",
-            currency = "840",
-            amount = 50.0,
-            transactionTimestamp = "12/01/2025 10:03:17",
-            trxType = "Purchase",
-            installmentsNumber = 1,
-            installmentsCreditor = "",
-            pinUsed = false,
-            approvalCode = "00",
-            processed = false
-        ),
-        Transaction(
-            guid = UUID.randomUUID(),
-            maskedPan = "765230****0054",
-            responseCode = "00",
-            cardBrand = "Visa",
-            currency = "978",
-            amount = 100.0,
-            transactionTimestamp = "12/01/2025 09:03:17",
-            trxType = "Purchase",
-            installmentsNumber = 1,
-            installmentsCreditor = "",
-            pinUsed = false,
-            approvalCode = "00",
-            processed = false
-        )
-    )
 }
