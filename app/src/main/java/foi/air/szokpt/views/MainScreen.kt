@@ -32,6 +32,7 @@ const val ROUTE_DASHBOARD = "dashboard"
 const val ROUTE_REPORTS = "reports"
 const val ROUTE_DAILY_PROCESSING = "daily_processing"
 const val ROUTE_ACCOUNT = "account"
+const val ROUTE_LOGIN = "login"
 const val ROUTE_REGISTRATION = "registration"
 const val ROUTE_ALL_ACCOUNT_SEARCH = "all_account_search"
 const val ROUTE_USER_ACCOUNT_OVERVIEW = "user_account"
@@ -58,10 +59,10 @@ fun MainScreen() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "login",
+            startDestination = ROUTE_LOGIN,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("login") {
+            composable(ROUTE_LOGIN) {
                 LoginPage(
                     onSuccessfulLogin = {
                         isAuthenticated.value = true
