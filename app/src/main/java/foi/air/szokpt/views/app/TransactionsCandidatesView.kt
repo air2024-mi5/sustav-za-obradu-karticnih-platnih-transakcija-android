@@ -19,11 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import foi.air.szokpt.ui.components.pagination_components.Pagination
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectAllTransactionsButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectCandidatesButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.TransactionCandidateItem
-import foi.air.szokpt.ui.theme.Primary
-import foi.air.szokpt.ui.theme.TextBlack
 import foi.air.szokpt.viewmodels.TransactionsCandidatesViewModel
 import kotlinx.coroutines.launch
 
@@ -55,8 +54,8 @@ fun TransactionsCandidatesView(
         }
     }
 
-    val iconTintColor by remember {
-        derivedStateOf { if (!areAllSelected) TextBlack else Primary }
+    val allTransactionsSelected by remember {
+        derivedStateOf { if (!areAllSelected) false else true }
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -64,7 +63,7 @@ fun TransactionsCandidatesView(
         SelectAllTransactionsButton(
             transactionPage?.transactions,
             viewModel,
-            iconTintColor
+            allTransactionsSelected
         )
 
         LazyColumn(
@@ -84,6 +83,16 @@ fun TransactionsCandidatesView(
                 }
             }
         }
+
+        Pagination(
+            currentPage = currentPage,
+            totalPages = totalPages,
+            onPageSelected = { page ->
+                viewModel.fetchTransactionPage(page)
+                coroutineScope.launch {
+                    listState.scrollToItem(0)
+                }
+            })
 
         Row(
             modifier = Modifier
