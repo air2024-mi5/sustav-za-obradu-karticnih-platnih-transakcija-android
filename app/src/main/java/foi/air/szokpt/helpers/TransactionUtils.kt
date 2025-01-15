@@ -33,6 +33,7 @@ object TransactionUtils {
         "MASTERCARD" -> R.drawable.mastercard
         "DINERS" -> R.drawable.diners
         "DISCOVER" -> R.drawable.discover
+        "AMEX" -> R.drawable.amex
         else -> R.drawable.logo
     }
 
