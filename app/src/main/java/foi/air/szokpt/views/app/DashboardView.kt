@@ -308,8 +308,8 @@ fun CardBrandsTile(transactionUtils: TransactionUtils) {
     val mockStats = listOf(
         CardBrandInformation("VISA", 10, Color(0xFF1634CC)),
         CardBrandInformation("DINERS", 3, Color(0xFFc5c5c7)),
-        CardBrandInformation("DISCOVER", 0, Color(0xFFff7001)),
-        CardBrandInformation("MAESTRO", 0, Color(0xFF00a2e5)),
+        CardBrandInformation("DISCOVER", 5, Color(0xFFff7001)),
+        CardBrandInformation("MAESTRO", 8, Color(0xFF00a2e5)),
         CardBrandInformation("AMEX", 1, Color(0xFF006cb7)),
         CardBrandInformation("MASTERCARD", 5, Color(0xFFf79e1b))
     )

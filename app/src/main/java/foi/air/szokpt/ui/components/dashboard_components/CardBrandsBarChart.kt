@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import foi.air.szokpt.helpers.TransactionUtils
@@ -42,7 +44,7 @@ fun CardBrandsBarChart(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(10.dp)
+            .padding(top = 10.dp)
     ) {
         Box(
             modifier = Modifier
@@ -52,7 +54,7 @@ fun CardBrandsBarChart(
             var totalWidth by remember { mutableFloatStateOf(0f) }
             var availableWidth by remember { mutableFloatStateOf(0f) }
             var barWidth by remember { mutableFloatStateOf(0f) }
-            val spacing = 50f
+            val spacing = 45f
 
             Canvas(
                 modifier = Modifier
@@ -124,8 +126,9 @@ fun CardBrandsBarChart(
                                 id = transactionUtils.getCardBrandDrawable(stat.brand)
                             ),
                             contentDescription = "Card ${stat.brand}",
+                            contentScale = ContentScale.FillHeight,
                             modifier = Modifier
-                                .width(35.2.dp)
+                                .size(35.dp)
                         )
                     }
                 }
