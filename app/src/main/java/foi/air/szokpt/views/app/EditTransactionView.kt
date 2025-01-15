@@ -21,8 +21,10 @@ import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -68,7 +70,8 @@ fun EditTransactionView(
     viewModel.fetchTransactionDetails(transactionGuid = transactionGuid)
 
     var showDialog by remember { mutableStateOf(false) }
-    var updatedTransactionTimestamp by remember { mutableStateOf("originalTimestamp") }
+    var updatedTransactionTimestamp by remember { mutableStateOf("") }
+    var selectedNewAmount by remember { mutableStateOf<Double?>(null) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
@@ -203,17 +206,13 @@ fun EditTransactionView(
                         ) {
                             val currencySymbol =
                                 TransactionUtils.getCurrencySymbol(transaction!!.currency)
-                            val editableTransactionAmount = remember { mutableStateOf(transaction!!.copy()) }
                             StyledTextField(
                                 label = "New $currencySymbol Amount",
-                                value = if (editableTransactionAmount.value.amount > 0) editableTransactionAmount.value.amount.toString() else "",
+                                value = selectedNewAmount?.toString() ?: transaction!!.amount.toString(), // Use selectedNewAmount if set, fallback to transaction!!.amount
                                 onValueChange = { newValue ->
-                                    if (newValue.isBlank()) {
-                                        editableTransactionAmount.value = editableTransactionAmount.value.copy(amount = 0.0)
-                                    } else {
-                                        newValue.toDoubleOrNull()?.let { newAmount ->
-                                            editableTransactionAmount.value = editableTransactionAmount.value.copy(amount = newAmount)
-                                        }
+                                    // Update selectedNewAmount only if input is valid
+                                    newValue.toDoubleOrNull()?.let { newAmount ->
+                                        selectedNewAmount = newAmount
                                     }
                                 },
                                 isPasswordField = false,
@@ -278,6 +277,7 @@ fun EditTransactionView(
                                     }
                                 }
                             }
+
                             if (showTimePicker) {
                                 InputTimePicker(
                                     onConfirm = { hour, minute ->
@@ -289,23 +289,22 @@ fun EditTransactionView(
                                     }
                                 )
                             }
-
                         }
                     }
                 }
             }
         }
-
         if (showDialog) {
             DialogComponent(
                 onDismissRequest = { showDialog = false },
                 onConfirmation = {
-                    Log.i("TIME-update", updatedTransactionTimestamp)
+                    val amountToSave = selectedNewAmount ?: transaction!!.amount
+                    Log.i("TIME-update", updatedTransactionTimestamp + amountToSave)
                     showDialog = false
                 },
                 dialogTitle = "Confirm Save",
                 dialogText = "Are you sure you want to change ${transaction!!.guid}?",
-                iconTop = Icons.Rounded.CheckCircle,
+                iconTop = Icons.Rounded.Refresh,
                 highlightColor = success,
                 confirmationText = "Save",
                 dismissText = "Cancel",
