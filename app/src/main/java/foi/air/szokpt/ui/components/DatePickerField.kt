@@ -105,7 +105,7 @@ fun DatePickerField(
         modifier = modifier
             .then(if (maxWidth != null) Modifier.widthIn(max = maxWidth) else Modifier)
             .clickable { datePickerDialog.show() }
-            .padding(8.dp),
+            .padding(1.dp),
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedTextColor = Color.White,
             unfocusedPlaceholderColor = Color.Gray,
