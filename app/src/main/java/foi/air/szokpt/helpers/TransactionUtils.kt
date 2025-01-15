@@ -31,8 +31,9 @@ object TransactionUtils {
         "MAESTRO" -> R.drawable.maestro
         "VISA" -> R.drawable.visa
         "MASTERCARD" -> R.drawable.mastercard
-        "DIBERS" -> R.drawable.diners
+        "DINERS" -> R.drawable.diners
         "DISCOVER" -> R.drawable.discover
+        "AMEX" -> R.drawable.amex
         else -> R.drawable.logo
     }
 }
