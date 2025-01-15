@@ -15,16 +15,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -208,9 +205,8 @@ fun EditTransactionView(
                                 TransactionUtils.getCurrencySymbol(transaction!!.currency)
                             StyledTextField(
                                 label = "New $currencySymbol Amount",
-                                value = selectedNewAmount?.toString() ?: transaction!!.amount.toString(), // Use selectedNewAmount if set, fallback to transaction!!.amount
+                                value = selectedNewAmount?.toString() ?: transaction!!.amount.toString(),
                                 onValueChange = { newValue ->
-                                    // Update selectedNewAmount only if input is valid
                                     newValue.toDoubleOrNull()?.let { newAmount ->
                                         selectedNewAmount = newAmount
                                     }
@@ -277,7 +273,6 @@ fun EditTransactionView(
                                     }
                                 }
                             }
-
                             if (showTimePicker) {
                                 InputTimePicker(
                                     onConfirm = { hour, minute ->
@@ -298,11 +293,12 @@ fun EditTransactionView(
             DialogComponent(
                 onDismissRequest = { showDialog = false },
                 onConfirmation = {
-                    val amountToSave = selectedNewAmount ?: transaction!!.amount
-                    Log.i("TIME-update", updatedTransactionTimestamp + amountToSave)
+                    val updatedAmountToSave = selectedNewAmount ?: transaction!!.amount
+                    Log.i("TIME-update", updatedTransactionTimestamp + updatedAmountToSave)
                     showDialog = false
+                    navController.navigate("transaction_details/${transaction!!.guid}")
                 },
-                dialogTitle = "Confirm Save",
+                dialogTitle = "Confirm Changes",
                 dialogText = "Are you sure you want to change ${transaction!!.guid}?",
                 iconTop = Icons.Rounded.Refresh,
                 highlightColor = success,
