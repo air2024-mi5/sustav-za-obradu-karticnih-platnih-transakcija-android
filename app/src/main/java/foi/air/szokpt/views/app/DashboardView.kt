@@ -1,6 +1,6 @@
 package foi.air.szokpt.views.app
 
-import androidx.compose.foundation.background
+import CardBrandsBarChart
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,15 +30,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import foi.air.szokpt.helpers.TransactionUtils
+import foi.air.szokpt.models.CardBrandInformation
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dashboard_components.BarComponent
 import foi.air.szokpt.ui.components.dashboard_components.ChartWithLegend
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
-import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
-import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
@@ -59,11 +58,11 @@ fun DashboardView(navController: NavController) {
         item(span = { GridItemSpan(2) }) {
             AllTransactionsTile()
         }
-        item {
+        item(span = { GridItemSpan(2) }) {
             ValueTile()
         }
-        item {
-            CardTypesTile()
+        item(span = { GridItemSpan(2) }) {
+            CardBrandsTile(transactionUtils = TransactionUtils)
         }
         item(span = { GridItemSpan(2) }) {
             TransactionsListTile()
@@ -304,7 +303,17 @@ fun TransactionsListTile() {
 }
 
 @Composable
-fun CardTypesTile() {
+fun CardBrandsTile(transactionUtils: TransactionUtils) {
+
+    val mockStats = listOf(
+        CardBrandInformation("VISA", 10, Color(0xFF1634CC)),
+        CardBrandInformation("DINERS", 3, Color(0xFFc5c5c7)),
+        CardBrandInformation("DISCOVER", 0, Color(0xFFff7001)),
+        CardBrandInformation("MAESTRO", 0, Color(0xFF00a2e5)),
+        CardBrandInformation("AMEX", 1, Color(0xFF006cb7)),
+        CardBrandInformation("MASTERCARD", 5, Color(0xFFf79e1b))
+    )
+
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 16.dp,
@@ -331,9 +340,13 @@ fun CardTypesTile() {
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                BarComponent(40.dp, TextGray, "Other", "")
-                BarComponent(80.dp, Secondary, "Visa", "")
-                BarComponent(65.dp, Primary, "Master", "")
+                CardBrandsBarChart(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    stats = mockStats,
+                    transactionUtils = transactionUtils
+                )
             }
         }
     }
@@ -371,7 +384,7 @@ fun TransactionsByDayTile() {
             ) {
                 val transactions = listOf(60.dp, 25.dp, 30.dp, 35.dp, 55.dp, 80.dp, 15.dp)
                 val days = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-                
+
                 transactions.forEachIndexed { index, height ->
                     BarComponent(
                         height = height,
@@ -386,12 +399,12 @@ fun TransactionsByDayTile() {
 }
 
 @Composable
-fun TransactionOutcomes(){
+fun TransactionOutcomes() {
     val viewModel: ReportsViewModel = viewModel()
     val pieChartData by viewModel.pieChartData.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
-  TileSegment(
+    TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 16.dp,
         outerMargin = 8.dp,
@@ -423,6 +436,7 @@ fun TransactionOutcomes(){
                         ChartWithLegend(pieChartData)
                     }
                 }
+
                 else -> {
                     Text(
                         text = errorMessage.toString(),
