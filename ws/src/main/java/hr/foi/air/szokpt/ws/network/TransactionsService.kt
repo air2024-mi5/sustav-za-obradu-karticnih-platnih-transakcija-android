@@ -1,6 +1,7 @@
 package hr.foi.air.szokpt.ws.network
 
 import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
+import hr.foi.air.szokpt.core.transactions.TransactionData
 import hr.foi.air.szokpt.ws.models.TransactionPageResponse
 import hr.foi.air.szokpt.ws.models.responses.Transaction
 import retrofit2.Call
@@ -27,6 +28,7 @@ interface TransactionsService {
 
     @GET("transactions/{guid}")
     fun getTransactionDetails(
+        @Header("Authorization") authHeader: String,
         @Path("guid") transactionGuid: UUID
     ): Call<SuccessfulResponseBody<Transaction>>
 

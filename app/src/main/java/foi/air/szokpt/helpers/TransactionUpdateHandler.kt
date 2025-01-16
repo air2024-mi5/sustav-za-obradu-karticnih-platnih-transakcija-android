@@ -3,6 +3,7 @@ package foi.air.szokpt.helpers
 import hr.foi.air.szokpt.core.network.ResponseListener
 import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
 import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
+import hr.foi.air.szokpt.core.transactions.TransactionData
 import hr.foi.air.szokpt.core.transactions.TransactionUpdateOutcomeListener
 import hr.foi.air.szokpt.ws.models.responses.Transaction
 import hr.foi.air.szokpt.ws.request_handlers.TransactionUpdateRequestHandler
@@ -10,7 +11,7 @@ import hr.foi.air.szokpt.ws.request_handlers.TransactionUpdateRequestHandler
 class TransactionUpdateHandler {
     fun update(
         jwtToken: String,
-        newTransactionData: Transaction,
+        newTransactionData: TransactionData,
         transactionUpdateOutcomeListener: TransactionUpdateOutcomeListener
     ) {
         val transactionUpdateRequestHandler = TransactionUpdateRequestHandler(jwtToken, newTransactionData)

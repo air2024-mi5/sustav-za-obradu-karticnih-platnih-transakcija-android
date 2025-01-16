@@ -7,10 +7,11 @@ import retrofit2.Call
 import java.util.UUID
 
 class TransactionDetailsRequestHandler(
+    private val jwtToken: String,
     private val transactionGuid: UUID,
 ) : TemplateRequestHandler<Transaction>() {
     override fun getServiceCall(): Call<SuccessfulResponseBody<Transaction>> {
         val service = NetworkService.transactionsService
-        return service.getTransactionDetails(transactionGuid)
+        return service.getTransactionDetails( "Bearer $jwtToken", transactionGuid)
     }
 }
