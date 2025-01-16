@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.R
+import foi.air.szokpt.helpers.TransactionUpdateHandler
 import foi.air.szokpt.helpers.TransactionUtils
 import foi.air.szokpt.ui.components.DatePickerField
 import foi.air.szokpt.ui.components.InputTimePicker
@@ -49,7 +52,8 @@ import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.success
-import foi.air.szokpt.viewmodels.TransactionDetailsViewModel
+import foi.air.szokpt.ui.theme.warning
+import foi.air.szokpt.viewmodels.TransactionViewModel
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -59,12 +63,16 @@ import java.util.UUID
 fun EditTransactionView(
     navController: NavController,
     transactionGuid: UUID,
-    viewModel: TransactionDetailsViewModel = viewModel()
+    viewModel: TransactionViewModel = viewModel()
 ) {
-    val transaction by viewModel.transactionData.observeAsState()
-    val errorMessage by viewModel.errorMessage.observeAsState()
+    LaunchedEffect(Unit) {
+        viewModel.initializeTransactionData(transactionGuid)
+    }
 
-    viewModel.fetchTransactionDetails(transactionGuid = transactionGuid)
+    val currentTransaction by viewModel.currentTransactionData.observeAsState()
+    val storedTransaction by viewModel.storedTransactionData.observeAsState()
+    val errorMessage by viewModel.message.observeAsState()
+
 
     var showDialog by remember { mutableStateOf(false) }
     var updatedTransactionTimestamp by remember { mutableStateOf("") }
@@ -79,7 +87,7 @@ fun EditTransactionView(
             fontWeight = FontWeight.Bold
         )
 
-        if (transaction == null) {
+        if (currentTransaction == null) {
             errorMessage?.let {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -151,7 +159,7 @@ fun EditTransactionView(
                                             .padding(horizontal = 12.dp, vertical = 8.dp)
                                     ) {
                                         Text(
-                                            text = "#${transaction!!.guid}",
+                                            text = "#${storedTransaction!!.guid}",
                                             color = TextWhite.copy(alpha = 0.85f),
                                             fontWeight = FontWeight.SemiBold,
                                             fontSize = 18.sp
@@ -164,9 +172,9 @@ fun EditTransactionView(
                                             .fillMaxWidth()
                                     ) {
                                         val currencySymbol =
-                                            TransactionUtils.getCurrencySymbol(transaction!!.currency)
+                                            TransactionUtils.getCurrencySymbol(storedTransaction!!.currency)
                                         Text(
-                                            text = "$currencySymbol ${transaction!!.amount}",
+                                            text = "$currencySymbol ${storedTransaction!!.amount}",
                                             color = TextWhite,
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 18.sp
@@ -202,20 +210,21 @@ fun EditTransactionView(
                                 .padding(16.dp)
                         ) {
                             val currencySymbol =
-                                TransactionUtils.getCurrencySymbol(transaction!!.currency)
+                                TransactionUtils.getCurrencySymbol(currentTransaction!!.currency)
                             StyledTextField(
                                 label = "New $currencySymbol Amount",
-                                value = selectedNewAmount?.toString() ?: transaction!!.amount.toString(),
+                                value = selectedNewAmount?.toString() ?: currentTransaction!!.amount.toString(),
                                 onValueChange = { newValue ->
                                     newValue.toDoubleOrNull()?.let { newAmount ->
                                         selectedNewAmount = newAmount
+                                        viewModel.updateAmount(newAmount)
                                     }
                                 },
                                 isPasswordField = false,
                                 modifier = Modifier.padding(vertical = 8.dp)
                             )
 
-                            val originalTimestamp = transaction!!.transactionTimestamp
+                            val originalTimestamp = currentTransaction!!.transactionTimestamp
                             updatedTransactionTimestamp = originalTimestamp
 
                             val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -232,6 +241,7 @@ fun EditTransactionView(
                                 val date = selectedDate?.format(dateFormatter) ?: ""
                                 val time = selectedTime?.format(timeFormatter) ?: ""
                                 updatedTransactionTimestamp = "$date $time"
+                                viewModel.updateTimestamp(updatedTransactionTimestamp)
                             }
 
                             Row(
@@ -286,6 +296,21 @@ fun EditTransactionView(
                             }
                         }
                     }
+                    if(!errorMessage.isNullOrEmpty()){
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 80.dp)
+                                .padding(bottom = 20.dp),
+                            contentAlignment = Alignment.Center
+                        ) { Text(
+                                modifier = Modifier.padding(16.dp),
+                                text = errorMessage!!,
+                                color = warning,
+                                fontSize = 18.sp,
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -293,13 +318,24 @@ fun EditTransactionView(
             DialogComponent(
                 onDismissRequest = { showDialog = false },
                 onConfirmation = {
-                    val updatedAmountToSave = selectedNewAmount ?: transaction!!.amount
-                    Log.i("TIME-update", updatedTransactionTimestamp + updatedAmountToSave)
-                    showDialog = false
-                    navController.navigate("transaction_details/${transaction!!.guid}")
+
+                    val isValid = viewModel.validateData(currentTransaction!!)
+                    if (isValid) {
+                        viewModel.updateTransactionData(
+                            transactionUpdateHandler = TransactionUpdateHandler(),
+                            currentTransaction!!
+                        )
+
+                        showDialog = false
+                        navController.navigate("transaction_details/${storedTransaction!!.guid}")
+                    }else{
+                        showDialog = false
+                        viewModel.setMessage("Please check your input!")
+                    }
+
                 },
                 dialogTitle = "Confirm Changes",
-                dialogText = "Are you sure you want to change ${transaction!!.guid}?",
+                dialogText = "Are you sure you want to change ${storedTransaction!!.guid}?",
                 iconTop = Icons.Rounded.Refresh,
                 highlightColor = success,
                 confirmationText = "Save",
@@ -308,5 +344,6 @@ fun EditTransactionView(
                 iconDismiss = Icons.Rounded.Close
             )
         }
+
     }
 }
