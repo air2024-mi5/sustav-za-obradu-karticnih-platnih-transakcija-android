@@ -7,6 +7,7 @@ import foi.air.szokpt.context.Auth
 import hr.foi.air.szokpt.core.network.ResponseListener
 import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
 import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
+import hr.foi.air.szokpt.core.transactions.TransactionFilter
 import hr.foi.air.szokpt.ws.models.TransactionPageResponse
 import hr.foi.air.szokpt.ws.request_handlers.GetTransactionsPageRequestHandler
 
@@ -17,14 +18,17 @@ class TransactionsViewModel() : ViewModel() {
     private val _transactionPage: MutableLiveData<TransactionPageResponse?> = MutableLiveData(null)
     private val _currentPage: MutableLiveData<Int?> = MutableLiveData(1)
     private val _totalPages: MutableLiveData<Int?> = MutableLiveData(1)
+    private val _transactionsFilter: MutableLiveData<TransactionFilter?> = MutableLiveData(null)
 
     val transactionPage: LiveData<TransactionPageResponse?> = _transactionPage
     val currentPage: LiveData<Int?> = _currentPage
     val totalPages: LiveData<Int?> = _totalPages
+    val transactionsFilter: LiveData<TransactionFilter?> = _transactionsFilter
 
     fun fetchTransactionPage(page: Int) {
         val jwtToken = Auth.logedInUserData?.token ?: return
-        val transactionsRequestHandler = GetTransactionsPageRequestHandler(jwtToken, page)
+        val transactionsRequestHandler =
+            GetTransactionsPageRequestHandler(jwtToken, page, _transactionsFilter.value)
         transactionsRequestHandler.sendRequest(object : ResponseListener<TransactionPageResponse> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<TransactionPageResponse>) {
                 _loading.value = true
@@ -43,5 +47,9 @@ class TransactionsViewModel() : ViewModel() {
                 println("Error contacting network...")
             }
         })
+    }
+
+    fun setFilter(filter: TransactionFilter?) {
+        _transactionsFilter.value = filter
     }
 }
