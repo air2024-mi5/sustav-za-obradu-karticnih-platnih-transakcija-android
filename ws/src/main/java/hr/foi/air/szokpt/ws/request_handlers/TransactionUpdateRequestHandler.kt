@@ -13,7 +13,7 @@ class TransactionUpdateRequestHandler(
         val service = NetworkService.transactionsService
         return service.updateTransaction(
             "Bearer $jwtToken",
-            newTransactionData.id,
+            newTransactionData.guid,
             newTransactionData
         )
     }

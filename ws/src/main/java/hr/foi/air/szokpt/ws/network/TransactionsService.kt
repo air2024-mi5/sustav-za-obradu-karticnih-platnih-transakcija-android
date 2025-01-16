@@ -4,8 +4,10 @@ import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.ws.models.TransactionPageResponse
 import hr.foi.air.szokpt.ws.models.responses.Transaction
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 import java.util.UUID
@@ -27,4 +29,11 @@ interface TransactionsService {
     fun getTransactionDetails(
         @Path("guid") transactionGuid: UUID
     ): Call<SuccessfulResponseBody<Transaction>>
+
+    @PUT("transactions/{guid}")
+    fun updateTransaction(
+        @Header("Authorization") authHeader: String,
+        @Path("guid") transactionGuid: UUID,
+        @Body newTransactionData: Transaction
+    ): Call<SuccessfulResponseBody<Unit>>
 }
