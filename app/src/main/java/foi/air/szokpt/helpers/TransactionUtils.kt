@@ -28,11 +28,18 @@ object TransactionUtils {
     )
 
     fun getCardBrandDrawable(cardBrand: String): Int = when (cardBrand) {
-        "Maestro" -> R.drawable.maestro
-        "Visa" -> R.drawable.visa
-        "MasterCard" -> R.drawable.mastercard
-        "Diners" -> R.drawable.diners
-        "Discover" -> R.drawable.discover
+        "MAESTRO" -> R.drawable.maestro
+        "VISA" -> R.drawable.visa
+        "MASTERCARD" -> R.drawable.mastercard
+        "DINERS" -> R.drawable.diners
+        "DISCOVER" -> R.drawable.discover
+        "AMEX" -> R.drawable.amex
         else -> R.drawable.logo
+    }
+
+    fun getBorderColor(status: String): Color = when (status) {
+        "00" -> Color.Green
+        "11" -> Color.Green
+        else -> Color.Red
     }
 }

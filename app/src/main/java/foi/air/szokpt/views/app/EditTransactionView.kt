@@ -1,6 +1,6 @@
 package foi.air.szokpt.views.app
 
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,13 +13,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,20 +36,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import foi.air.szokpt.R
 import foi.air.szokpt.helpers.TransactionUtils
+import foi.air.szokpt.ui.components.DatePickerField
+import foi.air.szokpt.ui.components.InputTimePicker
+import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
+import foi.air.szokpt.ui.components.dialog_components.DialogComponent
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
-import foi.air.szokpt.ui.components.transaction_components.TransactionDetailRow
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
+import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.TransactionDetailsViewModel
-import foi.air.szokpt.views.ROUTE_EDIT_TRANSACTION
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 @Composable
-fun TransactionDetailsView(
+fun EditTransactionView(
     navController: NavController,
     transactionGuid: UUID,
     viewModel: TransactionDetailsViewModel = viewModel()
@@ -54,10 +66,14 @@ fun TransactionDetailsView(
 
     viewModel.fetchTransactionDetails(transactionGuid = transactionGuid)
 
+    var showDialog by remember { mutableStateOf(false) }
+    var updatedTransactionTimestamp by remember { mutableStateOf("") }
+    var selectedNewAmount by remember { mutableStateOf<Double?>(null) }
+
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             modifier = Modifier.padding(16.dp),
-            text = "Transaction Details",
+            text = "Transaction Edit",
             color = TextWhite,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
@@ -81,7 +97,7 @@ fun TransactionDetailsView(
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 item {
                     TileSegment(
@@ -97,9 +113,9 @@ fun TransactionDetailsView(
                                 .clip(RoundedCornerShape(30.dp))
                                 .background(
                                     Brush.verticalGradient(
-                                        colors = listOf(BGLevelOne, Primary),
+                                        colors = listOf(BGLevelOne, success),
                                         startY = 0f,
-                                        endY = 1600f
+                                        endY = 4000f
                                     )
                                 )
                                 .fillMaxSize()
@@ -115,7 +131,7 @@ fun TransactionDetailsView(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Rounded.Info,
+                                        imageVector = Icons.Outlined.Edit,
                                         contentDescription = null,
                                         tint = Color.White,
                                         modifier = Modifier.size(60.dp)
@@ -135,8 +151,8 @@ fun TransactionDetailsView(
                                             .padding(horizontal = 12.dp, vertical = 8.dp)
                                     ) {
                                         Text(
-                                            text = "Transaction #${transaction!!.guid}",
-                                            color = Primary,
+                                            text = "#${transaction!!.guid}",
+                                            color = TextWhite.copy(alpha = 0.85f),
                                             fontWeight = FontWeight.SemiBold,
                                             fontSize = 18.sp
                                         )
@@ -145,7 +161,6 @@ fun TransactionDetailsView(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         modifier = Modifier
-                                            .padding(10.dp)
                                             .fillMaxWidth()
                                     ) {
                                         val currencySymbol =
@@ -158,12 +173,12 @@ fun TransactionDetailsView(
                                         )
                                         OutlineBouncingButton(
                                             onClick = {
-                                                navController.navigate("${ROUTE_EDIT_TRANSACTION}/${transactionGuid}")
+                                                showDialog = true
                                             },
-                                            contentColor = TextWhite,
-                                            borderColor = TextWhite,
-                                            inputIcon = Icons.Rounded.Edit,
-                                            inputText = "Edit",
+                                            contentColor = success,
+                                            borderColor = success,
+                                            inputIcon = Icons.Rounded.Refresh,
+                                            inputText = "Save",
                                             modifier = Modifier
                                         )
                                     }
@@ -172,13 +187,13 @@ fun TransactionDetailsView(
                         }
                     }
                 }
-
                 item {
                     TileSegment(
                         tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
                         innerPadding = 8.dp,
                         outerMargin = 8.dp,
                         minWidth = 250.dp,
+                        minHeight = 100.dp,
                         color = BGLevelOne
                     ) {
                         Column(
@@ -186,79 +201,112 @@ fun TransactionDetailsView(
                                 .fillMaxSize()
                                 .padding(16.dp)
                         ) {
-                            TransactionDetailRow("Date", transaction!!.transactionTimestamp)
+                            val currencySymbol =
+                                TransactionUtils.getCurrencySymbol(transaction!!.currency)
+                            StyledTextField(
+                                label = "New $currencySymbol Amount",
+                                value = selectedNewAmount?.toString() ?: transaction!!.amount.toString(),
+                                onValueChange = { newValue ->
+                                    newValue.toDoubleOrNull()?.let { newAmount ->
+                                        selectedNewAmount = newAmount
+                                    }
+                                },
+                                isPasswordField = false,
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            )
+
+                            val originalTimestamp = transaction!!.transactionTimestamp
+                            updatedTransactionTimestamp = originalTimestamp
+
+                            val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                            val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+
+                            val initialDate = LocalDate.parse(originalTimestamp.split(" ")[0], dateFormatter)
+                            val initialTime = LocalTime.parse(originalTimestamp.split(" ")[1], timeFormatter)
+
+                            var selectedDate by remember { mutableStateOf<LocalDate?>(initialDate) }
+                            var selectedTime by remember { mutableStateOf<LocalTime?>(initialTime) }
+                            var showTimePicker by remember { mutableStateOf(false) }
+
+                            fun updateTransactionTimestamp() {
+                                val date = selectedDate?.format(dateFormatter) ?: ""
+                                val time = selectedTime?.format(timeFormatter) ?: ""
+                                updatedTransactionTimestamp = "$date $time"
+                            }
+
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .fillMaxWidth()
                             ) {
-                                Row() {
-                                    Text(
-                                        text = "Card",
-                                        color = TextWhite.copy(alpha = 0.7f),
-                                        fontSize = 16.sp
-                                    )
-                                }
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = transaction!!.maskedPan,
-                                        color = TextWhite,
-                                        fontWeight = FontWeight.Medium,
-                                        fontSize = 16.sp,
-                                        modifier = Modifier.padding(horizontal = 5.dp)
-                                    )
-                                    val cardBrandDrawable =
-                                        TransactionUtils.getCardBrandDrawable(transaction!!.cardBrand)
-                                    Image(
-                                        painter = painterResource(id = cardBrandDrawable),
-                                        contentDescription = "Card Brand",
-                                        modifier = Modifier.size(45.dp)
-                                    )
+                                DatePickerField(
+                                    onDateSelected = { date ->
+                                        selectedDate = date
+                                        updateTransactionTimestamp()
+                                        showTimePicker = true
+                                    },
+                                    label = "Choose Date & Time",
+                                    initialDate = LocalDate.parse(initialDate.toString()),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(end = 4.dp)
+                                )
+                                if (selectedDate != null && selectedTime != null) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.End,
+                                        modifier = Modifier
+                                            .padding(top = 4.dp)
+                                    ) {
+                                        Text(
+                                            text = selectedTime!!.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                                            color = TextWhite,
+                                            fontSize = 16.sp,
+                                        )
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.round_schedule_24),
+                                            contentDescription = "Time Icon",
+                                            modifier = Modifier.size(32.dp),
+                                            tint = Primary
+                                        )
+                                    }
                                 }
                             }
-                            val transactionType =
-                                TransactionUtils.getTransactionTypeDisplay(transaction!!.trxType)
-                            TransactionDetailRow(
-                                "Type",
-                                transactionType ?: transaction!!.trxType
-                            )
-                            if (transaction!!.installmentsNumber > 0) {
-                                val monthlyAmount =
-                                    transaction!!.amount / transaction!!.installmentsNumber
-                                TransactionDetailRow(
-                                    "Payment Method",
-                                    "Installments - ${transaction!!.installmentsNumber} months"
-                                )
-                                TransactionDetailRow(
-                                    "Monthly Amount",
-                                    "$monthlyAmount ${transaction!!.currency}"
-                                )
-                                TransactionDetailRow(
-                                    "Total Amount",
-                                    "${transaction!!.amount} ${transaction!!.currency}"
-                                )
-                                TransactionDetailRow("Creditor", transaction!!.installmentsCreditor)
-                            } else {
-                                TransactionDetailRow(
-                                    "Payment Method",
-                                    "One-time payment"
+                            if (showTimePicker) {
+                                InputTimePicker(
+                                    onConfirm = { hour, minute ->
+                                        selectedTime = LocalTime.of(hour, minute)
+                                        showTimePicker = false
+                                    },
+                                    onDismiss = {
+                                        showTimePicker = false
+                                    }
                                 )
                             }
-                            TransactionDetailRow(
-                                "PIN Used",
-                                if (transaction!!.pinUsed) "Yes" else "No"
-                            )
-                            TransactionDetailRow(
-                                "Status",
-                                if (transaction!!.processed) "Processed" else "Pending"
-                            )
-                            TransactionDetailRow("Response Code", transaction!!.responseCode)
                         }
                     }
                 }
             }
+        }
+        if (showDialog) {
+            DialogComponent(
+                onDismissRequest = { showDialog = false },
+                onConfirmation = {
+                    val updatedAmountToSave = selectedNewAmount ?: transaction!!.amount
+                    Log.i("TIME-update", updatedTransactionTimestamp + updatedAmountToSave)
+                    showDialog = false
+                    navController.navigate("transaction_details/${transaction!!.guid}")
+                },
+                dialogTitle = "Confirm Changes",
+                dialogText = "Are you sure you want to change ${transaction!!.guid}?",
+                iconTop = Icons.Rounded.Refresh,
+                highlightColor = success,
+                confirmationText = "Save",
+                dismissText = "Cancel",
+                iconConfirm = Icons.Rounded.Check,
+                iconDismiss = Icons.Rounded.Close
+            )
         }
     }
 }

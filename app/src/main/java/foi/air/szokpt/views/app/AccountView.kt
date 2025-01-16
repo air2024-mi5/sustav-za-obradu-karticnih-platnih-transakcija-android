@@ -54,6 +54,7 @@ import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.ui.theme.warning
 import foi.air.szokpt.viewmodels.AccountViewModel
+import foi.air.szokpt.views.ROUTE_ALL_ACCOUNT_SEARCH
 import hr.foi.air.szokpt.ws.models.responses.User
 
 @Composable
@@ -214,35 +215,35 @@ fun AccountView(
                             StyledTextField(
                                 label = "Username",
                                 value = currentUserAccountData?.username ?: "",
-                                onValueChange = { viewModel.updateUsername(it) },
+                                onValueChange = { viewModel.setUsername(it) },
                                 isPasswordField = false
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
                                 label = "E-mail",
                                 value = currentUserAccountData?.email ?: "",
-                                onValueChange = { viewModel.updateEmail(it) },
+                                onValueChange = { viewModel.setEmail(it) },
                                 isPasswordField = false
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
                                 label = "First Name",
                                 value = currentUserAccountData?.firstName ?: "",
-                                onValueChange = { viewModel.updateFirstName(it) },
+                                onValueChange = { viewModel.setFirstName(it) },
                                 isPasswordField = false
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
                                 label = "Last Name",
                                 value = currentUserAccountData?.lastName ?: "",
-                                onValueChange = { viewModel.updateLastName(it) },
+                                onValueChange = { viewModel.setLastName(it) },
                                 isPasswordField = false
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             StyledTextField(
                                 label = "Password",
                                 value = currentUserAccountData?.password ?: "",
-                                onValueChange = { viewModel.updatePassword(it) },
+                                onValueChange = { viewModel.setPassword(it) },
                                 isPasswordField = true
                             )
                             Spacer(modifier = Modifier.height(12.dp))
@@ -268,7 +269,9 @@ fun AccountView(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     DeactivateAccountButton(openDeactivateDialog)
-                    BlockAccountButton(openBlockDialog)
+                    currentUserAccountData?.let { user ->
+                        BlockAccountButton(openBlockDialog, user)
+                    }
                 }
             }
         }
@@ -293,10 +296,31 @@ fun AccountView(
             )
         }
         if (openDeactivateDialog.value) {
-            DeactivateAccountDialog(openDeactivateDialog, currentUserAccountData!!)
+            DeactivateAccountDialog(
+                openDeactivateDialog = openDeactivateDialog,
+                user = storedUserAccountData!!,
+                onConfirm = {
+                    viewModel.setDeactivatedStatus(!storedUserAccountData!!.deactivated)
+                    viewModel.updateAccountData(
+                        accountUpdateHandler = AccountUpdateHandler(),
+                        newUserData = storedUserAccountData!!
+                    )
+                    navController.navigate(ROUTE_ALL_ACCOUNT_SEARCH)
+                }
+            )
         }
         if (openBlockDialog.value) {
-            BlockAccountDialog(openBlockDialog, currentUserAccountData!!)
+            BlockAccountDialog(
+                openBlockDialog = openBlockDialog,
+                user = storedUserAccountData!!,
+                onConfirm = {
+                    viewModel.setBlockedStatus(!storedUserAccountData!!.blocked)
+                    viewModel.updateAccountData(
+                        accountUpdateHandler = AccountUpdateHandler(),
+                        newUserData = storedUserAccountData!!
+                    )
+                }
+            )
         }
     }
 }
