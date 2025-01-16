@@ -1,12 +1,13 @@
 package foi.air.szokpt.utils
 
+import hr.foi.air.szokpt.core.transactions.TransactionData
 import hr.foi.air.szokpt.ws.models.responses.Transaction
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class TransactionDataValidator : Validator<Transaction> {
-    override fun validate(data: Transaction): ValidationResult {
+class TransactionDataValidator : Validator<TransactionData> {
+    override fun validate(data: TransactionData): ValidationResult {
         return when {
             !validateField(data.amount) -> ValidationResult(
                 false,
@@ -20,7 +21,7 @@ class TransactionDataValidator : Validator<Transaction> {
 
             !validateTimestampFormat(data.transactionTimestamp) -> ValidationResult(
                 false,
-                "Timestamp must be in the format yyyy-MM-dd HH:mm:ss!"
+                "Timestamp must be in the format dd/MM/yyyy HH:mm:ss!"
             )
 
             !isTimestampNotInFuture(data.transactionTimestamp) -> ValidationResult(
@@ -41,12 +42,13 @@ class TransactionDataValidator : Validator<Transaction> {
     }
 
     private fun validateTimestampFormat(timestamp: String): Boolean {
-        val regex = Regex("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")
-        return regex.matches(timestamp)
+        val regex = Regex("^(0?[1-9]|[12][0-9]|3[01])[\\/\\-](0?[1-9]|1[012])[\\/\\-]\\d{4}\\s(0?[0-9]|1[0-9]|2[0-3]):(0?[0-9]|[1-5][0-9]):(0?[0-9]|[1-5][0-9])\$")
+        val x= regex.matches(timestamp)
+        return x;
     }
 
     private fun isTimestampNotInFuture(timestamp: String): Boolean {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
 
         return try {
             val inputTime = LocalDateTime.parse(timestamp, formatter)
