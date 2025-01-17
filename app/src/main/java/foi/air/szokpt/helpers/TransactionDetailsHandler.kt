@@ -11,10 +11,11 @@ import java.util.UUID
 
 class TransactionDetailsHandler() {
     fun getTransactionDetails(
+        jwtToken: String,
         transactionGuid: UUID,
         transactionDetailsListener: TransactionDetailsOutcomeListener
     ) {
-        val transactionDetailsRequestHandler = TransactionDetailsRequestHandler(transactionGuid)
+        val transactionDetailsRequestHandler = TransactionDetailsRequestHandler(jwtToken, transactionGuid)
 
         transactionDetailsRequestHandler.sendRequest(
             object : ResponseListener<Transaction> {

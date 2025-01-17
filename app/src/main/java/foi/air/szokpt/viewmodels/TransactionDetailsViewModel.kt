@@ -2,6 +2,7 @@ package foi.air.szokpt.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import foi.air.szokpt.context.Auth
 import foi.air.szokpt.helpers.TransactionDetailsHandler
 import hr.foi.air.szokpt.core.transactions.TransactionData
 import hr.foi.air.szokpt.core.transactions.TransactionDetailsOutcomeListener
@@ -19,8 +20,12 @@ class TransactionDetailsViewModel : ViewModel() {
     fun fetchTransactionDetails(
         transactionGuid: UUID,
     ) {
-        transactionDetailsHandler.getTransactionDetails(transactionGuid, object :
-            TransactionDetailsOutcomeListener {
+        val jwtToken = Auth.logedInUserData?.token ?: return
+
+        transactionDetailsHandler.getTransactionDetails(
+            jwtToken,
+            transactionGuid,
+            object : TransactionDetailsOutcomeListener {
             override fun onSuccessfulTransactionDetailsFetch(transactionData: TransactionData) {
                 _transactionData.value = transactionData
                 _errorMessage.value = null
