@@ -30,8 +30,8 @@ fun Last7DaysTransactionsBarChart(
     val maxTransactions = transactionsPerDay.maxOfOrNull { it.count }?.coerceAtLeast(1) ?: 1
 
     Row(
-        modifier = Modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier
+            .fillMaxWidth(),
         verticalAlignment = Alignment.Bottom
     ) {
         transactionsPerDay.forEachIndexed { index, day ->
@@ -40,6 +40,8 @@ fun Last7DaysTransactionsBarChart(
                 if (day.count > prevDayCount) success else danger
             } else { success }
             Column(
+                modifier = Modifier
+                    .weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom
             ) {
@@ -66,7 +68,7 @@ fun Last7DaysTransactionsBarChart(
                         .background(brush = gradientBrush)
                 )
                 Text(
-                    text = day.date.format(DateTimeFormatter.ofPattern("dd.M")),
+                    text = day.date.format(DateTimeFormatter.ofPattern("dd.MM")),
                     color = textColor,
                     fontSize = 12.sp
                 )

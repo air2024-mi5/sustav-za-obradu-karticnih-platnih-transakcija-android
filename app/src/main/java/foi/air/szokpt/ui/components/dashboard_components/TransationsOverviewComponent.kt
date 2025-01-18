@@ -13,10 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.theme.BGLevelOne
-import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
-import foi.air.szokpt.ui.theme.success
 import java.time.LocalDate
 
 @Composable
@@ -52,32 +50,6 @@ fun TransationsOverviewComponent(
                     maxBarHeight = 100,
                     textColor = TextWhite
                 )
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = "Success Rate",
-                        color = TextWhite,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    Box(contentAlignment = Alignment.Center) {
-                        val successFraction = 0.7f
-                        CustomCircularProgressBar(
-                            progress = successFraction,
-                            modifier = Modifier.size(90.dp),
-                            strokeWidth = 6.dp,
-                            progressColor = success,
-                            backgroundColor = Secondary
-                        )
-                        Text(
-                            text = "${(successFraction * 100).toInt()}%",
-                            color = TextWhite,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Normal
-                        )
-                    }
-                }
             }
         }
     }
