@@ -1,8 +1,8 @@
 package hr.foi.air.szokpt.ws.network
 
 import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
+import hr.foi.air.szokpt.core.transactions.SelectedTransactionGuids
 import hr.foi.air.szokpt.ws.models.responses.SelectedTransaction
-import hr.foi.air.szokpt.ws.models.responses.SelectedTransactions
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -18,6 +18,6 @@ interface ProcessingService {
     @POST("selected-transactions")
     fun addSelectedTransactions(
         @Header("Authorization") authHeader: String,
-        @Body body: SelectedTransactions
+        @Body body: SelectedTransactionGuids
     ): Call<SuccessfulResponseBody<Unit>>
 }

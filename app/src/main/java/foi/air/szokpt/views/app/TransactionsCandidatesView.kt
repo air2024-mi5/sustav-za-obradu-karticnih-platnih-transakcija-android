@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.pagination_components.Pagination
+import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.AddCandidatesButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectAllTransactionsButton
-import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectCandidatesButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.TransactionCandidateItem
 import foi.air.szokpt.viewmodels.TransactionsCandidatesViewModel
 import kotlinx.coroutines.launch
@@ -48,10 +48,11 @@ fun TransactionsCandidatesView(
         }
     }
 
-    val areAllSelected by remember {
+    val areAllSelected by remember(transactions, selectedGuids) {
         derivedStateOf {
-            transactions?.map { it.guid }?.all { it in selectedGuids.orEmpty() }
-                ?: false
+            transactions?.all { transaction ->
+                transaction.guid in (selectedGuids?.guids.orEmpty())
+            } ?: false
         }
     }
 
@@ -76,7 +77,7 @@ fun TransactionsCandidatesView(
                 item {
                     TransactionCandidateItem(
                         transaction = transaction,
-                        isSelected = transaction.guid in selectedGuids.orEmpty(),
+                        isSelected = transaction.guid in (selectedGuids?.guids.orEmpty()),
                         onSelectionChanged = { isSelectedNow ->
                             viewModel.updateSelectionStatus(transaction.guid, isSelectedNow)
                         }
@@ -100,7 +101,12 @@ fun TransactionsCandidatesView(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
         ) {
-            SelectCandidatesButton()
+            AddCandidatesButton(
+                selectedGuids = selectedGuids?.guids.orEmpty(),
+                onAdd = {
+                    viewModel.addSelectedTransactions()
+                }
+            )
         }
     }
 }

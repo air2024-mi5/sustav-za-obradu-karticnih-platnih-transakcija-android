@@ -7,6 +7,7 @@ import foi.air.szokpt.context.Auth
 import hr.foi.air.szokpt.core.network.ResponseListener
 import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
 import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
+import hr.foi.air.szokpt.core.transactions.SelectedTransactionGuids
 import hr.foi.air.szokpt.core.transactions.TransactionFilter
 import hr.foi.air.szokpt.ws.models.TransactionPageResponse
 import hr.foi.air.szokpt.ws.models.responses.SelectedTransaction
@@ -21,7 +22,7 @@ class TransactionsCandidatesViewModel : ViewModel() {
 
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(1)
     private val _totalPages: MutableLiveData<Int> = MutableLiveData(1)
-    private val _selectedGuids: MutableLiveData<List<UUID>> = MutableLiveData(mutableListOf())
+    private val _selectedGuids: MutableLiveData<SelectedTransactionGuids> = MutableLiveData()
 
     private val _selectedTransactions: MutableLiveData<List<SelectedTransaction>> =
         MutableLiveData(mutableListOf())
@@ -29,7 +30,7 @@ class TransactionsCandidatesViewModel : ViewModel() {
     val transactions: LiveData<List<Transaction>> = _transactions
     val currentPage: LiveData<Int> = _currentPage
     val totalPages: LiveData<Int> = _totalPages
-    val selectedGuids: LiveData<List<UUID>> = _selectedGuids
+    val selectedGuids: LiveData<SelectedTransactionGuids> = _selectedGuids
 
     fun fetchTransactionPage(page: Int) {
         val jwtToken = Auth.logedInUserData?.token ?: return
@@ -103,26 +104,27 @@ class TransactionsCandidatesViewModel : ViewModel() {
     }
 
     fun toggleSelectAllTransactions(pageGuids: Set<UUID>) {
-        _selectedGuids.value = _selectedGuids.value.orEmpty().let { currentSelectedGuids ->
-            if (pageGuids.all { it in currentSelectedGuids }) {
-                currentSelectedGuids - pageGuids
-            } else {
-                currentSelectedGuids + pageGuids
-            }
+        val currentSelectedGuids = _selectedGuids.value?.guids.orEmpty().toSet()
+        val updatedGuids = if (pageGuids.all { it in currentSelectedGuids }) {
+            currentSelectedGuids - pageGuids
+        } else {
+            currentSelectedGuids + pageGuids
         }
+        _selectedGuids.value = SelectedTransactionGuids(updatedGuids.toList())
     }
+
 
     fun updateSelectionStatus(transactionId: UUID, isSelected: Boolean) {
-        _selectedGuids.value = _selectedGuids.value.orEmpty().let { currentSelectedGuids ->
-            if (isSelected) {
-                currentSelectedGuids + transactionId
-            } else {
-                currentSelectedGuids - transactionId
-            }
+        val currentTransactions = _selectedGuids.value?.guids.orEmpty()
+        val updatedTransactions = if (isSelected) {
+            currentTransactions + transactionId
+        } else {
+            currentTransactions - transactionId
         }
+        _selectedGuids.value = SelectedTransactionGuids(guids = updatedTransactions)
     }
 
-    fun setFilter(): TransactionFilter {
+    private fun setFilter(): TransactionFilter {
         return TransactionFilter(
             cardBrands = emptyList(),
             trxTypes = emptyList(),
