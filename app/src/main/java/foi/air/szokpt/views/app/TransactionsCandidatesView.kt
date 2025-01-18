@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import foi.air.szokpt.ui.components.pagination_components.Pagination
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.AddCandidatesButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectAllTransactionsButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.TransactionCandidateItem
@@ -32,16 +31,14 @@ fun TransactionsCandidatesView(
 ) {
     val viewModel: TransactionsCandidatesViewModel = viewModel()
     val transactions by viewModel.transactions.observeAsState()
-    val currentPage by viewModel.currentPage.observeAsState()
-    val totalPages by viewModel.totalPages.observeAsState()
     val selectedGuids by viewModel.selectedGuids.observeAsState()
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(currentPage) {
-        if (transactions!!.isEmpty()) {
+    LaunchedEffect(Unit) {
+        if (transactions.isNullOrEmpty()) {
             viewModel.fetchSelectedTransactions()
-            viewModel.fetchTransactionPage(1)
+            viewModel.fetchTransactionPage()
         }
         coroutineScope.launch {
             listState.scrollToItem(0)
@@ -51,7 +48,7 @@ fun TransactionsCandidatesView(
     val areAllSelected by remember(transactions, selectedGuids) {
         derivedStateOf {
             transactions?.all { transaction ->
-                transaction.guid in (selectedGuids?.guids.orEmpty())
+                transaction.guid in (selectedGuids?.transactions.orEmpty())
             } ?: false
         }
     }
@@ -77,7 +74,7 @@ fun TransactionsCandidatesView(
                 item {
                     TransactionCandidateItem(
                         transaction = transaction,
-                        isSelected = transaction.guid in (selectedGuids?.guids.orEmpty()),
+                        isSelected = transaction.guid in (selectedGuids?.transactions.orEmpty()),
                         onSelectionChanged = { isSelectedNow ->
                             viewModel.updateSelectionStatus(transaction.guid, isSelectedNow)
                         }
@@ -85,24 +82,13 @@ fun TransactionsCandidatesView(
                 }
             }
         }
-
-        Pagination(
-            currentPage = currentPage,
-            totalPages = totalPages,
-            onPageSelected = { page ->
-                viewModel.fetchTransactionPage(page)
-                coroutineScope.launch {
-                    listState.scrollToItem(0)
-                }
-            })
-
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
         ) {
             AddCandidatesButton(
-                selectedGuids = selectedGuids?.guids.orEmpty(),
+                selectedGuids = selectedGuids?.transactions.orEmpty(),
                 onAdd = {
                     viewModel.addSelectedTransactions()
                 }
