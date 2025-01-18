@@ -17,8 +17,6 @@ import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.success
-import foi.air.szokpt.views.app.CustomCircularProgressBar
-
 
 @Composable
 fun TransationsOverviewComponent() {
@@ -30,7 +28,6 @@ fun TransationsOverviewComponent() {
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         color = BGLevelOne
     ) {
-        // Mock data for the bar chart (7 days)
         val sampleDayData = listOf(
             DayTransaction("Mon", "16.1", 30),
             DayTransaction("Tue", "17.1", 5),
