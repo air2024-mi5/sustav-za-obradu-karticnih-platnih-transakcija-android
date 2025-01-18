@@ -12,6 +12,17 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * A custom circular progress bar consisting of two concentric [CircularProgressIndicator]s.
+ * The lower one (background) is always at 100% to form a track, and the upper one represents
+ * the actual [progress].
+ *
+ * @param progress The fraction of progress to display, expressed as a [Float] between 0.0 and 1.0.
+ * @param modifier A [Modifier] for this composable; typically includes size, layout, or styling.
+ * @param backgroundColor The color of the track (the behind-the-scenes, 100% [CircularProgressIndicator]).
+ * @param progressColor The color of the actual progress arc.
+ * @param strokeWidth The width of the circular stroke, in [Dp].
+ */
 @Composable
 fun CustomCircularProgressBar(
     progress: Float,
