@@ -19,8 +19,9 @@ import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.views.app.CustomCircularProgressBar
 
+
 @Composable
-fun TransactionCountComponent() {
+fun TransationsOverviewComponent() {
     TileSegment(
         innerPadding = 16.dp,
         outerMargin = 8.dp,
@@ -77,7 +78,7 @@ fun TransactionCountComponent() {
 fun ReportsScreenPreview() {
     MaterialTheme {
         Surface {
-            TransactionCountComponent()
+            TransationsOverviewComponent()
         }
     }
 }
