@@ -36,6 +36,8 @@ import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dashboard_components.BarComponent
 import foi.air.szokpt.ui.components.dashboard_components.ChartWithLegend
 import foi.air.szokpt.ui.components.dashboard_components.CustomCircularProgressBar
+import foi.air.szokpt.ui.components.dashboard_components.TransactionsPerDay
+import foi.air.szokpt.ui.components.dashboard_components.TransationsOverviewComponent
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
@@ -45,6 +47,7 @@ import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.ReportsViewModel
+import java.time.LocalDate
 
 @Composable
 fun DashboardView(navController: NavController) {
@@ -160,65 +163,16 @@ fun ValueTile() {
 
 @Composable
 fun AllTransactionsTile() {
-    TileSegment(
-        tileSizeMode = TileSizeMode.WRAP_CONTENT,
-        innerPadding = 16.dp,
-        outerMargin = 8.dp,
-        minWidth = 250.dp,
-        minHeight = 20.dp,
-        color = BGLevelOne
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "All Transactions",
-                    color = Color.White,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextRow(label = "This week:", value = "9890", color = Primary)
-                Spacer(modifier = Modifier.height(4.dp))
-                TextRow(label = "Last Week:", value = "8540", color = Alternative)
-            }
-
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(110.dp)
-                    .padding(4.dp)
-            ) {
-                CustomCircularProgressBar(
-                    progress = 0.45f,
-                    modifier = Modifier
-                        .padding(8.dp), // So that both ProgressBars are visible
-                    backgroundColor = Alternative.copy(alpha = 0.5f),
-                    progressColor = Alternative,
-                    strokeWidth = 8.dp
-                )
-                CustomCircularProgressBar(
-                    progress = 0.66f,
-                    modifier = Modifier,
-                    backgroundColor = Secondary,
-                    progressColor = Primary,
-                    strokeWidth = 8.dp
-                )
-                Text(
-                    text = "+13.5%",
-                    color = Color.White,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
-    }
+    val sampleDayData = listOf(
+        TransactionsPerDay(LocalDate.of(2024, 1,13), 14),
+        TransactionsPerDay(LocalDate.of(2024, 1,14), 28),
+        TransactionsPerDay(LocalDate.of(2024, 1,15), 8),
+        TransactionsPerDay(LocalDate.of(2024, 1,16), 14),
+        TransactionsPerDay(LocalDate.of(2024, 1,17), 28),
+        TransactionsPerDay(LocalDate.of(2024, 1,18), 8),
+        TransactionsPerDay(LocalDate.of(2024, 1,19), 8),
+    )
+    TransationsOverviewComponent(sampleDayData)
 }
 
 @Composable

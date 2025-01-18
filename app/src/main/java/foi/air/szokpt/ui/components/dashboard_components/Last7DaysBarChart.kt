@@ -13,29 +13,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foi.air.szokpt.ui.theme.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-data class DayTransaction(
-    val dayName: String,
-    val dayDate: String,
+data class TransactionsPerDay(
+    val date: LocalDate,
     val count: Int
 )
 
 @Composable
 fun Last7DaysTransactionsBarChart(
-    dayTransactionData: List<DayTransaction>,
+    transactionsPerDay: List<TransactionsPerDay>,
     maxBarHeight: Int = 100,
     textColor: Color = TextWhite
 ) {
-    val maxTransactions = dayTransactionData.maxOfOrNull { it.count }?.coerceAtLeast(1) ?: 1
+    val maxTransactions = transactionsPerDay.maxOfOrNull { it.count }?.coerceAtLeast(1) ?: 1
 
     Row(
         modifier = Modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.Bottom
     ) {
-        dayTransactionData.forEachIndexed { index, day ->
+        transactionsPerDay.forEachIndexed { index, day ->
             val barColor = if (index > 0) {
-                val prevDayCount = dayTransactionData[index - 1].count
+                val prevDayCount = transactionsPerDay[index - 1].count
                 if (day.count > prevDayCount) success else danger
             } else { success }
             Column(
@@ -65,7 +66,7 @@ fun Last7DaysTransactionsBarChart(
                         .background(brush = gradientBrush)
                 )
                 Text(
-                    text = day.dayDate,
+                    text = day.date.format(DateTimeFormatter.ofPattern("dd.M")),
                     color = textColor,
                     fontSize = 12.sp
                 )

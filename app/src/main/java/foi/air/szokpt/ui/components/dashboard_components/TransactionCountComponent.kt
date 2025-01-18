@@ -17,9 +17,12 @@ import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.success
+import java.time.LocalDate
 
 @Composable
-fun TransationsOverviewComponent() {
+fun TransationsOverviewComponent(
+    transactionsPerDay: List<TransactionsPerDay>
+) {
     TileSegment(
         innerPadding = 16.dp,
         outerMargin = 8.dp,
@@ -28,16 +31,6 @@ fun TransationsOverviewComponent() {
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         color = BGLevelOne
     ) {
-        val sampleDayData = listOf(
-            DayTransaction("Mon", "16.1", 30),
-            DayTransaction("Tue", "17.1", 5),
-            DayTransaction("Wed", "18.1", 14),
-            DayTransaction("Thu", "19.1", 21),
-            DayTransaction("Fri", "20.1", 14),
-            DayTransaction("Sat", "21.1", 28),
-            DayTransaction("Sun", "22.1", 8),
-        )
-
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -55,7 +48,7 @@ fun TransationsOverviewComponent() {
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Last7DaysTransactionsBarChart(
-                    dayTransactionData = sampleDayData,
+                    transactionsPerDay = transactionsPerDay,
                     maxBarHeight = 100,
                     textColor = TextWhite
                 )
@@ -94,9 +87,18 @@ fun TransationsOverviewComponent() {
 @Preview(showBackground = true)
 @Composable
 fun ReportsScreenPreview() {
+    val sampleDayData = listOf(
+        TransactionsPerDay(LocalDate.of(2024, 1,13), 14),
+        TransactionsPerDay(LocalDate.of(2024, 1,14), 28),
+        TransactionsPerDay(LocalDate.of(2024, 1,15), 8),
+        TransactionsPerDay(LocalDate.of(2024, 1,16), 14),
+        TransactionsPerDay(LocalDate.of(2024, 1,17), 28),
+        TransactionsPerDay(LocalDate.of(2024, 1,18), 8),
+        TransactionsPerDay(LocalDate.of(2024, 1,19), 8),
+    )
     MaterialTheme {
         Surface {
-            TransationsOverviewComponent()
+            TransationsOverviewComponent(sampleDayData)
         }
     }
 }
