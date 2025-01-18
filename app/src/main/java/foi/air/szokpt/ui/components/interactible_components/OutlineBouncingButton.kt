@@ -82,12 +82,12 @@ fun OutlineBouncingButton(
         OutlinedButton(
             onClick = {
                 isPressed = true
-                onClick() // From the argument. Passed onClick to execute
+                onClick()
             },
             modifier = Modifier
                 .scale(scale)
                 .padding(8.dp),
-            border = BorderStroke(strokeScale, borderColor)
+            border = BorderStroke(strokeScale, borderColor),
         ) {
             Icon(
                 imageVector = inputIcon,
@@ -110,6 +110,6 @@ fun OutlineBouncingButton(
 
 @Preview
 @Composable
-fun PreviewOutlineBoucingButton(){
-    OutlineBouncingButton {  }
+fun PreviewOutlineBoucingButton() {
+    OutlineBouncingButton { }
 }
