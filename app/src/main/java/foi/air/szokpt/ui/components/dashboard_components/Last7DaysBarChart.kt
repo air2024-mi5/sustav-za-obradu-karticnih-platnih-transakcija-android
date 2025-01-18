@@ -25,6 +25,7 @@ data class TransactionsPerDay(
 fun Last7DaysTransactionsBarChart(
     transactionsPerDay: List<TransactionsPerDay>,
     maxBarHeight: Int = 100,
+    barColor: Color = Primary,
     textColor: Color = TextWhite
 ) {
     val maxTransactions = transactionsPerDay.maxOfOrNull { it.count }?.coerceAtLeast(1) ?: 1
@@ -35,10 +36,6 @@ fun Last7DaysTransactionsBarChart(
         verticalAlignment = Alignment.Bottom
     ) {
         transactionsPerDay.forEachIndexed { index, day ->
-            val barColor = if (index > 0) {
-                val prevDayCount = transactionsPerDay[index - 1].count
-                if (day.count > prevDayCount) success else danger
-            } else { success }
             Column(
                 modifier = Modifier
                     .weight(1f),
@@ -52,7 +49,7 @@ fun Last7DaysTransactionsBarChart(
                 )
                 val barFraction = day.count.toFloat() / maxTransactions.toFloat()
                 val gradientBrush = Brush.verticalGradient(
-                    colors = listOf(barColor, barColor.copy(alpha = 0.6f))
+                    colors = listOf(barColor, barColor.copy(alpha = 0.66f))
                 )
                 Box(
                     modifier = Modifier
