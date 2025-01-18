@@ -30,6 +30,17 @@ fun TransationsOverviewComponent() {
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         color = BGLevelOne
     ) {
+        // Mock data for the bar chart (7 days)
+        val sampleDayData = listOf(
+            DayTransaction("Mon", "16.1", 30),
+            DayTransaction("Tue", "17.1", 5),
+            DayTransaction("Wed", "18.1", 14),
+            DayTransaction("Thu", "19.1", 21),
+            DayTransaction("Fri", "20.1", 14),
+            DayTransaction("Sat", "21.1", 28),
+            DayTransaction("Sun", "22.1", 8),
+        )
+
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -41,37 +52,47 @@ fun TransationsOverviewComponent() {
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
-            Column(
+
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.End
+                horizontalArrangement = Arrangement.Center,
             ) {
-                Text(
-                    text = "Success Rate",
-                    color = TextWhite,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal
+                Last7DaysTransactionsBarChart(
+                    dayTransactionData = sampleDayData,
+                    maxBarHeight = 100,
+                    textColor = TextWhite
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                Box(contentAlignment = Alignment.Center) {
-                    val successFraction = 0.7f
-                    CustomCircularProgressBar(
-                        progress = 0.7f,
-                        modifier = Modifier.size(90.dp),
-                        strokeWidth = 6.dp,
-                        progressColor = success,
-                        backgroundColor = Secondary
-                    )
+                Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "${(successFraction * 100).toInt()}%",
+                        text = "Success Rate",
                         color = TextWhite,
-                        fontSize = 20.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Normal
                     )
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Box(contentAlignment = Alignment.Center) {
+                        val successFraction = 0.7f
+                        CustomCircularProgressBar(
+                            progress = successFraction,
+                            modifier = Modifier.size(90.dp),
+                            strokeWidth = 6.dp,
+                            progressColor = success,
+                            backgroundColor = Secondary
+                        )
+                        Text(
+                            text = "${(successFraction * 100).toInt()}%",
+                            color = TextWhite,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Normal
+                        )
+                    }
                 }
             }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
