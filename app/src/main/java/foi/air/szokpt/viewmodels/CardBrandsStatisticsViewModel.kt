@@ -22,8 +22,13 @@ class CardBrandsStatisticsViewModel : ViewModel() {
             cardBrandsStatisticsHandler.getCardBrandsStatistics(jwtToken, object :
                 CardBrandsStatisticsOutcomeListener {
                 override fun onSuccessfulCardBrandsStatisticsFetch(cardBrandsStatisticsData: CardBrandsStatisticsData) {
-                    _cardBrandsStatisticsData.value = cardBrandsStatisticsData
-                    _errorMessage.value = null
+                    if (cardBrandsStatisticsData.totalTransactions == 0) {
+                        _errorMessage.value =
+                            "No transactions were made, so there are no statistical data."
+                    } else {
+                        _cardBrandsStatisticsData.value = cardBrandsStatisticsData
+                        _errorMessage.value = null
+                    }
                 }
 
                 override fun onFailedCardBrandsStatisticsFetch(failureMessage: String) {

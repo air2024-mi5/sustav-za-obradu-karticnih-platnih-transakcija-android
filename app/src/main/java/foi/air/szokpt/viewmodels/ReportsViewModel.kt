@@ -33,37 +33,33 @@ class ReportsViewModel : ViewModel() {
                     rejectedTransactions: Int,
                     canceledTransactions: Int
                 ) {
-                    val total =
-                        (successfulTransactions + canceledTransactions + rejectedTransactions).toFloat()
-                    val data: List<PieChartModel> = if (total == 0f) {
-                        listOf(
-                            PieChartModel("Successful", 0, 0f, success),
-                            PieChartModel("Canceled", 0, 0f, danger),
-                            PieChartModel("Rejected", 0, 0f, TextGray)
-                        )
+                    if (totalTransactions == 0) {
+                        _errorMessage.value =
+                            "No transactions were made, so there are no statistical data."
                     } else {
-                        listOf(
+                        _errorMessage.value = null
+                        val data: List<PieChartModel> = listOf(
                             PieChartModel(
                                 "Successful",
                                 successfulTransactions,
-                                (successfulTransactions.toFloat() / total) * 100,
+                                (successfulTransactions.toFloat() / totalTransactions.toFloat()) * 100,
                                 success
                             ),
                             PieChartModel(
                                 "Canceled",
                                 canceledTransactions,
-                                (canceledTransactions.toFloat() / total) * 100,
+                                (canceledTransactions.toFloat() / totalTransactions.toFloat()) * 100,
                                 danger
                             ),
                             PieChartModel(
                                 "Rejected",
                                 rejectedTransactions,
-                                (rejectedTransactions.toFloat() / total) * 100,
+                                (rejectedTransactions.toFloat() / totalTransactions.toFloat()) * 100,
                                 TextGray
                             )
                         )
+                        _pieChartData.value = data
                     }
-                    _pieChartData.value = data
                 }
 
                 override fun onFailedTransactionsSuccessFetch(failureMessage: String) {
