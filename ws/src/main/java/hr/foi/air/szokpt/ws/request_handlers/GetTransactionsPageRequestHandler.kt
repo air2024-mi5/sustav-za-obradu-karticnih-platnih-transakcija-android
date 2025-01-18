@@ -8,7 +8,7 @@ import retrofit2.Call
 
 class GetTransactionsPageRequestHandler(
     private val jwtToken: String,
-    private val page: Int,
+    private val page: Int?,
     private val filter: TransactionFilter?
 ) :
     TemplateRequestHandler<TransactionPageResponse>() {
