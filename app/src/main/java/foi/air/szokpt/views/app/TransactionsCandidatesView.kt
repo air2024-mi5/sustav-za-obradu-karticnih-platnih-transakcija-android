@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.AddCandidatesButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectAllTransactionsButton
+import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectTransactionsDialog
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.TransactionCandidateItem
 import foi.air.szokpt.viewmodels.TransactionsCandidatesViewModel
 import kotlinx.coroutines.launch
@@ -32,6 +34,9 @@ fun TransactionsCandidatesView(
     val viewModel: TransactionsCandidatesViewModel = viewModel()
     val transactions by viewModel.transactions.observeAsState()
     val selectedGuids by viewModel.selectedGuids.observeAsState()
+
+    val openAddCandidatesDialog = remember { mutableStateOf(false) }
+
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -89,7 +94,13 @@ fun TransactionsCandidatesView(
         ) {
             AddCandidatesButton(
                 selectedGuids = selectedGuids?.transactions.orEmpty(),
-                onAdd = {
+                openAddCandidatesDialog
+            )
+        }
+        if (openAddCandidatesDialog.value) {
+            SelectTransactionsDialog(
+                openAddCandidatesDialog = openAddCandidatesDialog,
+                onConfirm = {
                     viewModel.addSelectedTransactions()
                 }
             )
