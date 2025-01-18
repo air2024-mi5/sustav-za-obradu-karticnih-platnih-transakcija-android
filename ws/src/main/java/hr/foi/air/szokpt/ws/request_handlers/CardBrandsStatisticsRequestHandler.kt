@@ -5,10 +5,10 @@ import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.ws.models.CardBrandsStatisticsResponse
 import retrofit2.Call
 
-class CardBrandsStatisticsRequestHandler() :
+class CardBrandsStatisticsRequestHandler(private val jwtToken: String) :
     TemplateRequestHandler<CardBrandsStatisticsResponse>() {
     override fun getServiceCall(): Call<SuccessfulResponseBody<CardBrandsStatisticsResponse>> {
         val service = NetworkService.reportsService
-        return service.getCardBrandsStatistics()
+        return service.getCardBrandsStatistics("Bearer $jwtToken")
     }
 }

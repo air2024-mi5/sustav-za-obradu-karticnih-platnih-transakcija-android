@@ -2,6 +2,7 @@ package foi.air.szokpt.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import foi.air.szokpt.context.Auth
 import foi.air.szokpt.helpers.CardBrandsStatisticsHandler
 import hr.foi.air.szokpt.core.reports.CardBrandsStatisticsData
 import hr.foi.air.szokpt.core.reports.CardBrandsStatisticsOutcomeListener
@@ -15,18 +16,21 @@ class CardBrandsStatisticsViewModel : ViewModel() {
 
     private val cardBrandsStatisticsHandler = CardBrandsStatisticsHandler()
 
+    private val jwtToken = Auth.logedInUserData?.token
     fun fetchCardBrandsStatistics() {
-        cardBrandsStatisticsHandler.getCardBrandsStatistics(object :
-            CardBrandsStatisticsOutcomeListener {
-            override fun onSuccessfulCardBrandsStatisticsFetch(cardBrandsStatisticsData: CardBrandsStatisticsData) {
-                _cardBrandsStatisticsData.value = cardBrandsStatisticsData
-                _errorMessage.value = null
-            }
+        if (jwtToken != null) {
+            cardBrandsStatisticsHandler.getCardBrandsStatistics(jwtToken, object :
+                CardBrandsStatisticsOutcomeListener {
+                override fun onSuccessfulCardBrandsStatisticsFetch(cardBrandsStatisticsData: CardBrandsStatisticsData) {
+                    _cardBrandsStatisticsData.value = cardBrandsStatisticsData
+                    _errorMessage.value = null
+                }
 
-            override fun onFailedCardBrandsStatisticsFetch(failureMessage: String) {
-                _errorMessage.value = failureMessage
-                _cardBrandsStatisticsData.value = null
-            }
-        })
+                override fun onFailedCardBrandsStatisticsFetch(failureMessage: String) {
+                    _errorMessage.value = failureMessage
+                    _cardBrandsStatisticsData.value = null
+                }
+            })
+        }
     }
 }

@@ -8,8 +8,11 @@ import hr.foi.air.szokpt.ws.models.TransactionsSuccessResponse
 import hr.foi.air.szokpt.ws.request_handlers.TransactionsSuccessRequestHandler
 
 class TransactionsSuccessHandler {
-    fun getTransactionsSuccess(transactionsListener: TransactionsSuccessOutcomeListener) {
-        val transactionsRequestHandler = TransactionsSuccessRequestHandler()
+    fun getTransactionsSuccess(
+        jwtToken: String,
+        transactionsListener: TransactionsSuccessOutcomeListener
+    ) {
+        val transactionsRequestHandler = TransactionsSuccessRequestHandler(jwtToken)
 
         transactionsRequestHandler.sendRequest(
             object : ResponseListener<TransactionsSuccessResponse> {

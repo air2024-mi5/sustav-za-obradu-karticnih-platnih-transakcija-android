@@ -9,20 +9,20 @@ import hr.foi.air.szokpt.ws.models.CardBrandsStatisticsResponse
 import hr.foi.air.szokpt.ws.request_handlers.CardBrandsStatisticsRequestHandler
 
 class CardBrandsStatisticsHandler() {
-    fun getTransactionDetails(
+    fun getCardBrandsStatistics(
+        jwtToken: String,
         cardBrandsStatisticsOutcomeListener: CardBrandsStatisticsOutcomeListener
     ) {
-        val cardBrandsStatisticsRequestHandler = CardBrandsStatisticsRequestHandler()
+        val cardBrandsStatisticsRequestHandler = CardBrandsStatisticsRequestHandler(jwtToken)
 
         cardBrandsStatisticsRequestHandler.sendRequest(
             object : ResponseListener<CardBrandsStatisticsResponse> {
                 override fun onSuccessfulResponse(response: SuccessfulResponseBody<CardBrandsStatisticsResponse>) {
-                    Log.d("CARDBRANDS", "Response je: ${response.data}")
                 }
 
                 override fun onErrorResponse(response: ErrorResponseBody) {
                     cardBrandsStatisticsOutcomeListener.onFailedCardBrandsStatisticsFetch(
-                        "An error occurred while fetching card brands statistics: $response.message"
+                        "An error occurred while fetching card brands statistics: ${response.message}"
                             ?: "An error occurred while fetching card brands statistics."
                     )
                     Log.d("CARDBRANDS", "An error occurred while fetching card brands statistics.")
