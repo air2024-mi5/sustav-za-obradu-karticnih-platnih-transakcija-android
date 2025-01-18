@@ -18,31 +18,23 @@ import hr.foi.air.szokpt.ws.request_handlers.GetTransactionsPageRequestHandler
 import java.util.UUID
 
 class TransactionsCandidatesViewModel : ViewModel() {
-    private val _transactions: MutableLiveData<List<Transaction>> = MutableLiveData(emptyList())
-
-    private val _currentPage: MutableLiveData<Int> = MutableLiveData(1)
-    private val _totalPages: MutableLiveData<Int> = MutableLiveData(1)
-    private val _selectedGuids: MutableLiveData<SelectedTransactions> = MutableLiveData()
-
     private val _savedSelectedTransactions: MutableLiveData<List<SelectedTransaction>> =
         MutableLiveData(mutableListOf())
+    private val _transactions: MutableLiveData<List<Transaction>> = MutableLiveData(emptyList())
+    private val _selectedGuids: MutableLiveData<SelectedTransactions> = MutableLiveData()
 
     val transactions: LiveData<List<Transaction>> = _transactions
-    val currentPage: LiveData<Int> = _currentPage
-    val totalPages: LiveData<Int> = _totalPages
     val selectedGuids: LiveData<SelectedTransactions> = _selectedGuids
 
-    fun fetchTransactionPage(page: Int) {
+    fun fetchTransactionPage() {
         val jwtToken = Auth.logedInUserData?.token ?: return
 
         val transactionsRequestHandler =
-            GetTransactionsPageRequestHandler(jwtToken, page, filter = setFilter())
+            GetTransactionsPageRequestHandler(jwtToken, null, filter = setFilter())
         transactionsRequestHandler.sendRequest(object : ResponseListener<TransactionPageResponse> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<TransactionPageResponse>) {
                 val transactionPage = response.data?.firstOrNull()
                 _transactions.value = transactionPage?.transactions
-                _currentPage.value = transactionPage?.currentPage
-                _totalPages.value = transactionPage?.totalPages
                 filterUnselectedTransactions()
             }
 
