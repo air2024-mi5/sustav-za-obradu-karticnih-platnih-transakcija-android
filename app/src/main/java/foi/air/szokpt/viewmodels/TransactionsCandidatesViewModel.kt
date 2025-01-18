@@ -7,7 +7,7 @@ import foi.air.szokpt.context.Auth
 import hr.foi.air.szokpt.core.network.ResponseListener
 import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
 import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
-import hr.foi.air.szokpt.core.transactions.SelectedTransactionGuids
+import hr.foi.air.szokpt.core.transactions.SelectedTransactions
 import hr.foi.air.szokpt.core.transactions.TransactionFilter
 import hr.foi.air.szokpt.ws.models.TransactionPageResponse
 import hr.foi.air.szokpt.ws.models.responses.SelectedTransaction
@@ -22,15 +22,15 @@ class TransactionsCandidatesViewModel : ViewModel() {
 
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(1)
     private val _totalPages: MutableLiveData<Int> = MutableLiveData(1)
-    private val _selectedGuids: MutableLiveData<SelectedTransactionGuids> = MutableLiveData()
+    private val _selectedGuids: MutableLiveData<SelectedTransactions> = MutableLiveData()
 
-    private val _selectedTransactions: MutableLiveData<List<SelectedTransaction>> =
+    private val _savedSelectedTransactions: MutableLiveData<List<SelectedTransaction>> =
         MutableLiveData(mutableListOf())
 
     val transactions: LiveData<List<Transaction>> = _transactions
     val currentPage: LiveData<Int> = _currentPage
     val totalPages: LiveData<Int> = _totalPages
-    val selectedGuids: LiveData<SelectedTransactionGuids> = _selectedGuids
+    val selectedGuids: LiveData<SelectedTransactions> = _selectedGuids
 
     fun fetchTransactionPage(page: Int) {
         val jwtToken = Auth.logedInUserData?.token ?: return
@@ -40,16 +40,10 @@ class TransactionsCandidatesViewModel : ViewModel() {
         transactionsRequestHandler.sendRequest(object : ResponseListener<TransactionPageResponse> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<TransactionPageResponse>) {
                 val transactionPage = response.data?.firstOrNull()
-
-                val selectedGuids = _selectedTransactions.value?.map { it.guid }?.toSet().orEmpty()
-
-                val filteredTransactions = transactionPage?.transactions?.filter { transaction ->
-                    transaction.guid !in selectedGuids
-                } ?: emptyList()
-
-                _transactions.value = filteredTransactions
+                _transactions.value = transactionPage?.transactions
                 _currentPage.value = transactionPage?.currentPage
                 _totalPages.value = transactionPage?.totalPages
+                filterUnselectedTransactions()
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {
@@ -69,7 +63,8 @@ class TransactionsCandidatesViewModel : ViewModel() {
         selectedTransactionsRequestHandler.sendRequest(object :
             ResponseListener<SelectedTransaction> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<SelectedTransaction>) {
-                _selectedTransactions.value = response.data!!.toMutableList()
+                _savedSelectedTransactions.value = response.data.orEmpty().toMutableList()
+                filterUnselectedTransactions()
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {
@@ -90,11 +85,12 @@ class TransactionsCandidatesViewModel : ViewModel() {
         addSelectedTransactionsRequestHandler.sendRequest(object :
             ResponseListener<Unit> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<Unit>) {
-                println("Success")
+                _selectedGuids.value = SelectedTransactions(emptyList())
+                fetchSelectedTransactions()
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {
-                println("Error receiving response: ${response.error_message}")
+                println("Error receiving response: ${response.message}")
             }
 
             override fun onNetworkFailure(t: Throwable) {
@@ -103,25 +99,12 @@ class TransactionsCandidatesViewModel : ViewModel() {
         })
     }
 
-    fun toggleSelectAllTransactions(pageGuids: Set<UUID>) {
-        val currentSelectedGuids = _selectedGuids.value?.guids.orEmpty().toSet()
-        val updatedGuids = if (pageGuids.all { it in currentSelectedGuids }) {
-            currentSelectedGuids - pageGuids
-        } else {
-            currentSelectedGuids + pageGuids
-        }
-        _selectedGuids.value = SelectedTransactionGuids(updatedGuids.toList())
-    }
-
-
-    fun updateSelectionStatus(transactionId: UUID, isSelected: Boolean) {
-        val currentTransactions = _selectedGuids.value?.guids.orEmpty()
-        val updatedTransactions = if (isSelected) {
-            currentTransactions + transactionId
-        } else {
-            currentTransactions - transactionId
-        }
-        _selectedGuids.value = SelectedTransactionGuids(guids = updatedTransactions)
+    private fun filterUnselectedTransactions() {
+        val savedGuids = _savedSelectedTransactions.value?.map { it.guid }?.toSet().orEmpty()
+        val filteredTransactions = _transactions.value?.filter { transaction ->
+            transaction.guid !in savedGuids
+        } ?: emptyList()
+        _transactions.value = filteredTransactions
     }
 
     private fun setFilter(): TransactionFilter {
@@ -134,5 +117,25 @@ class TransactionsCandidatesViewModel : ViewModel() {
             beforeDate = null,
             processed = false
         )
+    }
+
+    fun toggleSelectAllTransactions(pageGuids: Set<UUID>) {
+        val currentSelectedGuids = _selectedGuids.value?.transactions.orEmpty().toSet()
+        val updatedGuids = if (pageGuids.all { it in currentSelectedGuids }) {
+            currentSelectedGuids - pageGuids
+        } else {
+            currentSelectedGuids + pageGuids
+        }
+        _selectedGuids.value = SelectedTransactions(updatedGuids.toList())
+    }
+
+    fun updateSelectionStatus(transactionId: UUID, isSelected: Boolean) {
+        val currentTransactions = _selectedGuids.value?.transactions.orEmpty()
+        val updatedTransactions = if (isSelected) {
+            currentTransactions + transactionId
+        } else {
+            currentTransactions - transactionId
+        }
+        _selectedGuids.value = SelectedTransactions(transactions = updatedTransactions)
     }
 }
