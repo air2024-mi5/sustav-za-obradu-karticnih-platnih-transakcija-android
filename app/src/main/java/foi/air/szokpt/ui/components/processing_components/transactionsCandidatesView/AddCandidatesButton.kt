@@ -3,6 +3,7 @@ package foi.air.szokpt.ui.components.processing_components.transactionsCandidate
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.success
@@ -11,7 +12,7 @@ import java.util.UUID
 @Composable
 fun AddCandidatesButton(
     selectedGuids: List<UUID>?,
-    onAdd: () -> Unit,
+    openAddCandidatesDialog: MutableState<Boolean>
 ) {
     val buttonColor = if (selectedGuids.isNullOrEmpty()) {
         Color(0xFF003300)
@@ -27,8 +28,9 @@ fun AddCandidatesButton(
         contentColor = buttonColor,
         borderColor = buttonColor,
         onClick = {
-            if (isEnabled)
-                onAdd()
+            if (isEnabled) {
+                openAddCandidatesDialog.value = true
+            }
         }
     )
 }
