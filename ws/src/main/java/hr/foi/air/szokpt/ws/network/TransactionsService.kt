@@ -14,7 +14,7 @@ interface TransactionsService {
     @GET("transactions")
     fun getTransactionPage(
         @Header("Authorization") authHeader: String,
-        @Query("page") page: Int,
+        @Query("page") page: Int?,
         @Query("card_brand") cardBrands: List<String>?,
         @Query("trx_type") trxTypes: List<String>?,
         @Query("before") beforeDate: String?,
