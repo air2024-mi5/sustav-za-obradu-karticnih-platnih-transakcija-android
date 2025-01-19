@@ -19,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,7 +38,6 @@ import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButto
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.success
-import foi.air.szokpt.viewmodels.TransactionsViewModel
 import hr.foi.air.szokpt.core.transactions.TransactionFilter
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -47,20 +45,13 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-/**
- * A composable function that provides a UI for filtering transactions based on various criteria.
- *
- * @param viewModel The instance of `TransactionsViewModel` used to observe and update transaction filter data.
- * @param onApplyFilter A callback function triggered when the user applies the filters. It provides the updated `TransactionFilter`.
- */
 @Composable
 fun TransactionFilterView(
-    viewModel: TransactionsViewModel,
+    filter: TransactionFilter?,
     onApplyFilter: (TransactionFilter) -> Unit
 ) {
     val context = LocalContext.current
-
-    val transactionsFilter = viewModel.transactionsFilter.observeAsState().value
+    val transactionsFilter: TransactionFilter? = filter
 
     val cardBrands = listOf("Maestro", "Visa", "MasterCard", "Diners", "Discover")
     val trxTypeMap = mapOf(
@@ -72,8 +63,16 @@ fun TransactionFilterView(
         "reversal_refund" to "Reversal refund"
     )
 
-    val selectedCardBrands = remember { mutableStateListOf<String>().apply {transactionsFilter?.cardBrands?.let { addAll(it) } } }
-    val selectedTrxTypes = remember { mutableStateListOf<String>().apply {transactionsFilter?.trxTypes?.let { addAll(it) } } }
+    val selectedCardBrands = remember {
+        mutableStateListOf<String>().apply {
+            transactionsFilter?.cardBrands?.let { addAll(it) }
+        }
+    }
+    val selectedTrxTypes = remember {
+        mutableStateListOf<String>().apply {
+            transactionsFilter?.trxTypes?.let { addAll(it) }
+        }
+    }
 
     var showAfterTimePicker by remember { mutableStateOf(false) }
     var showBeforeTimePicker by remember { mutableStateOf(false) }
@@ -275,7 +274,8 @@ fun TransactionFilterView(
             fontWeight = FontWeight.Medium,
         )
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(bottom = 2.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
@@ -310,7 +310,6 @@ fun TransactionFilterView(
                         )
                     }
                 }
-                // After Time Picker
                 if (showAfterTimePicker) {
                     InputTimePicker(
                         onConfirm = { hour, minute ->
@@ -415,7 +414,8 @@ fun TransactionFilterView(
                             minAmount = minAmount,
                             maxAmount = maxAmount,
                             afterDate = formatTime(selectedAfterDate, selectedAfterTime),
-                            beforeDate = formatTime(selectedBeforeDate, selectedBeforeTime)
+                            beforeDate = formatTime(selectedBeforeDate, selectedBeforeTime),
+                            processed = null
                         )
                         onApplyFilter(results)
                     } else {
@@ -431,13 +431,6 @@ fun TransactionFilterView(
     }
 }
 
-/**
- * Formats a given date and time into a string representation.
- *
- * @param date The date component of the `LocalDateTime` to format. This should be of type `LocalDate` or `null` if no date is provided.
- * @param time The time component of the `LocalDateTime` to format. This should be of type `LocalTime` or `null` if no time is provided.
- * @return A formatted string in the pattern "dd/MM/yyyy HH:mm:ss" if both `date` and `time` are non-null, or `null` if either is null.
- */
 fun formatTime(date: LocalDate?, time: LocalTime?): String? {
     val tempDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
     return if (date != null && time != null) {

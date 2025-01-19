@@ -8,7 +8,7 @@ import retrofit2.Call
 
 class GetTransactionsPageRequestHandler(
     private val jwtToken: String,
-    private val page: Int,
+    private val page: Int?,
     private val filter: TransactionFilter?
 ) :
     TemplateRequestHandler<TransactionPageResponse>() {
@@ -22,7 +22,8 @@ class GetTransactionsPageRequestHandler(
             minAmount = filter?.minAmount,
             maxAmount = filter?.maxAmount,
             beforeDate = filter?.beforeDate,
-            afterDate = filter?.afterDate
+            afterDate = filter?.afterDate,
+            processed = filter?.processed,
         )
     }
 }

@@ -1,6 +1,7 @@
-package foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView
+package foi.air.szokpt.ui.components.transaction_components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,7 +31,8 @@ import hr.foi.air.szokpt.ws.models.responses.Transaction
 fun TransactionCandidateItem(
     transaction: Transaction,
     isSelected: Boolean,
-    onSelectionChanged: (Boolean) -> Unit
+    onSelectionChanged: (Boolean) -> Unit,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -45,8 +47,9 @@ fun TransactionCandidateItem(
                     size = Size(4.dp.toPx(), size.height)
                 )
             }
+            .clickable { onClick() }
             .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(

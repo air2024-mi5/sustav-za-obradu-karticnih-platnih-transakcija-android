@@ -6,5 +6,6 @@ data class TransactionFilter(
     val minAmount: Int?,
     val maxAmount: Int?,
     val afterDate: String?,
-    val beforeDate: String?
+    val beforeDate: String?,
+    val processed: Boolean?
 )
