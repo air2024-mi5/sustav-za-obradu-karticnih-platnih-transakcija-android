@@ -23,10 +23,10 @@ import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
-import foi.air.szokpt.views.ROUTE_LATEST_PROCESS_DETAILS
+import foi.air.szokpt.views.ROUTE_LATEST_PROCESSING_DETAILS
 
 @Composable
-fun LatestProcessTile(navController: NavController) {
+fun LatestProcessingTile(navController: NavController) {
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 15.dp,
@@ -41,7 +41,7 @@ fun LatestProcessTile(navController: NavController) {
         ) {
             Text(
                 modifier = Modifier.padding(7.dp),
-                text = "Latest Process",
+                text = "Latest Processing",
                 color = TextWhite,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
@@ -80,7 +80,7 @@ fun LatestProcessTile(navController: NavController) {
                     contentColor = Primary,
                     borderColor = Secondary,
                 ) {
-                    navController.navigate(ROUTE_LATEST_PROCESS_DETAILS)
+                    navController.navigate(ROUTE_LATEST_PROCESSING_DETAILS)
                 }
             }
         }
