@@ -26,6 +26,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foi.air.szokpt.ui.theme.Primary
@@ -49,6 +51,10 @@ fun OutlineBouncingButton(
     inputIcon: ImageVector = Icons.Filled.FavoriteBorder,
     contentColor: Color = Primary,
     borderColor: Color = Primary,
+    fontSize: TextUnit = 16.sp,
+    iconSize: Dp = 24.dp,
+    padding: Dp = 8.dp,
+    spacer: Dp = 4.dp,
     onClick: () -> Unit
 ) {
     var isPressed by remember { mutableStateOf(false) }
@@ -86,7 +92,7 @@ fun OutlineBouncingButton(
             },
             modifier = Modifier
                 .scale(scale)
-                .padding(8.dp),
+                .padding(padding),
             border = BorderStroke(strokeScale, borderColor)
         ) {
             Icon(
@@ -94,14 +100,14 @@ fun OutlineBouncingButton(
                 contentDescription = "Favorite Icon",
                 tint = contentColor,
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(iconSize)
                     .scale(iconScale)
             )
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(spacer))
             Text(
                 text = inputText,
                 color = contentColor,
-                fontSize = 16.sp,
+                fontSize = fontSize,
                 modifier = Modifier
             )
         }
@@ -110,6 +116,6 @@ fun OutlineBouncingButton(
 
 @Preview
 @Composable
-fun PreviewOutlineBoucingButton(){
-    OutlineBouncingButton {  }
+fun PreviewOutlineBoucingButton() {
+    OutlineBouncingButton { }
 }
