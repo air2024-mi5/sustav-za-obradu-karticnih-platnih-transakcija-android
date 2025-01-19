@@ -23,10 +23,12 @@ class TransactionsCandidatesViewModel : ViewModel() {
     private val _transactions: MutableLiveData<List<Transaction>> = MutableLiveData(emptyList())
     private val _selectedGuids: MutableLiveData<SelectedTransactions> = MutableLiveData()
     private val _transactionsFilter: MutableLiveData<TransactionFilter?> = MutableLiveData(null)
+    private val _loading = MutableLiveData(true)
 
     val transactions: LiveData<List<Transaction>> = _transactions
     val selectedGuids: LiveData<SelectedTransactions> = _selectedGuids
     val transactionsFilter: LiveData<TransactionFilter?> = _transactionsFilter
+    val loading: LiveData<Boolean> = _loading
 
     fun fetchTransactionPage() {
         val jwtToken = Auth.logedInUserData?.token ?: return
@@ -35,9 +37,11 @@ class TransactionsCandidatesViewModel : ViewModel() {
             GetTransactionsPageRequestHandler(jwtToken, null, _transactionsFilter.value)
         transactionsRequestHandler.sendRequest(object : ResponseListener<TransactionPageResponse> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<TransactionPageResponse>) {
+                _loading.value = true
                 val transactionPage = response.data?.firstOrNull()
                 _transactions.value = transactionPage?.transactions
                 filterUnselectedTransactions()
+                _loading.value = false
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {
@@ -57,8 +61,10 @@ class TransactionsCandidatesViewModel : ViewModel() {
         selectedTransactionsRequestHandler.sendRequest(object :
             ResponseListener<SelectedTransaction> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<SelectedTransaction>) {
+                _loading.value = true
                 _savedSelectedTransactions.value = response.data.orEmpty().toMutableList()
                 filterUnselectedTransactions()
+                _loading.value = false
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {
