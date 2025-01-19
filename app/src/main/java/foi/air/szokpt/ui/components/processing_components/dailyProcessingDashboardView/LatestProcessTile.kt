@@ -23,6 +23,7 @@ import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
+import foi.air.szokpt.views.ROUTE_LATEST_PROCESS_DETAILS
 
 @Composable
 fun LatestProcessTile(navController: NavController) {
@@ -79,7 +80,7 @@ fun LatestProcessTile(navController: NavController) {
                     contentColor = Primary,
                     borderColor = Secondary,
                 ) {
-                    navController.navigate("")
+                    navController.navigate(ROUTE_LATEST_PROCESS_DETAILS)
                 }
             }
         }
