@@ -30,18 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foi.air.szokpt.ui.theme.Primary
 
-
-/**
- * A custom bouncing outlined button component that provides animated effects for scaling
- * the button, icon, and border stroke when pressed.
- *
- * @param modifier Modifier to be applied to the outer Box container
- * @param inputText Text to display on the button
- * @param inputIcon Icon to display beside the button text
- * @param contentColor Color of the button's content (text and icon)
- * @param borderColor Color of the button's border
- * @param onClick Action to perform when the button is clicked
- */
 @Composable
 fun OutlineBouncingButton(
     modifier: Modifier = Modifier,
