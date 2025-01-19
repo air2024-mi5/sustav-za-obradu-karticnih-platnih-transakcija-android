@@ -68,11 +68,9 @@ class TransactionsCandidatesViewModel : ViewModel() {
         selectedTransactionsRequestHandler.sendRequest(object :
             ResponseListener<SelectedTransaction> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<SelectedTransaction>) {
-                _loading.value = true
                 _message.value = ""
                 _savedSelectedTransactions.value = response.data.orEmpty().toMutableList()
                 filterUnselectedTransactions()
-                _loading.value = false
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {
@@ -93,18 +91,22 @@ class TransactionsCandidatesViewModel : ViewModel() {
         addSelectedTransactionsRequestHandler.sendRequest(object :
             ResponseListener<Unit> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<Unit>) {
+                _loading.value = true
                 _selectedGuids.value = SelectedTransactions(emptyList())
                 fetchSelectedTransactions()
+                _loading.value = false
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {
                 _toastMessage.value = "Something went wrong while submitting!"
                 _showToast.value = true
+                _loading.value = false
             }
 
             override fun onNetworkFailure(t: Throwable) {
                 _toastMessage.value = "Please check your internet connection!"
                 _showToast.value = true
+                _loading.value = false
             }
         })
     }

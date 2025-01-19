@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
@@ -124,15 +125,7 @@ fun TransactionsCandidatesView(
                 .padding(8.dp)
                 .weight(3f),
         ) {
-            if (transactions.isEmpty() && message.isEmpty()) {
-                item {
-                    IconMessage(
-                        title = "No results found",
-                        description = "No results were found that matched your request. Please change the filter or remove it.",
-                        icon = Icons.Rounded.Search
-                    )
-                }
-            } else if (transactions.isEmpty() && message.isNotEmpty()) {
+            if (!loading && transactions.isEmpty()) {
                 item {
                     Box(
                         modifier = Modifier
@@ -140,18 +133,26 @@ fun TransactionsCandidatesView(
                             .padding(16.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = message,
-                            color = Color.Red,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                        if (message.isEmpty()) {
+                            IconMessage(
+                                title = "No results found",
+                                description = "No results were found that matched your request. Please change the filter or remove it.",
+                                icon = Icons.Rounded.Search
+                            )
+                        } else {
+                            Text(
+                                text = message,
+                                color = Color.Red,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                 }
             }
 
-            transactions.forEach { transaction ->
-                item {
+            if (transactions.isNotEmpty()) {
+                items(transactions) { transaction ->
                     TransactionCandidateItem(
                         transaction = transaction,
                         isSelected = transaction.guid in (selectedGuids?.transactions.orEmpty()),
