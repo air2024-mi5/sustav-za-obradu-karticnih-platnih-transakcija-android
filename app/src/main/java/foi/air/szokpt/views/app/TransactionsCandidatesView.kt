@@ -47,15 +47,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.R
 import foi.air.szokpt.ui.components.IconMessage
+import foi.air.szokpt.ui.components.dialog_components.DialogComponent
 import foi.air.szokpt.ui.components.filter_components.ModalBottomSheetFilter
 import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogButton
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
-import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectTransactionsDialog
 import foi.air.szokpt.ui.components.transaction_components.TransactionCandidateItem
 import foi.air.szokpt.ui.components.transaction_components.TransactionFilterView
 import foi.air.szokpt.ui.theme.DarkGreen
 import foi.air.szokpt.ui.theme.Primary
+import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.success
+import foi.air.szokpt.ui.theme.warning
 import foi.air.szokpt.viewmodels.TransactionsCandidatesViewModel
 import kotlinx.coroutines.launch
 
@@ -239,11 +241,16 @@ fun TransactionsCandidatesView(
             )
         }
         if (openAddCandidatesDialog.value) {
-            SelectTransactionsDialog(
-                openAddCandidatesDialog = openAddCandidatesDialog,
-                onConfirm = {
+            DialogComponent(
+                dialogTitle = "Confirm Selection",
+                dialogText = "Are you sure you want to confirm the selected transactions for daily processing?\n",
+                highlightColor = warning,
+                titleColor = TextWhite,
+                onConfirmation = {
                     viewModel.addSelectedTransactions()
-                }
+                    openAddCandidatesDialog.value = false
+                },
+                onDismissRequest = { openAddCandidatesDialog.value = false },
             )
         }
 
