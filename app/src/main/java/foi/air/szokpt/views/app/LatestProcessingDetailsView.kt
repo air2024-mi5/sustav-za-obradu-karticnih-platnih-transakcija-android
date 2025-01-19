@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
@@ -18,18 +19,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import foi.air.szokpt.models.LatestProcess
+import foi.air.szokpt.models.LatestProcessing
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun LatestProcessDetailsView(
+fun LatestProcessingDetailsView(
     navController: NavController,
-    latestProcess: LatestProcess
+    latestProcessing: LatestProcessing
 ) {
+    val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm")
+    val formattedDate = latestProcessing.date.format(formatter)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -37,14 +42,14 @@ fun LatestProcessDetailsView(
         verticalArrangement = Arrangement.Top
     ) {
         Text(
-            text = "Details of latest process",
+            text = "Latest Processing Details",
             color = TextWhite.copy(alpha = 0.7f),
             fontSize = 18.sp,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
         Text(
-            text = "Process #${latestProcess.processNumber}",
+            text = "Process #${latestProcessing.id}",
             color = TextWhite,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
@@ -52,7 +57,7 @@ fun LatestProcessDetailsView(
         )
 
         Surface(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.wrapContentHeight(),
             shape = RoundedCornerShape(16.dp),
             color = BGLevelOne.copy(alpha = 0.5f),
             border = BorderStroke(1.dp, TextWhite.copy(alpha = 0.1f))
@@ -65,12 +70,17 @@ fun LatestProcessDetailsView(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        text = "Process with ID ${latestProcess.fullProcessId} - Completed",
+                        text = "Status: ${latestProcessing.status}",
                         color = TextWhite,
                         fontSize = 14.sp
                     )
                     Text(
-                        text = "Finished on ${latestProcess.processDate}",
+                        text = "Finished: ${formattedDate}h",
+                        color = TextWhite,
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = "Transactions processed: ${latestProcessing.processedTransactions}",
                         color = TextWhite,
                         fontSize = 14.sp
                     )
@@ -82,11 +92,11 @@ fun LatestProcessDetailsView(
                 ) {
                     OutlineBouncingButton(
                         modifier = Modifier.weight(1f),
-                        inputText = "Export to PDF",
+                        inputText = "Export PDF",
                         inputIcon = Icons.Default.ExitToApp,
                         contentColor = Primary,
                         borderColor = Secondary,
-                        fontSize = 15.sp,
+                        fontSize = 14.sp,
                         spacer = 10.dp
                     ) {
                         // TODO Handle PDF download
@@ -94,12 +104,12 @@ fun LatestProcessDetailsView(
 
                     OutlineBouncingButton(
                         modifier = Modifier.weight(1f),
-                        inputText = "Export to Excel",
+                        inputText = "Export Excel",
                         inputIcon = Icons.Default.ExitToApp,
                         contentColor = Primary,
                         borderColor = Secondary,
-                        fontSize = 15.sp,
-                        spacer = 6.dp
+                        fontSize = 14.sp,
+                        spacer = 10.dp
                     ) {
                         // TODO Handle excel download
                     }
