@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import foi.air.szokpt.ui.components.processing_components.dailyProcessingDashboardView.LatestProcessTile
 import foi.air.szokpt.ui.components.processing_components.dailyProcessingDashboardView.ProcessingScheduleTile
 import foi.air.szokpt.ui.components.processing_components.dailyProcessingDashboardView.TransactionsCandidatesTile
 
@@ -35,6 +36,7 @@ fun DailyProcessesDashboardView(navController: NavController) {
                 TransactionsCandidatesTile(navController)
             }
             item(span = { GridItemSpan(2) }) {
+                LatestProcessTile(navController)
             }
             item(span = { GridItemSpan(2) }) {
             }
