@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 val Primary: Color = Color(0xFF2196F3)
 val Secondary: Color = Color(0xFF125386)
-// Alternative color against the Primary color
+
 val Alternative: Color = Color(0xFFFFA200)
 
 val danger: Color = Color(0xFFF32125)
