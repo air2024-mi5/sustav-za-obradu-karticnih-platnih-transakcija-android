@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.helpers.TransactionUtils
-import foi.air.szokpt.models.CardBrandInformation
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dashboard_components.BarComponent
 import foi.air.szokpt.ui.components.dashboard_components.ChartWithLegend
@@ -44,6 +43,7 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
+import foi.air.szokpt.utils.CardBrandInformationList
 import foi.air.szokpt.viewmodels.CardBrandsStatisticsViewModel
 import foi.air.szokpt.viewmodels.ReportsViewModel
 
@@ -312,6 +312,8 @@ fun CardBrandsTile(
     val cardBrandsStats by viewModel.cardBrandsStatisticsData.observeAsState()
     val errorMessage by viewModel.errorMessage.observeAsState()
 
+    val cardBrandInformationList = CardBrandInformationList()
+
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 16.dp,
@@ -342,44 +344,20 @@ fun CardBrandsTile(
 
                 when (errorMessage) {
                     null -> {
-                        val cardBrandsList = listOf(
-                            CardBrandInformation(
-                                "VISA",
-                                cardBrandsStats?.visaCount ?: 0,
-                                Color(0xFF1634CC)
-                            ),
-                            CardBrandInformation(
-                                "DINERS",
-                                cardBrandsStats?.dinersCount ?: 0,
-                                Color(0xFFc5c5c7)
-                            ),
-                            CardBrandInformation(
-                                "DISCOVER",
-                                cardBrandsStats?.discoverCount ?: 0, Color(0xFFff7001)
-                            ),
-                            CardBrandInformation(
-                                "MAESTRO",
-                                cardBrandsStats?.maestroCount ?: 0,
-                                Color(0xFF00a2e5)
-                            ),
-                            CardBrandInformation(
-                                "AMEX",
-                                cardBrandsStats?.amexCount ?: 0,
-                                Color(0xFF006cb7)
-                            ),
-                            CardBrandInformation(
-                                "MASTERCARD",
-                                cardBrandsStats?.mastercardCount ?: 0,
-                                Color(0xFFf79e1b)
+                        val cardBrandsList = cardBrandsStats?.let {
+                            cardBrandInformationList.getCardBrandInformationList(
+                                it
                             )
-                        )
-                        
-                        CardBrandsBarChart(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            stats = cardBrandsList,
-                        )
+                        }
+
+                        if (cardBrandsList != null) {
+                            CardBrandsBarChart(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                stats = cardBrandsList,
+                            )
+                        }
                     }
 
                     else -> {
