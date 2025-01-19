@@ -3,6 +3,7 @@ package foi.air.szokpt.views.app
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,10 +17,15 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import foi.air.szokpt.R
+import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.AddCandidatesButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectAllTransactionsButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectTransactionsDialog
@@ -36,6 +42,7 @@ fun TransactionsCandidatesView(
     val selectedGuids by viewModel.selectedGuids.observeAsState()
 
     val openAddCandidatesDialog = remember { mutableStateOf(false) }
+    var isFilterExpanded by remember { mutableStateOf(false) }
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -59,7 +66,7 @@ fun TransactionsCandidatesView(
     }
 
     val allTransactionsSelected by remember {
-        derivedStateOf { if (!areAllSelected) false else true }
+        derivedStateOf { areAllSelected }
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -89,9 +96,17 @@ fun TransactionsCandidatesView(
         }
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(16.dp, 8.dp, 8.dp, 8.dp),
             horizontalArrangement = Arrangement.Center,
         ) {
+            BouncingFABDialogButton(
+                isExpanded = isFilterExpanded,
+                onToggle = { isFilterExpanded = !isFilterExpanded },
+                baseIcon = ImageVector.vectorResource(id = R.drawable.rounded_filter_alt_24),
+                expandedIcon = ImageVector.vectorResource(id = R.drawable.round_filter_fill_alt_24)
+            )
+            Spacer(modifier = Modifier.weight(1f))
             AddCandidatesButton(
                 selectedGuids = selectedGuids?.transactions.orEmpty(),
                 openAddCandidatesDialog
