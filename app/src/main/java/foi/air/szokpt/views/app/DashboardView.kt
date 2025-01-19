@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.helpers.TransactionUtils
-import foi.air.szokpt.models.CardBrandInformation
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dashboard_components.BarComponent
 import foi.air.szokpt.ui.components.dashboard_components.ChartWithLegend
@@ -46,6 +46,8 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
+import foi.air.szokpt.utils.CardBrandInformationList
+import foi.air.szokpt.viewmodels.CardBrandsStatisticsViewModel
 import foi.air.szokpt.viewmodels.ReportsViewModel
 import java.time.LocalDate
 
@@ -221,16 +223,14 @@ fun TransactionsListTile() {
 }
 
 @Composable
-fun CardBrandsTile(transactionUtils: TransactionUtils) {
+fun CardBrandsTile(
+    transactionUtils: TransactionUtils,
+    viewModel: CardBrandsStatisticsViewModel = viewModel()
+) {
+    val cardBrandsStats by viewModel.cardBrandsStatisticsData.observeAsState()
+    val errorMessage by viewModel.errorMessage.observeAsState()
 
-    val mockStats = listOf(
-        CardBrandInformation("VISA", 10, Color(0xFF1634CC)),
-        CardBrandInformation("DINERS", 3, Color(0xFFc5c5c7)),
-        CardBrandInformation("DISCOVER", 5, Color(0xFFff7001)),
-        CardBrandInformation("MAESTRO", 8, Color(0xFF00a2e5)),
-        CardBrandInformation("AMEX", 1, Color(0xFF006cb7)),
-        CardBrandInformation("MASTERCARD", 5, Color(0xFFf79e1b))
-    )
+    val cardBrandInformationList = CardBrandInformationList()
 
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
@@ -258,13 +258,38 @@ fun CardBrandsTile(transactionUtils: TransactionUtils) {
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                CardBrandsBarChart(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    stats = mockStats,
-                    transactionUtils = transactionUtils
-                )
+                viewModel.fetchCardBrandsStatistics()
+
+                when (errorMessage) {
+                    null -> {
+                        val cardBrandsList = cardBrandsStats?.let {
+                            cardBrandInformationList.getCardBrandInformationList(
+                                it
+                            )
+                        }
+
+                        if (cardBrandsList != null) {
+                            CardBrandsBarChart(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                stats = cardBrandsList,
+                            )
+                        }
+                    }
+
+                    else -> {
+                        Text(
+                            text = errorMessage.toString(),
+                            color = TextWhite,
+                            fontSize = 12.sp,
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .align(Alignment.CenterVertically)
+                        )
+                    }
+
+                }
             }
         }
     }
