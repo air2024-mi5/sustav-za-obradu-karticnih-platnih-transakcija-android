@@ -63,12 +63,12 @@ fun LatestProcessingTile(navController: NavController, latestProcessing: LatestP
                     Text(
                         text = "Process #${latestProcessing.id}",
                         color = TextWhite,
-                        fontSize = 14.sp
+                        fontSize = 15.sp
                     )
                     Text(
                         text = "${latestProcessing.date.format(formatter)}h",
                         color = TextWhite,
-                        fontSize = 14.sp
+                        fontSize = 15.sp
                     )
                 }
 

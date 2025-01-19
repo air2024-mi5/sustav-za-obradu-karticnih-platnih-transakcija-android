@@ -67,22 +67,23 @@ fun LatestProcessingDetailsView(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.padding(start = 5.dp)
                 ) {
                     Text(
                         text = "Status: ${latestProcessing.status}",
                         color = TextWhite,
-                        fontSize = 14.sp
+                        fontSize = 15.sp
                     )
                     Text(
                         text = "Finished: ${formattedDate}h",
                         color = TextWhite,
-                        fontSize = 14.sp
+                        fontSize = 15.sp
                     )
                     Text(
                         text = "Transactions processed: ${latestProcessing.processedTransactions}",
                         color = TextWhite,
-                        fontSize = 14.sp
+                        fontSize = 15.sp
                     )
                 }
 
