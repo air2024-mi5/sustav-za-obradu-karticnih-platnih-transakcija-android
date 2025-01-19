@@ -40,7 +40,7 @@ fun TransactionsOverviewComponent(
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = "Transactions overview",
+                text = "Transactions Overview",
                 color = TextWhite,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
