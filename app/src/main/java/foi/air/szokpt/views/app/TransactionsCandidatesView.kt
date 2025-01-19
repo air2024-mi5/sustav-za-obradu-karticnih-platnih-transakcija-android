@@ -1,21 +1,29 @@
 package foi.air.szokpt.views.app
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,11 +50,11 @@ import foi.air.szokpt.ui.components.IconMessage
 import foi.air.szokpt.ui.components.filter_components.ModalBottomSheetFilter
 import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogButton
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
-import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectAllTransactionsButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectTransactionsDialog
 import foi.air.szokpt.ui.components.transaction_components.TransactionCandidateItem
 import foi.air.szokpt.ui.components.transaction_components.TransactionFilterView
 import foi.air.szokpt.ui.theme.DarkGreen
+import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.TransactionsCandidatesViewModel
 import kotlinx.coroutines.launch
@@ -104,12 +112,45 @@ fun TransactionsCandidatesView(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-
-        SelectAllTransactionsButton(
-            transactions,
-            viewModel,
-            allTransactionsSelected
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Select all",
+                color = Primary,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Button(
+                modifier = Modifier
+                    .size(24.dp),
+                shape = RoundedCornerShape(4.dp),
+                border = BorderStroke(1.dp, Primary),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent
+                ),
+                contentPadding = PaddingValues(0.dp),
+                onClick = {
+                    transactions.let { transactions ->
+                        val pageGuids = transactions.map { it.guid }.toSet()
+                        viewModel.toggleSelectAllTransactions(pageGuids)
+                    }
+                },
+            ) {
+                if (allTransactionsSelected) {
+                    Icon(
+                        imageVector = Icons.Outlined.Check,
+                        contentDescription = "",
+                        tint = Primary,
+                    )
+                }
+            }
+        }
 
         if (loading) {
             Box(
@@ -138,8 +179,8 @@ fun TransactionsCandidatesView(
                     ) {
                         if (message.isEmpty()) {
                             IconMessage(
-                                title = "No results found",
-                                description = "No results were found that matched your request. Please change the filter or remove it.",
+                                title = "No transactions found!",
+                                description = "",
                                 icon = Icons.Rounded.Search
                             )
                         } else {
