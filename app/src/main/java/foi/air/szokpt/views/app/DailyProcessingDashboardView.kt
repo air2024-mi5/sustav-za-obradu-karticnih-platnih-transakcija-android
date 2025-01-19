@@ -2,20 +2,37 @@ package foi.air.szokpt.views.app
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowForward
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import foi.air.szokpt.models.LatestProcessing
-import foi.air.szokpt.ui.components.processing_components.dailyProcessingDashboardView.LatestProcessingTile
-import foi.air.szokpt.ui.components.processing_components.dailyProcessingDashboardView.ProcessingScheduleTile
-import foi.air.szokpt.ui.components.processing_components.dailyProcessingDashboardView.TransactionsCandidatesTile
-import java.time.LocalDateTime
+import foi.air.szokpt.ui.components.TileSegment
+import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
+import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.BGLevelZeroHigh
+import foi.air.szokpt.ui.theme.Primary
+import foi.air.szokpt.ui.theme.Secondary
+import foi.air.szokpt.ui.theme.TextWhite
+import foi.air.szokpt.ui.theme.TileSizeMode
+import foi.air.szokpt.views.ROUTE_LATEST_PROCESSING_DETAILS
+import foi.air.szokpt.views.ROUTE_TRANSACTIONS_CANDIDATES
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun DailyProcessesDashboardView(navController: NavController) {
@@ -32,16 +49,125 @@ fun DailyProcessesDashboardView(navController: NavController) {
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             item(span = { GridItemSpan(2) }) {
-                ProcessingScheduleTile()
+                TileSegment(
+                    tileSizeMode = TileSizeMode.WRAP_CONTENT,
+                    innerPadding = 12.dp,
+                    outerMargin = 4.dp,
+                    minWidth = 250.dp,
+                    minHeight = 20.dp,
+                    color = BGLevelZeroHigh
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Processing starts at 12 AM",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontSize = 18.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
             }
             item(span = { GridItemSpan(2) }) {
-                TransactionsCandidatesTile(navController)
+                TileSegment(
+                    tileSizeMode = TileSizeMode.WRAP_CONTENT,
+                    innerPadding = 10.dp,
+                    outerMargin = 4.dp,
+                    minWidth = 250.dp,
+                    minHeight = 20.dp,
+                    color = BGLevelOne
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Transactions Candidates",
+                                color = TextWhite,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            OutlineBouncingButton(
+                                modifier = Modifier,
+                                inputText = "",
+                                inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
+                                contentColor = Primary,
+                                borderColor = Secondary,
+                            ) {
+                                navController.navigate(ROUTE_TRANSACTIONS_CANDIDATES)
+                            }
+                        }
+                    }
+                }
             }
             item(span = { GridItemSpan(2) }) {
-                LatestProcessingTile(
-                    navController,
-                    latestProcessing = LatestProcessing(100, LocalDateTime.now(), "Completed", 50)
-                )
+                TileSegment(
+                    tileSizeMode = TileSizeMode.WRAP_CONTENT,
+                    innerPadding = 15.dp,
+                    outerMargin = 4.dp,
+                    minWidth = 250.dp,
+                    minHeight = 20.dp,
+                    color = BGLevelOne
+                ) {
+                    val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm")
+
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(7.dp),
+                            text = "Latest Processing",
+                            color = TextWhite,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(start = 15.dp),
+                                verticalArrangement = Arrangement.Top
+                            ) {
+                                Text(
+                                    text = "Process #${latestProcessing.id}",
+                                    color = TextWhite,
+                                    fontSize = 15.sp
+                                )
+                                Text(
+                                    text = "${latestProcessing.date.format(formatter)}h",
+                                    color = TextWhite,
+                                    fontSize = 15.sp
+                                )
+                            }
+
+                            OutlineBouncingButton(
+                                modifier = Modifier.width(100.dp),
+                                inputText = "",
+                                inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
+                                contentColor = Primary,
+                                borderColor = Secondary,
+                            ) {
+                                navController.navigate(ROUTE_LATEST_PROCESSING_DETAILS)
+                            }
+                        }
+                    }
+                }
+
             }
             item(span = { GridItemSpan(2) }) {
             }
