@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material3.Text
@@ -22,10 +23,9 @@ import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
-import foi.air.szokpt.views.ROUTE_TRANSACTIONS_CANDIDATES
 
 @Composable
-fun TransactionsCandidatesTile(navController: NavController) {
+fun LatestProcessTile(navController: NavController) {
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 15.dp,
@@ -36,28 +36,50 @@ fun TransactionsCandidatesTile(navController: NavController) {
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            Text(
+                modifier = Modifier.padding(7.dp),
+                text = "Latest Process",
+                color = TextWhite,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    modifier = Modifier.padding(7.dp),
-                    text = "Transactions Candidates",
-                    color = TextWhite,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Column(
+                    modifier = Modifier
+                        .padding(start = 15.dp),
+                    verticalArrangement = Arrangement.Top
+                ) {
+                    Text(
+                        text = "4.11.2024 21:26",
+                        color = TextWhite,
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = "Process #993",
+                        color = TextWhite,
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = "ID 22573912321",
+                        color = TextWhite,
+                        fontSize = 14.sp
+                    )
+                }
+
                 OutlineBouncingButton(
-                    modifier = Modifier,
+                    modifier = Modifier.width(100.dp),
                     inputText = "",
                     inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
                     contentColor = Primary,
                     borderColor = Secondary,
                 ) {
-                    navController.navigate(ROUTE_TRANSACTIONS_CANDIDATES)
+                    navController.navigate("")
                 }
             }
         }
