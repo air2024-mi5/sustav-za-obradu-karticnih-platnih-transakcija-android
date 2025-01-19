@@ -25,11 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.R
+import foi.air.szokpt.ui.components.filter_components.ModalBottomSheetFilter
 import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.AddCandidatesButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectAllTransactionsButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectTransactionsDialog
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.TransactionCandidateItem
+import foi.air.szokpt.ui.components.transaction_components.TransactionFilterView
 import foi.air.szokpt.viewmodels.TransactionsCandidatesViewModel
 import kotlinx.coroutines.launch
 
@@ -40,9 +42,12 @@ fun TransactionsCandidatesView(
     val viewModel: TransactionsCandidatesViewModel = viewModel()
     val transactions by viewModel.transactions.observeAsState()
     val selectedGuids by viewModel.selectedGuids.observeAsState()
+    val filterResults by viewModel.transactionsFilter.observeAsState()
 
     val openAddCandidatesDialog = remember { mutableStateOf(false) }
     var isFilterExpanded by remember { mutableStateOf(false) }
+    var hasFilters by remember { mutableStateOf(filterResults != null) }
+    var isShowingFilters by remember { mutableStateOf(false) }
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -120,5 +125,33 @@ fun TransactionsCandidatesView(
                 }
             )
         }
+
+        ModalBottomSheetFilter(
+            isVisible = isFilterExpanded,
+            onDismiss = { isFilterExpanded = false },
+            hasFilters = hasFilters,
+            isShowingFilters = isShowingFilters,
+            onShowFilterOptions = {
+                isShowingFilters = true
+            },
+            onRemoveFilters = {
+                hasFilters = false
+                isFilterExpanded = false
+                viewModel.setFilter(null)
+                viewModel.fetchTransactionPage()
+            },
+            filterOptionsContent = {
+                TransactionFilterView(
+                    filter = viewModel.transactionsFilter.value,
+                    onApplyFilter = { results ->
+                        viewModel.setFilter(results)
+                        hasFilters = true
+                        isShowingFilters = false
+                        isFilterExpanded = false
+                        viewModel.fetchTransactionPage()
+                    }
+                )
+            }
+        )
     }
 }

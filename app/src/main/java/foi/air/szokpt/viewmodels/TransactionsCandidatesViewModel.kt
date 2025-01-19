@@ -22,9 +22,11 @@ class TransactionsCandidatesViewModel : ViewModel() {
         MutableLiveData(mutableListOf())
     private val _transactions: MutableLiveData<List<Transaction>> = MutableLiveData(emptyList())
     private val _selectedGuids: MutableLiveData<SelectedTransactions> = MutableLiveData()
+    private val _transactionsFilter: MutableLiveData<TransactionFilter?> = MutableLiveData(null)
 
     val transactions: LiveData<List<Transaction>> = _transactions
     val selectedGuids: LiveData<SelectedTransactions> = _selectedGuids
+    val transactionsFilter: LiveData<TransactionFilter?> = _transactionsFilter
 
     fun fetchTransactionPage() {
         val jwtToken = Auth.logedInUserData?.token ?: return
@@ -129,5 +131,9 @@ class TransactionsCandidatesViewModel : ViewModel() {
             currentTransactions - transactionId
         }
         _selectedGuids.value = SelectedTransactions(transactions = updatedTransactions)
+    }
+
+    fun setFilter(filter: TransactionFilter?) {
+        _transactionsFilter.value = filter
     }
 }

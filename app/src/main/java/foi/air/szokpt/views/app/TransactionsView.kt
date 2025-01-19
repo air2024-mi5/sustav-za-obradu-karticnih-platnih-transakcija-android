@@ -167,7 +167,7 @@ fun TransactionsView(navController: NavController) {
         },
         filterOptionsContent = {
             TransactionFilterView(
-                viewModel = viewModel,
+                filter = viewModel.transactionsFilter.value,
                 onApplyFilter = { results ->
                     viewModel.setFilter(results)
                     hasFilters = true

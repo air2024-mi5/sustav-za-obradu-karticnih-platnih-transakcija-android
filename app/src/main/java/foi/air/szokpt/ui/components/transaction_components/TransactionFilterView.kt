@@ -19,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,7 +38,6 @@ import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButto
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.success
-import foi.air.szokpt.viewmodels.TransactionsViewModel
 import hr.foi.air.szokpt.core.transactions.TransactionFilter
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -47,20 +45,13 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-/**
- * A composable function that provides a UI for filtering transactions based on various criteria.
- *
- * @param viewModel The instance of `TransactionsViewModel` used to observe and update transaction filter data.
- * @param onApplyFilter A callback function triggered when the user applies the filters. It provides the updated `TransactionFilter`.
- */
 @Composable
 fun TransactionFilterView(
-    viewModel: TransactionsViewModel,
+    filter: TransactionFilter?,
     onApplyFilter: (TransactionFilter) -> Unit
 ) {
     val context = LocalContext.current
-
-    val transactionsFilter = viewModel.transactionsFilter.observeAsState().value
+    val transactionsFilter: TransactionFilter? = filter
 
     val cardBrands = listOf("Maestro", "Visa", "MasterCard", "Diners", "Discover")
     val trxTypeMap = mapOf(
@@ -74,16 +65,12 @@ fun TransactionFilterView(
 
     val selectedCardBrands = remember {
         mutableStateListOf<String>().apply {
-            transactionsFilter?.cardBrands?.let {
-                addAll(it)
-            }
+            transactionsFilter?.cardBrands?.let { addAll(it) }
         }
     }
     val selectedTrxTypes = remember {
         mutableStateListOf<String>().apply {
-            transactionsFilter?.trxTypes?.let {
-                addAll(it)
-            }
+            transactionsFilter?.trxTypes?.let { addAll(it) }
         }
     }
 
