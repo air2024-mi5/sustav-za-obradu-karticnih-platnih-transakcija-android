@@ -30,7 +30,7 @@ import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogBut
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.AddCandidatesButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectAllTransactionsButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectTransactionsDialog
-import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.TransactionCandidateItem
+import foi.air.szokpt.ui.components.transaction_components.TransactionCandidateItem
 import foi.air.szokpt.ui.components.transaction_components.TransactionFilterView
 import foi.air.szokpt.viewmodels.TransactionsCandidatesViewModel
 import kotlinx.coroutines.launch
@@ -94,6 +94,9 @@ fun TransactionsCandidatesView(
                         isSelected = transaction.guid in (selectedGuids?.transactions.orEmpty()),
                         onSelectionChanged = { isSelectedNow ->
                             viewModel.updateSelectionStatus(transaction.guid, isSelectedNow)
+                        },
+                        onClick = {
+                            navController.navigate("transaction_details/${transaction.guid}")
                         }
                     )
                 }
