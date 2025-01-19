@@ -1,6 +1,10 @@
 package foi.air.szokpt.ui.components.dashboard_components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -18,8 +22,9 @@ import foi.air.szokpt.ui.theme.TileSizeMode
 import java.time.LocalDate
 
 @Composable
-fun TransationsOverviewComponent(
-    transactionsPerDay: List<TransactionsPerDay>
+fun TransactionsOverviewComponent(
+    transactionsPerDay: List<TransactionsPerDay>,
+    errorMessage: String
 ) {
     TileSegment(
         innerPadding = 16.dp,
@@ -45,11 +50,25 @@ fun TransationsOverviewComponent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
             ) {
-                Last7DaysTransactionsBarChart(
-                    transactionsPerDay = transactionsPerDay,
-                    maxBarHeight = 100,
-                    textColor = TextWhite
-                )
+                when (errorMessage) {
+                    "" -> {
+                        Last7DaysTransactionsBarChart(
+                            transactionsPerDay = transactionsPerDay,
+                            maxBarHeight = 100,
+                            textColor = TextWhite
+                        )
+                    }
+
+                    else -> {
+                        Text(
+                            text = errorMessage,
+                            color = TextWhite,
+                            fontSize = 12.sp,
+                            modifier = Modifier
+                                .padding(5.dp)
+                        )
+                    }
+                }
             }
         }
     }
@@ -60,17 +79,17 @@ fun TransationsOverviewComponent(
 @Composable
 fun ReportsScreenPreview() {
     val sampleDayData = listOf(
-        TransactionsPerDay(LocalDate.of(2024, 1,13), 14),
-        TransactionsPerDay(LocalDate.of(2024, 1,14), 28),
-        TransactionsPerDay(LocalDate.of(2024, 1,15), 8),
-        TransactionsPerDay(LocalDate.of(2024, 1,16), 14),
-        TransactionsPerDay(LocalDate.of(2024, 1,17), 28),
-        TransactionsPerDay(LocalDate.of(2024, 1,18), 8),
-        TransactionsPerDay(LocalDate.of(2024, 1,19), 8),
+        TransactionsPerDay(LocalDate.of(2024, 1, 13), 14),
+        TransactionsPerDay(LocalDate.of(2024, 1, 14), 28),
+        TransactionsPerDay(LocalDate.of(2024, 1, 15), 8),
+        TransactionsPerDay(LocalDate.of(2024, 1, 16), 14),
+        TransactionsPerDay(LocalDate.of(2024, 1, 17), 28),
+        TransactionsPerDay(LocalDate.of(2024, 1, 18), 8),
+        TransactionsPerDay(LocalDate.of(2024, 1, 19), 8),
     )
     MaterialTheme {
         Surface {
-            TransationsOverviewComponent(sampleDayData)
+            TransactionsOverviewComponent(sampleDayData, "")
         }
     }
 }
