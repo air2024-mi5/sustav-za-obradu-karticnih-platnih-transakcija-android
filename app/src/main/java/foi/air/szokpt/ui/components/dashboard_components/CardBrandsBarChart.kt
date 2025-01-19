@@ -29,7 +29,6 @@ import foi.air.szokpt.models.CardBrandInformation
 fun CardBrandsBarChart(
     modifier: Modifier = Modifier,
     stats: List<CardBrandInformation>,
-    transactionUtils: TransactionUtils
 ) {
     val maxCount = stats.maxOfOrNull { it.count } ?: 0
     if (maxCount == 0) return
@@ -101,7 +100,7 @@ fun CardBrandsBarChart(
                     ) {
                         Image(
                             painter = painterResource(
-                                id = transactionUtils.getCardBrandDrawable(stat.brand)
+                                id = TransactionUtils.getCardBrandDrawable(stat.brand)
                             ),
                             contentDescription = "Card ${stat.brand}",
                             contentScale = ContentScale.FillHeight,

@@ -373,14 +373,12 @@ fun CardBrandsTile(
                                 Color(0xFFf79e1b)
                             )
                         )
-
-
+                        
                         CardBrandsBarChart(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp),
                             stats = cardBrandsList,
-                            transactionUtils = transactionUtils
                         )
                     }
 
