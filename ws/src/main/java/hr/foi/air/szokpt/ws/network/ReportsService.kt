@@ -11,6 +11,6 @@ interface ReportsService {
     @GET("/reports/successful-transactions")
     fun getTransactionsSuccess(): Call<SuccessfulResponseBody<TransactionsSuccessResponse>>
 
-    @GET("/reports/successful-transactions")
+    @GET("/reports/transactions-per-day")
     fun getTransactionsPerDay(@Header("Authorization") authHeader: String): Call<SuccessfulResponseBody<TransactionsPerDayResponse>>
 }
