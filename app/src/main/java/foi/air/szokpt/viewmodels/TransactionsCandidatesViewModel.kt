@@ -24,20 +24,27 @@ class TransactionsCandidatesViewModel : ViewModel() {
     private val _selectedGuids: MutableLiveData<SelectedTransactions> = MutableLiveData()
     private val _transactionsFilter: MutableLiveData<TransactionFilter?> = MutableLiveData(null)
     private val _loading = MutableLiveData(true)
+    private val _message: MutableLiveData<String> = MutableLiveData("")
+    private val _toastMessage: MutableLiveData<String> = MutableLiveData("")
+    private val _showToast = MutableLiveData(false)
 
     val transactions: LiveData<List<Transaction>> = _transactions
     val selectedGuids: LiveData<SelectedTransactions> = _selectedGuids
     val transactionsFilter: LiveData<TransactionFilter?> = _transactionsFilter
     val loading: LiveData<Boolean> = _loading
+    val message: LiveData<String> = _message
+    val toastMessage: LiveData<String> = _toastMessage
+    val showToast: LiveData<Boolean> = _showToast
 
     fun fetchTransactionPage() {
-        val jwtToken = Auth.logedInUserData?.token ?: return
+        val jwtToken = getJwtTokenOrShowError() ?: return
 
         val transactionsRequestHandler =
             GetTransactionsPageRequestHandler(jwtToken, null, _transactionsFilter.value)
         transactionsRequestHandler.sendRequest(object : ResponseListener<TransactionPageResponse> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<TransactionPageResponse>) {
                 _loading.value = true
+                _message.value = ""
                 val transactionPage = response.data?.firstOrNull()
                 _transactions.value = transactionPage?.transactions
                 filterUnselectedTransactions()
@@ -45,40 +52,41 @@ class TransactionsCandidatesViewModel : ViewModel() {
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {
-                println("Error receiving response: ${response.error_message}")
+                showErrorMessage("Something went wrong! Please try again!")
             }
 
             override fun onNetworkFailure(t: Throwable) {
-                println("Error contacting network...")
+                showErrorMessage("Please check your internet connection!")
             }
         })
     }
 
     fun fetchSelectedTransactions() {
-        val jwtToken = Auth.logedInUserData?.token ?: return
+        val jwtToken = getJwtTokenOrShowError() ?: return
 
         val selectedTransactionsRequestHandler = GetSelectedTransactionsRequestHandler(jwtToken)
         selectedTransactionsRequestHandler.sendRequest(object :
             ResponseListener<SelectedTransaction> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<SelectedTransaction>) {
                 _loading.value = true
+                _message.value = ""
                 _savedSelectedTransactions.value = response.data.orEmpty().toMutableList()
                 filterUnselectedTransactions()
                 _loading.value = false
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {
-                println("Error receiving response: ${response.error_message}")
+                showErrorMessage("Please check your internet connection!")
             }
 
             override fun onNetworkFailure(t: Throwable) {
-                println("Error contacting network...")
+                showErrorMessage("Please check your internet connection!")
             }
         })
     }
 
     fun addSelectedTransactions() {
-        val jwtToken = Auth.logedInUserData?.token ?: return
+        val jwtToken = getJwtTokenOrShowError() ?: return
 
         val addSelectedTransactionsRequestHandler =
             AddSelectedTransactions(jwtToken, _selectedGuids.value!!)
@@ -90,11 +98,13 @@ class TransactionsCandidatesViewModel : ViewModel() {
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {
-                println("Error receiving response: ${response.message}")
+                _toastMessage.value = "Something went wrong while submitting!"
+                _showToast.value = true
             }
 
             override fun onNetworkFailure(t: Throwable) {
-                println("Error contacting network...")
+                _toastMessage.value = "Please check your internet connection!"
+                _showToast.value = true
             }
         })
     }
@@ -129,5 +139,22 @@ class TransactionsCandidatesViewModel : ViewModel() {
 
     fun setFilter(filter: TransactionFilter?) {
         _transactionsFilter.value = filter
+    }
+
+    private fun getJwtTokenOrShowError(): String? {
+        val jwtToken = Auth.logedInUserData?.token
+        if (jwtToken == null) {
+            showErrorMessage("Something went wrong! Please try logging in again!")
+        }
+        return jwtToken
+    }
+
+    private fun showErrorMessage(message: String) {
+        _message.value = message
+        _loading.value = false
+    }
+
+    fun resetToast() {
+        _showToast.value = false
     }
 }
