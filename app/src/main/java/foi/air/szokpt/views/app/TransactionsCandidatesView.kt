@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -40,11 +41,13 @@ import foi.air.szokpt.R
 import foi.air.szokpt.ui.components.IconMessage
 import foi.air.szokpt.ui.components.filter_components.ModalBottomSheetFilter
 import foi.air.szokpt.ui.components.interactible_components.BouncingFABDialogButton
-import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.AddCandidatesButton
+import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectAllTransactionsButton
 import foi.air.szokpt.ui.components.processing_components.transactionsCandidatesView.SelectTransactionsDialog
 import foi.air.szokpt.ui.components.transaction_components.TransactionCandidateItem
 import foi.air.szokpt.ui.components.transaction_components.TransactionFilterView
+import foi.air.szokpt.ui.theme.DarkGreen
+import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.TransactionsCandidatesViewModel
 import kotlinx.coroutines.launch
 
@@ -180,9 +183,18 @@ fun TransactionsCandidatesView(
                 expandedIcon = ImageVector.vectorResource(id = R.drawable.round_filter_fill_alt_24)
             )
             Spacer(modifier = Modifier.weight(1f))
-            AddCandidatesButton(
-                selectedGuids = selectedGuids?.transactions.orEmpty(),
-                openAddCandidatesDialog
+
+            OutlineBouncingButton(
+                inputText = "Confirm selection",
+                inputIcon = Icons.Rounded.CheckCircle,
+                contentColor = if (!selectedGuids?.transactions.isNullOrEmpty()) success else DarkGreen,
+                borderColor = if (!selectedGuids?.transactions.isNullOrEmpty()) success else DarkGreen,
+                onClick = {
+                    val isEnabled = selectedGuids?.transactions?.isNotEmpty() == true
+                    if (isEnabled) {
+                        openAddCandidatesDialog.value = true
+                    }
+                }
             )
         }
         if (openAddCandidatesDialog.value) {

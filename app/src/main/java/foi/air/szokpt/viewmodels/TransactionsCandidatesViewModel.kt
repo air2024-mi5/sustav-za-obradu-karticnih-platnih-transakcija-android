@@ -12,7 +12,7 @@ import hr.foi.air.szokpt.core.transactions.TransactionFilter
 import hr.foi.air.szokpt.ws.models.TransactionPageResponse
 import hr.foi.air.szokpt.ws.models.responses.SelectedTransaction
 import hr.foi.air.szokpt.ws.models.responses.Transaction
-import hr.foi.air.szokpt.ws.request_handlers.AddSelectedTransactions
+import hr.foi.air.szokpt.ws.request_handlers.AddSelectedTransactionsRequestHandler
 import hr.foi.air.szokpt.ws.request_handlers.GetSelectedTransactionsRequestHandler
 import hr.foi.air.szokpt.ws.request_handlers.GetTransactionsPageRequestHandler
 import java.util.UUID
@@ -87,7 +87,7 @@ class TransactionsCandidatesViewModel : ViewModel() {
         val jwtToken = getJwtTokenOrShowError() ?: return
 
         val addSelectedTransactionsRequestHandler =
-            AddSelectedTransactions(jwtToken, _selectedGuids.value!!)
+            AddSelectedTransactionsRequestHandler(jwtToken, _selectedGuids.value!!)
         addSelectedTransactionsRequestHandler.sendRequest(object :
             ResponseListener<Unit> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<Unit>) {
