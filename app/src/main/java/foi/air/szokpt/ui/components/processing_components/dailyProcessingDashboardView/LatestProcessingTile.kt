@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import foi.air.szokpt.models.LatestProcessing
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
@@ -24,9 +25,10 @@ import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.views.ROUTE_LATEST_PROCESSING_DETAILS
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun LatestProcessingTile(navController: NavController) {
+fun LatestProcessingTile(navController: NavController, latestProcessing: LatestProcessing) {
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 15.dp,
@@ -35,6 +37,8 @@ fun LatestProcessingTile(navController: NavController) {
         minHeight = 20.dp,
         color = BGLevelOne
     ) {
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm")
+
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -57,17 +61,12 @@ fun LatestProcessingTile(navController: NavController) {
                     verticalArrangement = Arrangement.Top
                 ) {
                     Text(
-                        text = "4.11.2024 21:26",
+                        text = "Process #${latestProcessing.id}",
                         color = TextWhite,
                         fontSize = 14.sp
                     )
                     Text(
-                        text = "Process #993",
-                        color = TextWhite,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "ID 22573912321",
+                        text = "${latestProcessing.date.format(formatter)}h",
                         color = TextWhite,
                         fontSize = 14.sp
                     )

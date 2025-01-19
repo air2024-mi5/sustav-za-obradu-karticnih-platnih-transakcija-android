@@ -11,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import foi.air.szokpt.models.LatestProcessing
 import foi.air.szokpt.ui.components.processing_components.dailyProcessingDashboardView.LatestProcessingTile
 import foi.air.szokpt.ui.components.processing_components.dailyProcessingDashboardView.ProcessingScheduleTile
 import foi.air.szokpt.ui.components.processing_components.dailyProcessingDashboardView.TransactionsCandidatesTile
+import java.time.LocalDateTime
 
 @Composable
 fun DailyProcessesDashboardView(navController: NavController) {
@@ -36,7 +38,10 @@ fun DailyProcessesDashboardView(navController: NavController) {
                 TransactionsCandidatesTile(navController)
             }
             item(span = { GridItemSpan(2) }) {
-                LatestProcessingTile(navController)
+                LatestProcessingTile(
+                    navController,
+                    latestProcessing = LatestProcessing(100, LocalDateTime.now(), "Completed", 50)
+                )
             }
             item(span = { GridItemSpan(2) }) {
             }
