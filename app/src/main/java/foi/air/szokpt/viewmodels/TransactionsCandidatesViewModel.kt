@@ -32,7 +32,7 @@ class TransactionsCandidatesViewModel : ViewModel() {
         val jwtToken = Auth.logedInUserData?.token ?: return
 
         val transactionsRequestHandler =
-            GetTransactionsPageRequestHandler(jwtToken, null, filter = setFilter())
+            GetTransactionsPageRequestHandler(jwtToken, null, _transactionsFilter.value)
         transactionsRequestHandler.sendRequest(object : ResponseListener<TransactionPageResponse> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<TransactionPageResponse>) {
                 val transactionPage = response.data?.firstOrNull()
@@ -99,18 +99,6 @@ class TransactionsCandidatesViewModel : ViewModel() {
             transaction.guid !in savedGuids
         } ?: emptyList()
         _transactions.value = filteredTransactions
-    }
-
-    private fun setFilter(): TransactionFilter {
-        return TransactionFilter(
-            cardBrands = emptyList(),
-            trxTypes = emptyList(),
-            minAmount = null,
-            maxAmount = null,
-            afterDate = null,
-            beforeDate = null,
-            processed = false
-        )
     }
 
     fun toggleSelectAllTransactions(pageGuids: Set<UUID>) {
