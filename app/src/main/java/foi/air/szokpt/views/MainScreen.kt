@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
+import foi.air.szokpt.models.LatestProcessing
 import foi.air.szokpt.ui.LoginPage
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
 import foi.air.szokpt.views.app.AccountSearchView
@@ -21,12 +22,14 @@ import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DailyProcessesDashboardView
 import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.EditTransactionView
+import foi.air.szokpt.views.app.LatestProcessingDetailsView
 import foi.air.szokpt.views.app.RegistrationView
 import foi.air.szokpt.views.app.TransactionDetailsView
 import foi.air.szokpt.views.app.TransactionsCandidatesView
 import foi.air.szokpt.views.app.TransactionsView
 import hr.foi.air.szokpt.ws.models.responses.User
 import java.nio.charset.StandardCharsets
+import java.time.LocalDateTime
 import java.util.UUID
 
 const val ROUTE_DASHBOARD = "dashboard"
@@ -40,6 +43,7 @@ const val ROUTE_USER_ACCOUNT_OVERVIEW = "user_account"
 const val ROUTE_TRANSACTION_DETAILS = "transaction_details"
 const val ROUTE_TRANSACTIONS_CANDIDATES = "processing_candidates"
 const val ROUTE_EDIT_TRANSACTION = "edit_transaction"
+const val ROUTE_LATEST_PROCESSING_DETAILS = "latest_processing_details"
 
 @Composable
 fun MainScreen() {
@@ -119,13 +123,25 @@ fun MainScreen() {
             }
 
             composable(ROUTE_TRANSACTIONS_CANDIDATES) { TransactionsCandidatesView(navController) }
+            composable(ROUTE_LATEST_PROCESSING_DETAILS) {
+                LatestProcessingDetailsView(
+                    navController,
+                    latestProcessing = LatestProcessing(
+                        100,
+                        LocalDateTime.now(),
+                        "Completed",
+                        50
+                    )
+                )
+            }
 
             composable(
                 route = "${ROUTE_EDIT_TRANSACTION}/{transactionGuid}",
                 arguments = listOf(navArgument("transactionGuid") { type = NavType.StringType })
             ) { backStackEntry ->
                 val transactionGuidString = backStackEntry.arguments?.getString("transactionGuid")
-                val transactionGuid = transactionGuidString?.let { UUID.fromString(it) } ?: return@composable
+                val transactionGuid =
+                    transactionGuidString?.let { UUID.fromString(it) } ?: return@composable
                 EditTransactionView(
                     navController = navController,
                     transactionGuid = transactionGuid
