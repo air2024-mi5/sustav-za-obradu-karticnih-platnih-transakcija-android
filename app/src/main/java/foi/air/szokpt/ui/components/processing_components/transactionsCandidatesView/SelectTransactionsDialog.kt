@@ -14,7 +14,7 @@ fun SelectTransactionsDialog(
     openAddCandidatesDialog: MutableState<Boolean>,
     onConfirm: () -> Unit,
 ) {
-    val dialogTitle = "Confirm Selected Transactions"
+    val dialogTitle = "Confirm Selection"
     DialogComponent(
         onConfirmation = {
             onConfirm()
@@ -22,7 +22,7 @@ fun SelectTransactionsDialog(
         },
         onDismissRequest = { openAddCandidatesDialog.value = false },
         dialogTitle = dialogTitle,
-        dialogText = "Are you sure you want to confirm the selection for daily processing?\n",
+        dialogText = "Are you sure you want to confirm the selected transactions for daily processing?\n",
         iconTop = Icons.Rounded.Check,
         highlightColor = warning,
         containerColor = BGLevelTwo,
