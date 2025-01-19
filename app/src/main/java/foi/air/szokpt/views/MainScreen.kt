@@ -20,6 +20,7 @@ import foi.air.szokpt.views.app.AccountSearchView
 import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DailyProcessesDashboardView
 import foi.air.szokpt.views.app.DashboardView
+import foi.air.szokpt.views.app.EditTransactionView
 import foi.air.szokpt.views.app.RegistrationView
 import foi.air.szokpt.views.app.TransactionDetailsView
 import foi.air.szokpt.views.app.TransactionsCandidatesView
@@ -38,6 +39,7 @@ const val ROUTE_ALL_ACCOUNT_SEARCH = "all_account_search"
 const val ROUTE_USER_ACCOUNT_OVERVIEW = "user_account"
 const val ROUTE_TRANSACTION_DETAILS = "transaction_details"
 const val ROUTE_TRANSACTIONS_CANDIDATES = "processing_candidates"
+const val ROUTE_EDIT_TRANSACTION = "edit_transaction"
 
 @Composable
 fun MainScreen() {
@@ -117,6 +119,18 @@ fun MainScreen() {
             }
 
             composable(ROUTE_TRANSACTIONS_CANDIDATES) { TransactionsCandidatesView(navController) }
+
+            composable(
+                route = "${ROUTE_EDIT_TRANSACTION}/{transactionGuid}",
+                arguments = listOf(navArgument("transactionGuid") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val transactionGuidString = backStackEntry.arguments?.getString("transactionGuid")
+                val transactionGuid = transactionGuidString?.let { UUID.fromString(it) } ?: return@composable
+                EditTransactionView(
+                    navController = navController,
+                    transactionGuid = transactionGuid
+                )
+            }
         }
     }
 }

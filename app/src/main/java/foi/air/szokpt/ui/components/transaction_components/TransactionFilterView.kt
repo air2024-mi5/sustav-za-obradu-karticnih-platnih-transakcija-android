@@ -284,7 +284,9 @@ fun TransactionFilterView(
                     onDateSelected = { date -> validateAndSetAfterDate(date) },
                     label = "After date",
                     initialDate = selectedAfterDate,
-                    maxWidth = 172.dp
+                    maxWidth = 164.dp,
+                    modifier = Modifier.padding(start = 6.dp)
+
                 )
                 if (selectedAfterDate != null && selectedAfterTime != null) {
                     Row(
@@ -297,6 +299,7 @@ fun TransactionFilterView(
                         Text(
                             text = selectedAfterTime!!.format(timeFormatter),
                             fontSize = 16.sp,
+                            color = TextWhite,
                             modifier = Modifier.padding(end = 10.dp)
                         )
                         Icon(
@@ -325,7 +328,8 @@ fun TransactionFilterView(
                     onDateSelected = { date -> validateAndSetBeforeDate(date) },
                     label = "Before date",
                     initialDate = selectedBeforeDate,
-                    maxWidth = 172.dp
+                    maxWidth = 172.dp,
+                    modifier = Modifier.padding(end = 6.dp, start = 4.dp)
                 )
                 if (selectedBeforeDate != null && selectedBeforeTime != null) {
                     Row(
@@ -338,6 +342,7 @@ fun TransactionFilterView(
                         Text(
                             text = selectedBeforeTime!!.format(timeFormatter),
                             fontSize = 16.sp,
+                            color = TextWhite,
                             modifier = Modifier.padding(end = 10.dp)
                         )
                         Icon(
@@ -426,13 +431,6 @@ fun TransactionFilterView(
     }
 }
 
-/**
- * Formats a given date and time into a string representation.
- *
- * @param date The date component of the `LocalDateTime` to format. This should be of type `LocalDate` or `null` if no date is provided.
- * @param time The time component of the `LocalDateTime` to format. This should be of type `LocalTime` or `null` if no time is provided.
- * @return A formatted string in the pattern "dd/MM/yyyy HH:mm:ss" if both `date` and `time` are non-null, or `null` if either is null.
- */
 fun formatTime(date: LocalDate?, time: LocalTime?): String? {
     val tempDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
     return if (date != null && time != null) {

@@ -1,6 +1,6 @@
 package foi.air.szokpt.views.app
 
-import androidx.compose.foundation.background
+import CardBrandsBarChart
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,20 +30,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import foi.air.szokpt.helpers.TransactionUtils
+import foi.air.szokpt.models.CardBrandInformation
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dashboard_components.BarComponent
 import foi.air.szokpt.ui.components.dashboard_components.ChartWithLegend
+import foi.air.szokpt.ui.components.dashboard_components.CustomCircularProgressBar
+import foi.air.szokpt.ui.components.dashboard_components.TransactionsPerDay
+import foi.air.szokpt.ui.components.dashboard_components.TransationsOverviewComponent
 import foi.air.szokpt.ui.theme.Alternative
 import foi.air.szokpt.ui.theme.BGLevelOne
-import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
-import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.ReportsViewModel
+import java.time.LocalDate
 
 @Composable
 fun DashboardView(navController: NavController) {
@@ -59,11 +62,11 @@ fun DashboardView(navController: NavController) {
         item(span = { GridItemSpan(2) }) {
             AllTransactionsTile()
         }
-        item {
+        item(span = { GridItemSpan(2) }) {
             ValueTile()
         }
-        item {
-            CardTypesTile()
+        item(span = { GridItemSpan(2) }) {
+            CardBrandsTile(transactionUtils = TransactionUtils)
         }
         item(span = { GridItemSpan(2) }) {
             TransactionsListTile()
@@ -160,65 +163,16 @@ fun ValueTile() {
 
 @Composable
 fun AllTransactionsTile() {
-    TileSegment(
-        tileSizeMode = TileSizeMode.WRAP_CONTENT,
-        innerPadding = 16.dp,
-        outerMargin = 8.dp,
-        minWidth = 250.dp,
-        minHeight = 20.dp,
-        color = BGLevelOne
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "All Transactions",
-                    color = Color.White,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextRow(label = "This week:", value = "9890", color = Primary)
-                Spacer(modifier = Modifier.height(4.dp))
-                TextRow(label = "Last Week:", value = "8540", color = Alternative)
-            }
-
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(110.dp)
-                    .padding(4.dp)
-            ) {
-                CustomCircularProgressBar(
-                    progress = 0.45f,
-                    modifier = Modifier
-                        .padding(8.dp), // So that both ProgressBars are visible
-                    backgroundColor = Alternative.copy(alpha = 0.5f),
-                    progressColor = Alternative,
-                    strokeWidth = 8.dp
-                )
-                CustomCircularProgressBar(
-                    progress = 0.66f,
-                    modifier = Modifier,
-                    backgroundColor = Secondary,
-                    progressColor = Primary,
-                    strokeWidth = 8.dp
-                )
-                Text(
-                    text = "+13.5%",
-                    color = Color.White,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
-    }
+    val sampleDayData = listOf(
+        TransactionsPerDay(LocalDate.of(2024, 1,13), 14),
+        TransactionsPerDay(LocalDate.of(2024, 1,14), 28),
+        TransactionsPerDay(LocalDate.of(2024, 1,15), 8),
+        TransactionsPerDay(LocalDate.of(2024, 1,16), 14),
+        TransactionsPerDay(LocalDate.of(2024, 1,17), 28),
+        TransactionsPerDay(LocalDate.of(2024, 1,18), 8),
+        TransactionsPerDay(LocalDate.of(2024, 1,19), 8),
+    )
+    TransationsOverviewComponent(sampleDayData)
 }
 
 @Composable
@@ -240,43 +194,6 @@ fun TextRow(label: String, value: String, color: Color) {
         )
     }
 }
-
-
-@Composable
-fun CustomCircularProgressBar(
-    progress: Float,
-    modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.Gray,
-    progressColor: Color = Color.White,
-    strokeWidth: Dp = 8.dp,
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .size(110.dp)
-    ) {
-        CircularProgressIndicator(
-            progress = {
-                1f
-            },
-            modifier = Modifier.fillMaxSize(),
-            color = backgroundColor,
-            strokeWidth = strokeWidth,
-            strokeCap = StrokeCap.Round,
-        )
-
-        CircularProgressIndicator(
-            progress = {
-                progress
-            },
-            modifier = Modifier.fillMaxSize(),
-            color = progressColor,
-            strokeWidth = strokeWidth,
-            strokeCap = StrokeCap.Round,
-        )
-    }
-}
-
 
 @Composable
 fun TransactionsListTile() {
@@ -304,7 +221,17 @@ fun TransactionsListTile() {
 }
 
 @Composable
-fun CardTypesTile() {
+fun CardBrandsTile(transactionUtils: TransactionUtils) {
+
+    val mockStats = listOf(
+        CardBrandInformation("VISA", 10, Color(0xFF1634CC)),
+        CardBrandInformation("DINERS", 3, Color(0xFFc5c5c7)),
+        CardBrandInformation("DISCOVER", 5, Color(0xFFff7001)),
+        CardBrandInformation("MAESTRO", 8, Color(0xFF00a2e5)),
+        CardBrandInformation("AMEX", 1, Color(0xFF006cb7)),
+        CardBrandInformation("MASTERCARD", 5, Color(0xFFf79e1b))
+    )
+
     TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 16.dp,
@@ -331,9 +258,13 @@ fun CardTypesTile() {
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                BarComponent(40.dp, TextGray, "Other", "")
-                BarComponent(80.dp, Secondary, "Visa", "")
-                BarComponent(65.dp, Primary, "Master", "")
+                CardBrandsBarChart(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    stats = mockStats,
+                    transactionUtils = transactionUtils
+                )
             }
         }
     }
@@ -371,7 +302,7 @@ fun TransactionsByDayTile() {
             ) {
                 val transactions = listOf(60.dp, 25.dp, 30.dp, 35.dp, 55.dp, 80.dp, 15.dp)
                 val days = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-                
+
                 transactions.forEachIndexed { index, height ->
                     BarComponent(
                         height = height,
@@ -386,12 +317,12 @@ fun TransactionsByDayTile() {
 }
 
 @Composable
-fun TransactionOutcomes(){
+fun TransactionOutcomes() {
     val viewModel: ReportsViewModel = viewModel()
     val pieChartData by viewModel.pieChartData.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
-  TileSegment(
+    TileSegment(
         tileSizeMode = TileSizeMode.WRAP_CONTENT,
         innerPadding = 16.dp,
         outerMargin = 8.dp,
@@ -423,6 +354,7 @@ fun TransactionOutcomes(){
                         ChartWithLegend(pieChartData)
                     }
                 }
+
                 else -> {
                     Text(
                         text = errorMessage.toString(),

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -32,12 +33,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.helpers.TransactionUtils
 import foi.air.szokpt.ui.components.TileSegment
+import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.components.transaction_components.TransactionDetailRow
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.viewmodels.TransactionDetailsViewModel
+import foi.air.szokpt.views.ROUTE_EDIT_TRANSACTION
 import java.util.UUID
 
 @Composable
@@ -140,7 +143,10 @@ fun TransactionDetailsView(
                                     }
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
-                                        modifier = Modifier.padding(10.dp)
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        modifier = Modifier
+                                            .padding(10.dp)
+                                            .fillMaxWidth()
                                     ) {
                                         val currencySymbol =
                                             TransactionUtils.getCurrencySymbol(transaction!!.currency)
@@ -149,6 +155,16 @@ fun TransactionDetailsView(
                                             color = TextWhite,
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 18.sp
+                                        )
+                                        OutlineBouncingButton(
+                                            onClick = {
+                                                navController.navigate("${ROUTE_EDIT_TRANSACTION}/${transactionGuid}")
+                                            },
+                                            contentColor = TextWhite,
+                                            borderColor = TextWhite,
+                                            inputIcon = Icons.Rounded.Edit,
+                                            inputText = "Edit",
+                                            modifier = Modifier
                                         )
                                     }
                                 }
