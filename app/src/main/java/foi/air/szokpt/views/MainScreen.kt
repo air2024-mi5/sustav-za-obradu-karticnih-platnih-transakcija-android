@@ -21,7 +21,7 @@ import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DailyProcessesDashboardView
 import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.EditTransactionView
-import foi.air.szokpt.views.app.LatestProcessingDetailsView
+import foi.air.szokpt.views.app.ProcessingDetailsView
 import foi.air.szokpt.views.app.RegistrationView
 import foi.air.szokpt.views.app.TransactionDetailsView
 import foi.air.szokpt.views.app.TransactionsCandidatesView
@@ -121,7 +121,7 @@ fun MainScreen() {
             }
 
             composable(ROUTE_TRANSACTIONS_CANDIDATES) { TransactionsCandidatesView(navController) }
-            composable(ROUTE_LATEST_PROCESSING_DETAILS) { LatestProcessingDetailsView(navController) }
+            composable(ROUTE_LATEST_PROCESSING_DETAILS) { ProcessingDetailsView(navController) }
 
             composable(
                 route = "${ROUTE_EDIT_TRANSACTION}/{transactionGuid}",

@@ -28,13 +28,13 @@ import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
-import foi.air.szokpt.viewmodels.LatestProcessingViewModel
+import foi.air.szokpt.viewmodels.ProcessingDetailsViewModel
 
 @Composable
-fun LatestProcessingDetailsView(
+fun ProcessingDetailsView(
     navController: NavController,
 ) {
-    val viewModel: LatestProcessingViewModel = viewModel()
+    val viewModel: ProcessingDetailsViewModel = viewModel()
     val errorMessage by viewModel.errorMessage.observeAsState()
 
     Column(

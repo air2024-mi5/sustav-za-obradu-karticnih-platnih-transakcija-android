@@ -2,7 +2,7 @@ package foi.air.szokpt.models
 
 import hr.foi.air.szokpt.core.processing.BatchRecord
 
-data class LatestProcessing(
+data class ProcessingRecord(
     val status: String = "",
     val scheduledAt: String? = "",
     val processedAt: String? = "",

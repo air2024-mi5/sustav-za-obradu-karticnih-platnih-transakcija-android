@@ -34,10 +34,9 @@ import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
-import foi.air.szokpt.viewmodels.LatestProcessingViewModel
+import foi.air.szokpt.viewmodels.ProcessingDetailsViewModel
 import foi.air.szokpt.views.ROUTE_LATEST_PROCESSING_DETAILS
 import foi.air.szokpt.views.ROUTE_TRANSACTIONS_CANDIDATES
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun DailyProcessesDashboardView(navController: NavController) {
@@ -125,7 +124,7 @@ fun DailyProcessesDashboardView(navController: NavController) {
                     minHeight = 20.dp,
                     color = BGLevelOne
                 ) {
-                    val viewModel: LatestProcessingViewModel = viewModel()
+                    val viewModel: ProcessingDetailsViewModel = viewModel()
                     val errorMessage by viewModel.errorMessage.observeAsState()
 
                     Column(
