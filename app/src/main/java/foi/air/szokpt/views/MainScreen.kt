@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
 import foi.air.szokpt.ExcelClearingFileGenerator
+import foi.air.szokpt.pdf.PdfClearingFileGenerator
 import foi.air.szokpt.ui.LoginPage
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
 import foi.air.szokpt.views.app.AccountSearchView
@@ -70,7 +71,10 @@ fun MainScreen() {
             ).show()
         }
     })
-    val clearingFileGenerators = listOf(ExcelClearingFileGenerator(mediaStoreFileSaver))
+    val clearingFileGenerators = listOf(
+        ExcelClearingFileGenerator(mediaStoreFileSaver),
+        PdfClearingFileGenerator(mediaStoreFileSaver)
+    )
 
     val view = LocalView.current
     if (!view.isInEditMode) {
