@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import foi.air.szokpt.helpers.DateFormatter
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
@@ -36,7 +37,6 @@ import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.viewmodels.LatestProcessingViewModel
 import foi.air.szokpt.views.ROUTE_LATEST_PROCESSING_DETAILS
 import foi.air.szokpt.views.ROUTE_TRANSACTIONS_CANDIDATES
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun DailyProcessesDashboardView(navController: NavController) {
@@ -124,9 +124,7 @@ fun DailyProcessesDashboardView(navController: NavController) {
                     minHeight = 20.dp,
                     color = BGLevelOne
                 ) {
-                    val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm")
                     val viewModel: LatestProcessingViewModel = viewModel()
-
                     val errorMessage by viewModel.errorMessage.observeAsState()
 
                     Column(
@@ -145,52 +143,53 @@ fun DailyProcessesDashboardView(navController: NavController) {
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(start = 15.dp),
-                                verticalArrangement = Arrangement.Top
-                            ) {
-                                when (errorMessage) {
-                                    null -> {
+                            viewModel.fetchLatestProcessing()
+                            when (errorMessage) {
+                                null -> {
+                                    Column(
+                                        modifier = Modifier
+                                            .padding(start = 15.dp),
+                                        verticalArrangement = Arrangement.Top
+                                    ) {
                                         val latestProcessing =
                                             viewModel.latestProcessing.observeAsState().value
                                         if (latestProcessing != null) {
                                             Text(
-                                                text = "Last processing was made on:",
+                                                text = "Processed on:",
                                                 color = TextWhite,
                                                 fontSize = 15.sp
                                             )
                                             Text(
                                                 text = "${
-                                                    latestProcessing.processedAt?.format(
-                                                        formatter
-                                                    )
-                                                }h",
+                                                    latestProcessing.processedAt?.let {
+                                                        DateFormatter.format(
+                                                            it
+                                                        )
+                                                    }
+                                                }",
                                                 color = TextWhite,
                                                 fontSize = 15.sp
                                             )
                                         }
                                     }
-
-                                    else -> {
-                                        Text(
-                                            text = errorMessage!!,
-                                            color = TextWhite,
-                                            fontSize = 15.sp
-                                        )
+                                    OutlineBouncingButton(
+                                        modifier = Modifier.width(100.dp),
+                                        inputText = "",
+                                        inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
+                                        contentColor = Primary,
+                                        borderColor = Secondary,
+                                    ) {
+                                        navController.navigate(ROUTE_LATEST_PROCESSING_DETAILS)
                                     }
                                 }
 
-                            }
-
-                            OutlineBouncingButton(
-                                modifier = Modifier.width(100.dp),
-                                inputText = "",
-                                inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
-                                contentColor = Primary,
-                                borderColor = Secondary,
-                            ) {
-                                navController.navigate(ROUTE_LATEST_PROCESSING_DETAILS)
+                                else -> {
+                                    Text(
+                                        text = errorMessage!!,
+                                        color = TextWhite,
+                                        fontSize = 15.sp
+                                    )
+                                }
                             }
                         }
                     }

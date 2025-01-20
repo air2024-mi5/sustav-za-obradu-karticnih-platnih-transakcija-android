@@ -14,26 +14,28 @@ import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import foi.air.szokpt.models.LatestProcessing
+import foi.air.szokpt.helpers.DateFormatter
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
-import java.time.format.DateTimeFormatter
+import foi.air.szokpt.viewmodels.LatestProcessingViewModel
 
 @Composable
 fun LatestProcessingDetailsView(
     navController: NavController,
-    latestProcessing: LatestProcessing
 ) {
-    val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm")
-    val formattedDate = latestProcessing.date.format(formatter)
+    val viewModel: LatestProcessingViewModel = viewModel()
+    val errorMessage by viewModel.errorMessage.observeAsState()
 
     Column(
         modifier = Modifier
@@ -42,14 +44,7 @@ fun LatestProcessingDetailsView(
         verticalArrangement = Arrangement.Top
     ) {
         Text(
-            text = "Latest Processing Details",
-            color = TextWhite.copy(alpha = 0.7f),
-            fontSize = 18.sp,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        Text(
-            text = "Process #${latestProcessing.id}",
+            text = "Latest Processing",
             color = TextWhite,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
@@ -66,53 +61,93 @@ fun LatestProcessingDetailsView(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.padding(start = 5.dp)
-                ) {
-                    Text(
-                        text = "Status: ${latestProcessing.status}",
-                        color = TextWhite,
-                        fontSize = 15.sp
-                    )
-                    Text(
-                        text = "Finished: ${formattedDate}h",
-                        color = TextWhite,
-                        fontSize = 15.sp
-                    )
-                    Text(
-                        text = "Transactions processed: ${latestProcessing.processedTransactions}",
-                        color = TextWhite,
-                        fontSize = 15.sp
-                    )
-                }
+                viewModel.fetchLatestProcessing()
+                when (errorMessage) {
+                    null -> {
+                        val latestProcessing = viewModel.latestProcessing.observeAsState().value
+                        if (latestProcessing != null) {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(4.dp),
+                                modifier = Modifier.padding(start = 5.dp)
+                            ) {
+                                Text(
+                                    text = "Status: ${latestProcessing.status}",
+                                    color = TextWhite,
+                                    fontSize = 15.sp
+                                )
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    OutlineBouncingButton(
-                        modifier = Modifier.weight(1f),
-                        inputText = "Export PDF",
-                        inputIcon = Icons.Default.ExitToApp,
-                        contentColor = Primary,
-                        borderColor = Secondary,
-                        fontSize = 14.sp,
-                        spacer = 10.dp
-                    ) {
-                        // TODO Handle PDF download
+                                Text(
+                                    text = "Scheduled at: ${
+                                        latestProcessing.scheduledAt?.let {
+                                            DateFormatter.format(
+                                                it
+                                            )
+                                        }
+                                    }",
+                                    color = TextWhite,
+                                    fontSize = 15.sp
+                                )
+
+                                Text(
+                                    text = "Processed at: ${
+                                        latestProcessing.processedAt?.let {
+                                            DateFormatter.format(
+                                                it
+                                            )
+                                        }
+                                    }",
+                                    color = TextWhite,
+                                    fontSize = 15.sp
+                                )
+                                Text(
+                                    text = "Transactions processed: ${latestProcessing.processedTransactionsCount}",
+                                    color = TextWhite,
+                                    fontSize = 15.sp
+                                )
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                OutlineBouncingButton(
+                                    modifier = Modifier.weight(1f),
+                                    inputText = "Export PDF",
+                                    inputIcon = Icons.Default.ExitToApp,
+                                    contentColor = Primary,
+                                    borderColor = Secondary,
+                                    fontSize = 14.sp,
+                                    spacer = 10.dp
+                                ) {
+                                    // TODO Handle PDF download
+                                }
+
+                                OutlineBouncingButton(
+                                    modifier = Modifier.weight(1f),
+                                    inputText = "Export Excel",
+                                    inputIcon = Icons.Default.ExitToApp,
+                                    contentColor = Primary,
+                                    borderColor = Secondary,
+                                    fontSize = 14.sp,
+                                    spacer = 10.dp
+                                ) {
+                                    // TODO Handle excel download
+                                }
+                            }
+                        } else {
+                            Text(
+                                text = "No data about last processing.",
+                                color = TextWhite,
+                                fontSize = 15.sp
+                            )
+                        }
                     }
 
-                    OutlineBouncingButton(
-                        modifier = Modifier.weight(1f),
-                        inputText = "Export Excel",
-                        inputIcon = Icons.Default.ExitToApp,
-                        contentColor = Primary,
-                        borderColor = Secondary,
-                        fontSize = 14.sp,
-                        spacer = 10.dp
-                    ) {
-                        // TODO Handle excel download
+                    else -> {
+                        Text(
+                            text = errorMessage!!,
+                            color = TextWhite,
+                            fontSize = 15.sp
+                        )
                     }
                 }
             }
