@@ -1,11 +1,13 @@
 package foi.air.szokpt.views
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavType
@@ -26,6 +28,9 @@ import foi.air.szokpt.views.app.RegistrationView
 import foi.air.szokpt.views.app.TransactionDetailsView
 import foi.air.szokpt.views.app.TransactionsCandidatesView
 import foi.air.szokpt.views.app.TransactionsView
+import hr.foi.air.szokpt.core.file_generation.ExcelClearingFileGenerator
+import hr.foi.air.szokpt.core.file_generation.FileSavingOutcomeListener
+import hr.foi.air.szokpt.core.file_generation.MediaStoreFileSaver
 import hr.foi.air.szokpt.ws.models.responses.User
 import java.nio.charset.StandardCharsets
 import java.util.UUID
@@ -47,6 +52,25 @@ const val ROUTE_LATEST_PROCESSING_DETAILS = "latest_processing_details"
 fun MainScreen() {
     val navController = rememberNavController()
     val isAuthenticated = remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val mediaStoreFileSaver = MediaStoreFileSaver(context, object : FileSavingOutcomeListener {
+        override fun onFailedSaving() {
+            Toast.makeText(
+                context,
+                "Something went wrong while trying to save the document",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        override fun onFailedFileOpening() {
+            Toast.makeText(
+                context,
+                "Could not open the generated file",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    })
+    val clearingFileGenerators = listOf(ExcelClearingFileGenerator(mediaStoreFileSaver))
 
     val view = LocalView.current
     if (!view.isInEditMode) {
@@ -121,7 +145,12 @@ fun MainScreen() {
             }
 
             composable(ROUTE_TRANSACTIONS_CANDIDATES) { TransactionsCandidatesView(navController) }
-            composable(ROUTE_LATEST_PROCESSING_DETAILS) { ProcessingDetailsView(navController) }
+            composable(ROUTE_LATEST_PROCESSING_DETAILS) {
+                ProcessingDetailsView(
+                    navController,
+                    clearingFileGenerators
+                )
+            }
 
             composable(
                 route = "${ROUTE_EDIT_TRANSACTION}/{transactionGuid}",
