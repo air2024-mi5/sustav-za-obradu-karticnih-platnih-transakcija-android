@@ -15,13 +15,17 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import foi.air.szokpt.helpers.DateFormatter
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
@@ -30,9 +34,9 @@ import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
+import foi.air.szokpt.viewmodels.ProcessingDetailsViewModel
 import foi.air.szokpt.views.ROUTE_LATEST_PROCESSING_DETAILS
 import foi.air.szokpt.views.ROUTE_TRANSACTIONS_CANDIDATES
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun DailyProcessesDashboardView(navController: NavController) {
@@ -120,7 +124,8 @@ fun DailyProcessesDashboardView(navController: NavController) {
                     minHeight = 20.dp,
                     color = BGLevelOne
                 ) {
-                    val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm")
+                    val viewModel: ProcessingDetailsViewModel = viewModel()
+                    val errorMessage by viewModel.errorMessage.observeAsState()
 
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -138,31 +143,53 @@ fun DailyProcessesDashboardView(navController: NavController) {
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(start = 15.dp),
-                                verticalArrangement = Arrangement.Top
-                            ) {
-                                Text(
-                                    text = "Process #${latestProcessing.id}",
-                                    color = TextWhite,
-                                    fontSize = 15.sp
-                                )
-                                Text(
-                                    text = "${latestProcessing.date.format(formatter)}h",
-                                    color = TextWhite,
-                                    fontSize = 15.sp
-                                )
-                            }
+                            viewModel.fetchLatestProcessing()
+                            when (errorMessage) {
+                                null -> {
+                                    Column(
+                                        modifier = Modifier
+                                            .padding(start = 15.dp),
+                                        verticalArrangement = Arrangement.Top
+                                    ) {
+                                        val latestProcessing =
+                                            viewModel.latestProcessing.observeAsState().value
+                                        if (latestProcessing != null) {
+                                            Text(
+                                                text = "Processed on:",
+                                                color = TextWhite,
+                                                fontSize = 15.sp
+                                            )
+                                            Text(
+                                                text = "${
+                                                    latestProcessing.processedAt?.let {
+                                                        DateFormatter.format(
+                                                            it
+                                                        )
+                                                    }
+                                                }",
+                                                color = TextWhite,
+                                                fontSize = 15.sp
+                                            )
+                                        }
+                                    }
+                                    OutlineBouncingButton(
+                                        modifier = Modifier.width(100.dp),
+                                        inputText = "",
+                                        inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
+                                        contentColor = Primary,
+                                        borderColor = Secondary,
+                                    ) {
+                                        navController.navigate(ROUTE_LATEST_PROCESSING_DETAILS)
+                                    }
+                                }
 
-                            OutlineBouncingButton(
-                                modifier = Modifier.width(100.dp),
-                                inputText = "",
-                                inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
-                                contentColor = Primary,
-                                borderColor = Secondary,
-                            ) {
-                                navController.navigate(ROUTE_LATEST_PROCESSING_DETAILS)
+                                else -> {
+                                    Text(
+                                        text = errorMessage!!,
+                                        color = TextWhite,
+                                        fontSize = 15.sp
+                                    )
+                                }
                             }
                         }
                     }
