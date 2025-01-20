@@ -37,6 +37,7 @@ import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.viewmodels.LatestProcessingViewModel
 import foi.air.szokpt.views.ROUTE_LATEST_PROCESSING_DETAILS
 import foi.air.szokpt.views.ROUTE_TRANSACTIONS_CANDIDATES
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun DailyProcessesDashboardView(navController: NavController) {
@@ -194,7 +195,6 @@ fun DailyProcessesDashboardView(navController: NavController) {
                         }
                     }
                 }
-
             }
             item(span = { GridItemSpan(2) }) {
             }
