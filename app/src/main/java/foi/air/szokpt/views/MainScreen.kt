@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
+import foi.air.szokpt.ExcelClearingFileGenerator
 import foi.air.szokpt.ui.LoginPage
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
 import foi.air.szokpt.views.app.AccountSearchView
@@ -28,7 +29,6 @@ import foi.air.szokpt.views.app.RegistrationView
 import foi.air.szokpt.views.app.TransactionDetailsView
 import foi.air.szokpt.views.app.TransactionsCandidatesView
 import foi.air.szokpt.views.app.TransactionsView
-import hr.foi.air.szokpt.core.file_generation.ExcelClearingFileGenerator
 import hr.foi.air.szokpt.core.file_generation.FileSavingOutcomeListener
 import hr.foi.air.szokpt.core.file_generation.MediaStoreFileSaver
 import hr.foi.air.szokpt.ws.models.responses.User

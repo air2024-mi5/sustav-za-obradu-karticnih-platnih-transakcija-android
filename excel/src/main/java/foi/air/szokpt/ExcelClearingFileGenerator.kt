@@ -1,5 +1,7 @@
-package hr.foi.air.szokpt.core.file_generation
+package foi.air.szokpt
 
+import hr.foi.air.szokpt.core.file_generation.ClearingFileGenerator
+import hr.foi.air.szokpt.core.file_generation.FileSaver
 import hr.foi.air.szokpt.core.processing.ProcessingRecord
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
