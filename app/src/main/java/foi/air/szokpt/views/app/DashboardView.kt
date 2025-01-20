@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.helpers.TransactionUtils
 import foi.air.szokpt.models.CardBrandInformation
+import foi.air.szokpt.ui.components.IconMessage
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dashboard_components.ChartWithLegend
 import foi.air.szokpt.ui.components.dashboard_components.TransactionsOverviewComponent
@@ -286,7 +289,11 @@ fun TransactionsPerDayTile(
         }
 
         else -> {
-            TransactionsOverviewComponent(emptyList(), errorMessage!!)
+            IconMessage(
+                "Couldn't display transactions per day.",
+                errorMessage!!,
+                Icons.Default.Clear
+            )
         }
     }
 }
