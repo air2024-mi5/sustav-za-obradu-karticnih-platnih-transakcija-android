@@ -1,10 +1,12 @@
 package hr.foi.air.szokpt.ws.models.responses
 
-import com.google.gson.annotations.SerializedName
+import hr.foi.air.szokpt.core.processing.BatchRecord as CoreBatchRecord
 
-data class BatchRecord(
-    @SerializedName("batch_header") val batchHeader: String,
-    @SerializedName("terminal_parameter_record") val terminalParameterRecord: String,
-    @SerializedName("batch_trailer") val batchTrailer: String,
-    @SerializedName("transaction_records") val transactionRecords: List<String>,
-)
+fun CoreBatchRecord.toCoreBatchRecord(): CoreBatchRecord {
+    return CoreBatchRecord(
+        batchHeader = this.batchHeader,
+        terminalParameterRecord = this.terminalParameterRecord,
+        batchTrailer = this.batchTrailer,
+        transactionRecords = this.transactionRecords
+    )
+}

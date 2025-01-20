@@ -8,7 +8,6 @@ import foi.air.szokpt.helpers.LatestProcessingHandler
 import foi.air.szokpt.models.LatestProcessing
 import hr.foi.air.szokpt.core.processing.BatchRecord
 import hr.foi.air.szokpt.core.processing.LatestProcessingOutcomeListener
-import java.time.LocalDateTime
 
 class LatestProcessingViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String?>(null)
@@ -27,8 +26,8 @@ class LatestProcessingViewModel : ViewModel() {
                 object : LatestProcessingOutcomeListener {
                     override fun onSuccessfulLatestProcessingFetch(
                         status: String,
-                        scheduledAt: LocalDateTime,
-                        processedAt: LocalDateTime,
+                        scheduledAt: String,
+                        processedAt: String,
                         batchRecords: List<BatchRecord>,
                         processedTransactionsCount: Int
                     ) {

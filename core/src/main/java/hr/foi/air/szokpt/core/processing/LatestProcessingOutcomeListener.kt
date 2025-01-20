@@ -1,12 +1,10 @@
 package hr.foi.air.szokpt.core.processing
 
-import java.time.LocalDateTime
-
 interface LatestProcessingOutcomeListener {
     fun onSuccessfulLatestProcessingFetch(
         status: String,
-        scheduledAt: LocalDateTime,
-        processedAt: LocalDateTime,
+        scheduledAt: String,
+        processedAt: String,
         batchRecords: List<BatchRecord>,
         processedTransactionsCount: Int
     )
