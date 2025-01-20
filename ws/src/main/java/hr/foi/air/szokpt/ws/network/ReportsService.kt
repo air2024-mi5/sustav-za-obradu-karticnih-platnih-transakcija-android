@@ -10,7 +10,7 @@ import retrofit2.http.Header
 
 interface ReportsService {
     @GET("/reports/successful-transactions")
-    fun getTransactionsSuccess(): Call<SuccessfulResponseBody<TransactionsSuccessResponse>>
+    fun getTransactionsSuccess(@Header("Authorization") authHeader: String): Call<SuccessfulResponseBody<TransactionsSuccessResponse>>
 
     @GET("/reports/card-brands")
     fun getCardBrandsStatistics(@Header("Authorization") authHeader: String): Call<SuccessfulResponseBody<CardBrandsStatisticsResponse>>
