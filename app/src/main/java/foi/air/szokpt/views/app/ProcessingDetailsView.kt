@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +39,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun ProcessingDetailsView(
     navController: NavController,
-    clearingFileGenerators: List<ClearingFileGenerator>,
+    clearingFileGenerators: Map<String, ClearingFileGenerator>,
 ) {
     val viewModel: ProcessingDetailsViewModel = viewModel()
     val errorMessage by viewModel.errorMessage.observeAsState()
@@ -112,40 +112,39 @@ fun ProcessingDetailsView(
                                     fontSize = 15.sp
                                 )
                             }
-                            Row(
+                            Column(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceEvenly
+                                verticalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
-                                OutlineBouncingButton(
-                                    modifier = Modifier.weight(1f),
-                                    inputText = "Export PDF",
-                                    inputIcon = Icons.Default.ExitToApp,
-                                    contentColor = Primary,
-                                    borderColor = Secondary,
-                                    fontSize = 14.sp,
-                                    spacer = 10.dp
-                                ) {
-                                    // TODO Handle PDF download
-                                }
-
-                                OutlineBouncingButton(
-                                    modifier = Modifier.weight(1f),
-                                    inputText = "Export Excel",
-                                    inputIcon = Icons.Default.ExitToApp,
-                                    contentColor = Primary,
-                                    borderColor = Secondary,
-                                    fontSize = 14.sp,
-                                    spacer = 10.dp
-                                ) {
-                                    viewModel.viewModelScope.launch {
-                                        withContext(Dispatchers.IO) {
-                                            clearingFileGenerators[0].generateFile(
-                                                processingRecord = latestProcessing,
-                                                "test"
-                                            )
+                                clearingFileGenerators.entries.chunked(2).forEach { chunk ->
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceEvenly
+                                    ) {
+                                        chunk.forEach { (label, generator) ->
+                                            OutlineBouncingButton(
+                                                modifier = Modifier.weight(1f),
+                                                inputText = label,
+                                                inputIcon = Icons.AutoMirrored.Filled.ExitToApp,
+                                                contentColor = Primary,
+                                                borderColor = Secondary,
+                                                fontSize = 14.sp,
+                                                spacer = 10.dp
+                                            ) {
+                                                viewModel.viewModelScope.launch {
+                                                    withContext(Dispatchers.IO) {
+                                                        generator.generateFile(
+                                                            processingRecord = latestProcessing,
+                                                            fileName = "processing_report_" +
+                                                                    latestProcessing.processedAt?.let {
+                                                                        DateFormatter.format(it)
+                                                                    }
+                                                        )
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
-
                                 }
                             }
                         } else {
