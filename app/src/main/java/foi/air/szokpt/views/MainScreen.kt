@@ -71,9 +71,9 @@ fun MainScreen() {
             ).show()
         }
     })
-    val clearingFileGenerators = listOf(
-        ExcelClearingFileGenerator(mediaStoreFileSaver),
-        PdfClearingFileGenerator(mediaStoreFileSaver)
+    val clearingFileGenerators = mapOf(
+        "Export PDF" to PdfClearingFileGenerator(mediaStoreFileSaver),
+        "Export Excel" to ExcelClearingFileGenerator(mediaStoreFileSaver),
     )
 
     val view = LocalView.current
