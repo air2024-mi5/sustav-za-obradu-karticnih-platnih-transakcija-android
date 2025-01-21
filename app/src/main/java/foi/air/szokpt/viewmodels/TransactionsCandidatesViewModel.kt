@@ -139,8 +139,22 @@ class TransactionsCandidatesViewModel : ViewModel() {
         _selectedGuids.value = SelectedTransactions(transactions = updatedTransactions)
     }
 
+    fun initializeFilter() {
+        _transactionsFilter.value = TransactionFilter(
+            cardBrands = emptyList(),
+            trxTypes = emptyList(),
+            minAmount = null,
+            maxAmount = null,
+            afterDate = null,
+            beforeDate = null,
+            processed = false
+        )
+    }
+
     fun setFilter(filter: TransactionFilter?) {
         _transactionsFilter.value = filter
+        _transactionsFilter.value = _transactionsFilter.value?.copy(processed = false)
+        println("Filter:" + _transactionsFilter.value?.processed)
     }
 
     private fun getJwtTokenOrShowError(): String? {
