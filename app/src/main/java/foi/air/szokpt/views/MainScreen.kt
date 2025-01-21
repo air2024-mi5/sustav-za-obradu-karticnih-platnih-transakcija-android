@@ -1,5 +1,7 @@
 package foi.air.szokpt.views
 
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -56,19 +58,23 @@ fun MainScreen() {
     val context = LocalContext.current
     val mediaStoreFileSaver = MediaStoreFileSaver(context, object : FileSavingOutcomeListener {
         override fun onFailedSaving() {
-            Toast.makeText(
-                context,
-                "Something went wrong while trying to save the document",
-                Toast.LENGTH_LONG
-            ).show()
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    context,
+                    "Something went wrong while trying to save the document",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
         override fun onFailedFileOpening() {
-            Toast.makeText(
-                context,
-                "Could not open the generated file",
-                Toast.LENGTH_LONG
-            ).show()
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    context,
+                    "Could not open the generated file",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     })
     val clearingFileGenerators = mapOf(
