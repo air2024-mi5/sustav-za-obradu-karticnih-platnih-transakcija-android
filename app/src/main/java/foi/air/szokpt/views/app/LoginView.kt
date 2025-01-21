@@ -88,9 +88,13 @@ fun LoginView(
                     modifier = Modifier.padding(16.dp, vertical = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Spacer(modifier = Modifier.height(15.dp))
-
-                    // polje za username
+                    Text(
+                        text = errorMessage,
+                        color = danger,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                    )
                     StyledTextField(
                         label = "Username",
                         value = username,
@@ -100,7 +104,6 @@ fun LoginView(
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    // polje za lozinku
                     StyledTextField(
                         label = "Password",
                         value = password,
@@ -110,7 +113,6 @@ fun LoginView(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // gumb za prijavu
                     Button(
                         onClick = {
                             val loginData = LoginBody(username, password)
@@ -135,26 +137,6 @@ fun LoginView(
                     ) {
                         Text(text = "Login", color = Color.White, fontWeight = FontWeight.Bold)
                     }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = "Help?",
-                        color = Primary,
-                        fontSize = 14.sp,
-                        modifier = Modifier
-                            .clickable { /* TODO: Dodati logiku za help */ }
-                            .padding(top = 8.dp)
-                    )
-
-                    // tekst za ispis greške
-                    Text(
-                        text = errorMessage,
-                        color = danger,
-                        fontSize = 14.sp,
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                    )
                 }
             }
         }
