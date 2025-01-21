@@ -156,16 +156,18 @@ fun TransactionDetailsView(
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 18.sp
                                         )
-                                        OutlineBouncingButton(
-                                            onClick = {
-                                                navController.navigate("${ROUTE_EDIT_TRANSACTION}/${transactionGuid}")
-                                            },
-                                            contentColor = TextWhite,
-                                            borderColor = TextWhite,
-                                            inputIcon = Icons.Rounded.Edit,
-                                            inputText = "Edit",
-                                            modifier = Modifier
-                                        )
+                                        if (!transaction!!.processed) {
+                                            OutlineBouncingButton(
+                                                onClick = {
+                                                    navController.navigate("${ROUTE_EDIT_TRANSACTION}/${transactionGuid}")
+                                                },
+                                                contentColor = TextWhite,
+                                                borderColor = TextWhite,
+                                                inputIcon = Icons.Rounded.Edit,
+                                                inputText = "Edit",
+                                                modifier = Modifier
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -252,7 +254,7 @@ fun TransactionDetailsView(
                             )
                             TransactionDetailRow(
                                 "Status",
-                                if (transaction!!.processed) "Processed" else "Pending"
+                                if (transaction!!.processed) "Processed" else "Not processed"
                             )
                             TransactionDetailRow("Response Code", transaction!!.responseCode)
                         }
