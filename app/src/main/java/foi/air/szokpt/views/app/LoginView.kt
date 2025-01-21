@@ -117,7 +117,7 @@ fun LoginView(
 
                     Button(
                         onClick = {
-                            val loginData = LoginBody(username, password)
+                            val loginData = LoginBody(username.trim(), password)
                             isAwaitingResponse = true
                             viewModel.login(
                                 loginHandler,
