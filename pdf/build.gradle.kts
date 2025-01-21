@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "hr.foi.air.core"
+    namespace = "foi.air.szokpt.pdf"
     compileSdk = 35
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 29
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -33,6 +33,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
+    implementation("com.itextpdf:itext7-core:7.2.3")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
