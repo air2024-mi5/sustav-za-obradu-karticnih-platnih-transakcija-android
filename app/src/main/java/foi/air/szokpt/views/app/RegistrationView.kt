@@ -248,7 +248,8 @@ fun RegistrationView(navController: NavController, userType: String) {
                                         "",
                                 iconTop = Icons.Rounded.CheckCircle,
                                 highlightColor = success,
-                                containerColor = BGLevelTwo
+                                containerColor = BGLevelTwo,
+                                titleColor = Color.White
                             )
                         }
                         if (showMessage) {
