@@ -1,6 +1,4 @@
-package foi.air.szokpt.models
-
-import hr.foi.air.szokpt.core.processing.BatchRecord
+package hr.foi.air.szokpt.core.processing
 
 data class ProcessingRecord(
     val status: String = "",

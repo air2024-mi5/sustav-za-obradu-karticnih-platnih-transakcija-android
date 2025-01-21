@@ -16,10 +16,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.helpers.DateFormatter
@@ -29,14 +31,19 @@ import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.viewmodels.ProcessingDetailsViewModel
+import hr.foi.air.szokpt.core.file_generation.ClearingFileGenerator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun ProcessingDetailsView(
     navController: NavController,
+    clearingFileGenerators: List<ClearingFileGenerator>,
 ) {
     val viewModel: ProcessingDetailsViewModel = viewModel()
     val errorMessage by viewModel.errorMessage.observeAsState()
-
+    val coroutineScope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -130,7 +137,15 @@ fun ProcessingDetailsView(
                                     fontSize = 14.sp,
                                     spacer = 10.dp
                                 ) {
-                                    // TODO Handle excel download
+                                    viewModel.viewModelScope.launch {
+                                        withContext(Dispatchers.IO) {
+                                            clearingFileGenerators[0].generateFile(
+                                                processingRecord = latestProcessing,
+                                                "test"
+                                            )
+                                        }
+                                    }
+
                                 }
                             }
                         } else {

@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.context.Auth
 import foi.air.szokpt.helpers.LatestProcessingHandler
-import foi.air.szokpt.models.ProcessingRecord
 import hr.foi.air.szokpt.core.processing.BatchRecord
 import hr.foi.air.szokpt.core.processing.LatestProcessingOutcomeListener
+import hr.foi.air.szokpt.core.processing.ProcessingRecord
 
 class ProcessingDetailsViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String?>(null)
