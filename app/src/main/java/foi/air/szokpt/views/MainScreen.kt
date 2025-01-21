@@ -18,7 +18,7 @@ import androidx.navigation.navArgument
 import com.google.gson.Gson
 import foi.air.szokpt.ExcelClearingFileGenerator
 import foi.air.szokpt.pdf.PdfClearingFileGenerator
-import foi.air.szokpt.ui.LoginPage
+import foi.air.szokpt.views.app.LoginView
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
 import foi.air.szokpt.views.app.AccountSearchView
 import foi.air.szokpt.views.app.AccountView
@@ -95,7 +95,7 @@ fun MainScreen() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(ROUTE_LOGIN) {
-                LoginPage(
+                LoginView(
                     onSuccessfulLogin = {
                         isAuthenticated.value = true
                         navController.navigate("dashboard") {

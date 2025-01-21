@@ -1,4 +1,4 @@
-package foi.air.szokpt.ui
+package foi.air.szokpt.views.app
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -45,7 +45,7 @@ import hr.foi.air.szokpt.core.login.LoginBody
 
 
 @Composable
-fun LoginPage(
+fun LoginView(
     viewModel: LoginViewModel = viewModel(),
     onSuccessfulLogin: (username: String) -> Unit
 ) {
@@ -164,5 +164,5 @@ fun LoginPage(
 @Preview(showBackground = true)
 @Composable
 fun LoginPagePreview() {
-    LoginPage(onSuccessfulLogin = {})
+    LoginView(onSuccessfulLogin = {})
 }
