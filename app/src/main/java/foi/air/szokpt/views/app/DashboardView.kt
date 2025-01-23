@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.helpers.TransactionUtils
-import foi.air.szokpt.models.CardBrandInformation
 import foi.air.szokpt.ui.components.IconMessage
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dashboard_components.ChartWithLegend
@@ -69,9 +68,6 @@ fun DashboardView(navController: NavController) {
         }
         item(span = { GridItemSpan(2) }) {
             CardBrandsTile(transactionUtils = TransactionUtils)
-        }
-        item(span = { GridItemSpan(2) }) {
-            TransactionsListTile()
         }
         item(span = { GridItemSpan(2) }) {
             TransactionOutcomes()
@@ -156,51 +152,6 @@ fun ValueTile() {
                     fontWeight = FontWeight.Bold
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun TextRow(label: String, value: String, color: Color) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = label,
-            color = Color.White,
-            fontSize = 14.sp
-        )
-        Spacer(modifier = Modifier.width(4.dp))
-        Text(
-            text = value,
-            color = color,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-@Composable
-fun TransactionsListTile() {
-    TileSegment(
-        tileSizeMode = TileSizeMode.WRAP_CONTENT,
-        innerPadding = 16.dp,
-        outerMargin = 8.dp,
-        minWidth = 250.dp,
-        minHeight = 20.dp,
-        color = BGLevelOne
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-
-            Text(
-                text = "Transactions list",
-                color = TextWhite,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 4.dp)
-            )
         }
     }
 }

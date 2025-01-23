@@ -1,6 +1,5 @@
 package foi.air.szokpt.views.app
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -213,7 +212,8 @@ fun EditTransactionView(
                                 TransactionUtils.getCurrencySymbol(currentTransaction!!.currency)
                             StyledTextField(
                                 label = "New $currencySymbol Amount",
-                                value = selectedNewAmount?.toString() ?: currentTransaction!!.amount.toString(),
+                                value = selectedNewAmount?.toString()
+                                    ?: currentTransaction!!.amount.toString(),
                                 onValueChange = { newValue ->
                                     newValue.toDoubleOrNull()?.let { newAmount ->
                                         selectedNewAmount = newAmount
@@ -230,8 +230,10 @@ fun EditTransactionView(
                             val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                             val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
 
-                            val initialDate = LocalDate.parse(originalTimestamp.split(" ")[0], dateFormatter)
-                            val initialTime = LocalTime.parse(originalTimestamp.split(" ")[1], timeFormatter)
+                            val initialDate =
+                                LocalDate.parse(originalTimestamp.split(" ")[0], dateFormatter)
+                            val initialTime =
+                                LocalTime.parse(originalTimestamp.split(" ")[1], timeFormatter)
 
                             var selectedDate by remember { mutableStateOf<LocalDate?>(initialDate) }
                             var selectedTime by remember { mutableStateOf<LocalTime?>(initialTime) }
@@ -270,7 +272,11 @@ fun EditTransactionView(
                                             .padding(top = 4.dp)
                                     ) {
                                         Text(
-                                            text = selectedTime!!.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                                            text = selectedTime!!.format(
+                                                DateTimeFormatter.ofPattern(
+                                                    "HH:mm:ss"
+                                                )
+                                            ),
                                             color = TextWhite,
                                             fontSize = 16.sp,
                                         )
@@ -296,14 +302,15 @@ fun EditTransactionView(
                             }
                         }
                     }
-                    if(!errorMessage.isNullOrEmpty()){
+                    if (!errorMessage.isNullOrEmpty()) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .heightIn(max = 80.dp)
                                 .padding(bottom = 20.dp),
                             contentAlignment = Alignment.Center
-                        ) { Text(
+                        ) {
+                            Text(
                                 modifier = Modifier.padding(16.dp),
                                 text = errorMessage!!,
                                 color = warning,
@@ -328,7 +335,7 @@ fun EditTransactionView(
 
                         showDialog = false
                         navController.navigate("transaction_details/${storedTransaction!!.guid}")
-                    }else{
+                    } else {
                         showDialog = false
                         viewModel.setMessage("Please check your input!")
                     }
@@ -341,7 +348,8 @@ fun EditTransactionView(
                 confirmationText = "Save",
                 dismissText = "Cancel",
                 iconConfirm = Icons.Rounded.Check,
-                iconDismiss = Icons.Rounded.Close
+                iconDismiss = Icons.Rounded.Close,
+                titleColor = Color.White
             )
         }
 

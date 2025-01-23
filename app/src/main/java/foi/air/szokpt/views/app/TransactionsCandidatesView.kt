@@ -84,6 +84,7 @@ fun TransactionsCandidatesView(
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         if (transactions.isEmpty()) {
+            viewModel.initializeFilter()
             viewModel.fetchSelectedTransactions()
             viewModel.fetchTransactionPage()
         }
@@ -265,7 +266,7 @@ fun TransactionsCandidatesView(
             onRemoveFilters = {
                 hasFilters = false
                 isFilterExpanded = false
-                viewModel.setFilter(null)
+                viewModel.initializeFilter()
                 viewModel.fetchTransactionPage()
             },
             filterOptionsContent = {

@@ -1,4 +1,4 @@
-package foi.air.szokpt.ui
+package foi.air.szokpt.views.app
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,7 +46,7 @@ import hr.foi.air.szokpt.core.login.LoginBody
 
 
 @Composable
-fun LoginPage(
+fun LoginView(
     viewModel: LoginViewModel = viewModel(),
     onSuccessfulLogin: (username: String) -> Unit
 ) {
@@ -67,6 +68,7 @@ fun LoginPage(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
+                .imePadding()
         ) {
             Image(
                 painter = painterResource(id = R.drawable.logo),
@@ -88,9 +90,13 @@ fun LoginPage(
                     modifier = Modifier.padding(16.dp, vertical = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Spacer(modifier = Modifier.height(15.dp))
-
-                    // polje za username
+                    Text(
+                        text = errorMessage,
+                        color = danger,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                    )
                     StyledTextField(
                         label = "Username",
                         value = username,
@@ -100,7 +106,6 @@ fun LoginPage(
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    // polje za lozinku
                     StyledTextField(
                         label = "Password",
                         value = password,
@@ -110,10 +115,9 @@ fun LoginPage(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // gumb za prijavu
                     Button(
                         onClick = {
-                            val loginData = LoginBody(username, password)
+                            val loginData = LoginBody(username.trim(), password)
                             isAwaitingResponse = true
                             viewModel.login(
                                 loginHandler,
@@ -135,34 +139,8 @@ fun LoginPage(
                     ) {
                         Text(text = "Login", color = Color.White, fontWeight = FontWeight.Bold)
                     }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = "Help?",
-                        color = Primary,
-                        fontSize = 14.sp,
-                        modifier = Modifier
-                            .clickable { /* TODO: Dodati logiku za help */ }
-                            .padding(top = 8.dp)
-                    )
-
-                    // tekst za ispis greške
-                    Text(
-                        text = errorMessage,
-                        color = danger,
-                        fontSize = 14.sp,
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                    )
                 }
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginPagePreview() {
-    LoginPage(onSuccessfulLogin = {})
 }

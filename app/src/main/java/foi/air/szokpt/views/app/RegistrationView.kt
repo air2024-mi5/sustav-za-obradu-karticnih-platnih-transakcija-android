@@ -61,7 +61,6 @@ fun RegistrationView(navController: NavController, userType: String) {
     val name = viewModel.firstName.observeAsState().value ?: ""
     val lastName = viewModel.lastName.observeAsState().value ?: ""
     val email = viewModel.email.observeAsState().value ?: ""
-    val role = viewModel.role.observeAsState().value ?: ""
     val message by viewModel.message.observeAsState("")
     var showMessage by remember { mutableStateOf(false) }
 
@@ -74,16 +73,6 @@ fun RegistrationView(navController: NavController, userType: String) {
         if (message.isNotEmpty()) {
             showMessage = true
         }
-    }
-
-    fun validateInput(): String {
-        return if (username.isBlank() || password.isBlank() || name.isBlank() || lastName.isBlank() || email.isBlank()) {
-            "All fields must be filled!"
-        } else if (password.length < 3) {
-            "Password must contain at least 3 characters."
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            "The email must be in the correct format."
-        } else ""
     }
 
     Column(
@@ -194,7 +183,6 @@ fun RegistrationView(navController: NavController, userType: String) {
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
 
-                        // Register user
                         OutlineBouncingButton(
                             modifier = Modifier,
                             inputText = "Register new ${options[selectedIndex]}",
@@ -202,11 +190,12 @@ fun RegistrationView(navController: NavController, userType: String) {
                             contentColor = success,
                             borderColor = success
                         ) {
-                            if (validateInput() == "")
+                            val validationMessage = viewModel.validateInput()
+                            if (validationMessage.isEmpty())
                                 openDialog.value = true
                             else {
                                 openDialog.value = false
-                                viewModel.message.value = validateInput()
+                                viewModel.message.value = validationMessage
                             }
                         }
                         if (openDialog.value) {
@@ -243,8 +232,6 @@ fun RegistrationView(navController: NavController, userType: String) {
                                                 openDialog.value = false
                                             }
                                         )
-                                        println("Registered new ${options[selectedIndex]}")
-                                        // Here goes the registration to the next layer, frontend done.
                                     } catch (e: Exception) {
                                         Log.e(
                                             "RegistrationError",
@@ -261,7 +248,8 @@ fun RegistrationView(navController: NavController, userType: String) {
                                         "",
                                 iconTop = Icons.Rounded.CheckCircle,
                                 highlightColor = success,
-                                containerColor = BGLevelTwo
+                                containerColor = BGLevelTwo,
+                                titleColor = Color.White
                             )
                         }
                         if (showMessage) {
