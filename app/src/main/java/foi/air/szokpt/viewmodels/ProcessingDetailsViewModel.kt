@@ -5,9 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.context.Auth
 import foi.air.szokpt.helpers.LatestProcessingHandler
+import hr.foi.air.szokpt.core.network.ResponseListener
+import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
+import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.core.processing.BatchRecord
 import hr.foi.air.szokpt.core.processing.LatestProcessingOutcomeListener
 import hr.foi.air.szokpt.core.processing.ProcessingRecord
+import hr.foi.air.szokpt.ws.request_handlers.RevertLastProcessingRequestHandler
 
 class ProcessingDetailsViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String?>(null)
@@ -16,11 +20,11 @@ class ProcessingDetailsViewModel : ViewModel() {
     private val _latestProcessing = MutableLiveData<ProcessingRecord?>(null)
     val latestProcessing: MutableLiveData<ProcessingRecord?> get() = _latestProcessing
 
-    private val latestProcessingHandler = LatestProcessingHandler()
     private val jwtToken = Auth.logedInUserData?.token
 
     fun fetchLatestProcessing() {
         if (jwtToken != null) {
+            val latestProcessingHandler = LatestProcessingHandler()
             latestProcessingHandler.getLatestProcessing(
                 jwtToken,
                 object : LatestProcessingOutcomeListener {
@@ -46,5 +50,38 @@ class ProcessingDetailsViewModel : ViewModel() {
                     }
                 })
         }
+    }
+
+    fun revertLastProcessing() {
+        val jwtToken = getJwtTokenOrShowError() ?: return
+
+        val revertLastProcessingRequestHandler = RevertLastProcessingRequestHandler(jwtToken)
+        revertLastProcessingRequestHandler.sendRequest(object :
+            ResponseListener<Unit> {
+            override fun onSuccessfulResponse(response: SuccessfulResponseBody<Unit>) {
+                _errorMessage.value = ""
+                _latestProcessing.value = _latestProcessing.value?.copy(status = "REVERTED")
+            }
+
+            override fun onErrorResponse(response: ErrorResponseBody) {
+                showErrorMessage("Something went wrong! Please try again!")
+            }
+
+            override fun onNetworkFailure(t: Throwable) {
+                showErrorMessage("Please check your internet connection!")
+            }
+        })
+    }
+
+    private fun getJwtTokenOrShowError(): String? {
+        val jwtToken = Auth.logedInUserData?.token
+        if (jwtToken == null) {
+            showErrorMessage("Something went wrong! Please try logging in again!")
+        }
+        return jwtToken
+    }
+
+    private fun showErrorMessage(message: String) {
+        _errorMessage.value = message
     }
 }
