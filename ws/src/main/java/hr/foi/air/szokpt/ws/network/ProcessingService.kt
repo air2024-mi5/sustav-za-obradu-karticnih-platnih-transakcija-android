@@ -9,6 +9,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface ProcessingService {
     @GET("/selected-transactions")
@@ -27,7 +28,7 @@ interface ProcessingService {
         @Header("Authorization") authHeader: String
     ): Call<SuccessfulResponseBody<ProcessingResponse>>
 
-    @GET("/revert-last-processing")
+    @PUT("/revert-last-processing")
     fun revertLastProcessing(
         @Header("Authorization") authHeader: String
     ): Call<SuccessfulResponseBody<Unit>>
