@@ -30,14 +30,13 @@ class LatestProcessingHandler {
 
             override fun onErrorResponse(response: ErrorResponseBody) {
                 latestProcessingOutcomeListener.onFailedLatestProcessingFetch(
-                    "An error occurred while fetching latest processing: ${response.message}"
-                        ?: "An error occurred while fetching latest processing."
+                    "An error occurred while fetching latest processing"
                 )
             }
 
             override fun onNetworkFailure(t: Throwable) {
                 latestProcessingOutcomeListener.onFailedLatestProcessingFetch(
-                    "Network error: $t.message" ?: "A network error occurred."
+                    "Please check your internet connection!"
                 )
             }
         })

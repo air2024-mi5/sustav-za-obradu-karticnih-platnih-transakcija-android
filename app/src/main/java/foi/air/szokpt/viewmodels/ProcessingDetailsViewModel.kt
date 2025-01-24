@@ -20,40 +20,39 @@ class ProcessingDetailsViewModel : ViewModel() {
     private val _latestProcessing = MutableLiveData<ProcessingRecord?>(null)
     val latestProcessing: MutableLiveData<ProcessingRecord?> get() = _latestProcessing
 
-    private val jwtToken = Auth.logedInUserData?.token
-
     fun fetchLatestProcessing() {
-        if (jwtToken != null) {
-            val latestProcessingHandler = LatestProcessingHandler()
-            latestProcessingHandler.getLatestProcessing(
-                jwtToken,
-                object : LatestProcessingOutcomeListener {
-                    override fun onSuccessfulLatestProcessingFetch(
-                        status: String,
-                        scheduledAt: String,
-                        processedAt: String,
-                        batchRecords: List<BatchRecord>,
-                        processedTransactionsCount: Int
-                    ) {
-                        _latestProcessing.value = ProcessingRecord(
-                            status = status,
-                            scheduledAt = scheduledAt,
-                            processedAt = processedAt,
-                            batchRecords = batchRecords,
-                            processedTransactionsCount = processedTransactionsCount
-                        )
-                        _errorMessage.value = null
-                    }
+        val jwtToken = setJwt() ?: return
 
-                    override fun onFailedLatestProcessingFetch(failureMessage: String) {
-                        _errorMessage.value = failureMessage
-                    }
-                })
-        }
+        val latestProcessingHandler = LatestProcessingHandler()
+        latestProcessingHandler.getLatestProcessing(
+            jwtToken,
+            object : LatestProcessingOutcomeListener {
+                override fun onSuccessfulLatestProcessingFetch(
+                    status: String,
+                    scheduledAt: String,
+                    processedAt: String,
+                    batchRecords: List<BatchRecord>,
+                    processedTransactionsCount: Int
+                ) {
+                    _latestProcessing.value = ProcessingRecord(
+                        status = status,
+                        scheduledAt = scheduledAt,
+                        processedAt = processedAt,
+                        batchRecords = batchRecords,
+                        processedTransactionsCount = processedTransactionsCount
+                    )
+                    _errorMessage.value = null
+                }
+
+                override fun onFailedLatestProcessingFetch(failureMessage: String) {
+                    _errorMessage.value = failureMessage
+                }
+            })
+
     }
 
     fun revertLastProcessing() {
-        val jwtToken = getJwtTokenOrShowError() ?: return
+        val jwtToken = setJwt() ?: return
 
         val revertLastProcessingRequestHandler = RevertLastProcessingRequestHandler(jwtToken)
         revertLastProcessingRequestHandler.sendRequest(object :
@@ -73,7 +72,7 @@ class ProcessingDetailsViewModel : ViewModel() {
         })
     }
 
-    private fun getJwtTokenOrShowError(): String? {
+    private fun setJwt(): String? {
         val jwtToken = Auth.logedInUserData?.token
         if (jwtToken == null) {
             showErrorMessage("Something went wrong! Please try logging in again!")
