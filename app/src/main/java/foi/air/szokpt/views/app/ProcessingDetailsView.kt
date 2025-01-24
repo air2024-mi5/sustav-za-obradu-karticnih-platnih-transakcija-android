@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import foi.air.szokpt.helpers.DateFormatter
 import foi.air.szokpt.ui.components.clearing_file_generation.GenerationButtonsRow
 import foi.air.szokpt.ui.components.dialog_components.DialogComponent
@@ -38,8 +37,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ProcessingDetailsView(
-    navController: NavController,
     clearingFileGenerators: Map<String, ClearingFileGenerator>,
+    revertible: Boolean
 ) {
     val viewModel: ProcessingDetailsViewModel = viewModel()
     val errorMessage by viewModel.errorMessage.observeAsState()
@@ -109,7 +108,7 @@ fun ProcessingDetailsView(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    if (processingRecord.status == "COMPLETED") {
+                                    if (processingRecord.status == "COMPLETED" && revertible) {
                                         OutlineBouncingButton(
                                             onClick = {
                                                 openRevertProcessingDialog.value = true
@@ -127,16 +126,18 @@ fun ProcessingDetailsView(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalArrangement = Arrangement.SpaceEvenly
                             ) {
-                                clearingFileGenerators.entries.chunked(2).forEach { chunk ->
-                                    GenerationButtonsRow(
-                                        chunk,
-                                        processingRecord
-                                    ) { generator, fileName ->
-                                        coroutineScope.launch(Dispatchers.IO) {
-                                            generator.generateFile(
-                                                processingRecord = processingRecord,
-                                                fileName = fileName
-                                            )
+                                if (processingRecord.status == "COMPLETED") {
+                                    clearingFileGenerators.entries.chunked(2).forEach { chunk ->
+                                        GenerationButtonsRow(
+                                            chunk,
+                                            processingRecord
+                                        ) { generator, fileName ->
+                                            coroutineScope.launch(Dispatchers.IO) {
+                                                generator.generateFile(
+                                                    processingRecord = processingRecord,
+                                                    fileName = fileName
+                                                )
+                                            }
                                         }
                                     }
                                 }

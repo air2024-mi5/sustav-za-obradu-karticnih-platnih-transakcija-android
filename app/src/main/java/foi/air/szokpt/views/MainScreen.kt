@@ -20,13 +20,13 @@ import androidx.navigation.navArgument
 import com.google.gson.Gson
 import foi.air.szokpt.ExcelClearingFileGenerator
 import foi.air.szokpt.pdf.PdfClearingFileGenerator
-import foi.air.szokpt.views.app.LoginView
 import foi.air.szokpt.ui.components.AnimatedNavigationBar
 import foi.air.szokpt.views.app.AccountSearchView
 import foi.air.szokpt.views.app.AccountView
 import foi.air.szokpt.views.app.DailyProcessesDashboardView
 import foi.air.szokpt.views.app.DashboardView
 import foi.air.szokpt.views.app.EditTransactionView
+import foi.air.szokpt.views.app.LoginView
 import foi.air.szokpt.views.app.ProcessingDetailsView
 import foi.air.szokpt.views.app.RegistrationView
 import foi.air.szokpt.views.app.TransactionDetailsView
@@ -49,7 +49,7 @@ const val ROUTE_USER_ACCOUNT_OVERVIEW = "user_account"
 const val ROUTE_TRANSACTION_DETAILS = "transaction_details"
 const val ROUTE_TRANSACTIONS_CANDIDATES = "processing_candidates"
 const val ROUTE_EDIT_TRANSACTION = "edit_transaction"
-const val ROUTE_LATEST_PROCESSING_DETAILS = "latest_processing_details"
+const val ROUTE_PROCESSING_DETAILS = "latest_processing_details"
 
 @Composable
 fun MainScreen() {
@@ -121,11 +121,7 @@ fun MainScreen() {
                 val userType = backStackEntry.arguments?.getString("userType") ?: "Unknown"
                 RegistrationView(navController = navController, userType = userType)
             }
-            composable(ROUTE_ALL_ACCOUNT_SEARCH) {
-                AccountSearchView(
-                    navController,
-                )
-            }
+            composable(ROUTE_ALL_ACCOUNT_SEARCH) { AccountSearchView(navController) }
             composable(
                 route = ROUTE_USER_ACCOUNT_OVERVIEW + "/{userJson}",
                 arguments = listOf(navArgument("userJson") { type = NavType.StringType })
@@ -155,10 +151,13 @@ fun MainScreen() {
             }
 
             composable(ROUTE_TRANSACTIONS_CANDIDATES) { TransactionsCandidatesView(navController) }
-            composable(ROUTE_LATEST_PROCESSING_DETAILS) {
+
+            composable("$ROUTE_PROCESSING_DETAILS?revertable={revertable}") { backStackEntry ->
+                val revertable =
+                    backStackEntry.arguments?.getString("revertable")?.toBoolean() ?: false
                 ProcessingDetailsView(
-                    navController,
-                    clearingFileGenerators
+                    clearingFileGenerators = clearingFileGenerators,
+                    revertible = revertable
                 )
             }
 
