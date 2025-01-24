@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -126,18 +127,16 @@ fun ProcessingDetailsView(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalArrangement = Arrangement.SpaceEvenly
                             ) {
-                                if (processingRecord.status == "COMPLETED") {
-                                    clearingFileGenerators.entries.chunked(2).forEach { chunk ->
-                                        GenerationButtonsRow(
-                                            chunk,
-                                            processingRecord
-                                        ) { generator, fileName ->
-                                            coroutineScope.launch(Dispatchers.IO) {
-                                                generator.generateFile(
-                                                    processingRecord = processingRecord,
-                                                    fileName = fileName
-                                                )
-                                            }
+                                clearingFileGenerators.entries.chunked(2).forEach { chunk ->
+                                    GenerationButtonsRow(
+                                        chunk,
+                                        processingRecord
+                                    ) { generator, fileName ->
+                                        coroutineScope.launch(Dispatchers.IO) {
+                                            generator.generateFile(
+                                                processingRecord = processingRecord,
+                                                fileName = fileName
+                                            )
                                         }
                                     }
                                 }
@@ -154,7 +153,7 @@ fun ProcessingDetailsView(
                     else -> {
                         Text(
                             text = errorMessage!!,
-                            color = TextWhite,
+                            color = Color.Red,
                             fontSize = 15.sp
                         )
                     }
