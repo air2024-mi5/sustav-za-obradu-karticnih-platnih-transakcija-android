@@ -168,6 +168,7 @@ fun ProcessingDetailsView(
                 titleColor = TextWhite,
                 iconTop = Icons.Rounded.Refresh,
                 onConfirmation = {
+                    viewModel.revertLastProcessing()
                     openRevertProcessingDialog.value = false
                 },
                 onDismissRequest = { openRevertProcessingDialog.value = false },
