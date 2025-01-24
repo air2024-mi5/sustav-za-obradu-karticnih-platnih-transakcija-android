@@ -66,7 +66,7 @@ fun ProcessingDetailsView(
                 viewModel.fetchLatestProcessing()
                 when (errorMessage) {
                     null -> {
-                        val processingRecord = viewModel.latestProcessing.observeAsState().value
+                        val processingRecord = viewModel.processingRecord.observeAsState().value
                         if (processingRecord != null) {
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(4.dp),

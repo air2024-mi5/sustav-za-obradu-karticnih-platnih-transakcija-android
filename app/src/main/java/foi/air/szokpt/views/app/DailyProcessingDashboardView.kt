@@ -152,7 +152,7 @@ fun DailyProcessesDashboardView(navController: NavController) {
                                         verticalArrangement = Arrangement.Top
                                     ) {
                                         val latestProcessing =
-                                            viewModel.latestProcessing.observeAsState().value
+                                            viewModel.processingRecord.observeAsState().value
                                         if (latestProcessing != null) {
                                             Text(
                                                 text = "Processed on:",

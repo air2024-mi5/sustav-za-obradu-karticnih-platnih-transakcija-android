@@ -17,8 +17,8 @@ class ProcessingDetailsViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String?>(null)
     val errorMessage: LiveData<String?> get() = _errorMessage
 
-    private val _latestProcessing = MutableLiveData<ProcessingRecord?>(null)
-    val latestProcessing: MutableLiveData<ProcessingRecord?> get() = _latestProcessing
+    private val _processingRecord = MutableLiveData<ProcessingRecord?>(null)
+    val processingRecord: MutableLiveData<ProcessingRecord?> get() = _processingRecord
 
     fun fetchLatestProcessing() {
         val jwtToken = setJwt() ?: return
@@ -34,7 +34,7 @@ class ProcessingDetailsViewModel : ViewModel() {
                     batchRecords: List<BatchRecord>,
                     processedTransactionsCount: Int
                 ) {
-                    _latestProcessing.value = ProcessingRecord(
+                    _processingRecord.value = ProcessingRecord(
                         status = status,
                         scheduledAt = scheduledAt,
                         processedAt = processedAt,
@@ -59,7 +59,7 @@ class ProcessingDetailsViewModel : ViewModel() {
             ResponseListener<Unit> {
             override fun onSuccessfulResponse(response: SuccessfulResponseBody<Unit>) {
                 _errorMessage.value = ""
-                _latestProcessing.value = _latestProcessing.value?.copy(status = "REVERTED")
+                _processingRecord.value = _processingRecord.value?.copy(status = "REVERTED")
             }
 
             override fun onErrorResponse(response: ErrorResponseBody) {
