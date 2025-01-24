@@ -26,4 +26,9 @@ interface ProcessingService {
     fun getLatestProcessingResult(
         @Header("Authorization") authHeader: String
     ): Call<SuccessfulResponseBody<ProcessingResponse>>
+
+    @GET("/revert-last-processing")
+    fun revertLastProcessing(
+        @Header("Authorization") authHeader: String
+    ): Call<SuccessfulResponseBody<ProcessingResponse>>
 }
