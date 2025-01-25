@@ -1,6 +1,7 @@
 package foi.air.szokpt.ui.components.processing_components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,10 +25,10 @@ import hr.foi.air.szokpt.core.processing.ProcessingRecord
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-
 @Composable
 fun ProcessingItem(
     processing: ProcessingRecord,
+    onClick: () -> Unit
 ) {
     val statusColor = when (processing.status) {
         "COMPLETED" -> success
@@ -39,7 +40,8 @@ fun ProcessingItem(
             .fillMaxWidth()
             .padding(8.dp)
             .background(color = BGLevelOne, shape = RoundedCornerShape(10.dp))
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(

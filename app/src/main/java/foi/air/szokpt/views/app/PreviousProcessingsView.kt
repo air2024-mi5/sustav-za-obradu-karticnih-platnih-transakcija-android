@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.components.processing_components.ProcessingItem
+import foi.air.szokpt.views.ROUTE_PROCESSING_DETAILS
 import hr.foi.air.szokpt.core.processing.ProcessingRecord
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -82,6 +83,13 @@ fun PreviousProcessingsView(navController: NavController) {
                 items(mockProcessings) { processing ->
                     ProcessingItem(
                         processing = processing,
+                        onClick = {
+                            val revertable = processing.status == "COMPLETED"
+
+                            navController.navigate(
+                                "${ROUTE_PROCESSING_DETAILS}?revertable=$revertable"
+                            )
+                        }
                     )
                 }
             }
