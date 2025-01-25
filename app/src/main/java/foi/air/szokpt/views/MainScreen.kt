@@ -50,6 +50,7 @@ const val ROUTE_TRANSACTION_DETAILS = "transaction_details"
 const val ROUTE_TRANSACTIONS_CANDIDATES = "processing_candidates"
 const val ROUTE_EDIT_TRANSACTION = "edit_transaction"
 const val ROUTE_PROCESSING_DETAILS = "latest_processing_details"
+const val ROUTE_PREVIOUS_PROCESSINGS = "previous_processings"
 
 @Composable
 fun MainScreen() {
