@@ -35,7 +35,7 @@ import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.viewmodels.ProcessingDetailsViewModel
-import foi.air.szokpt.views.ROUTE_LATEST_PROCESSING_DETAILS
+import foi.air.szokpt.views.ROUTE_PROCESSING_DETAILS
 import foi.air.szokpt.views.ROUTE_TRANSACTIONS_CANDIDATES
 
 @Composable
@@ -152,7 +152,7 @@ fun DailyProcessesDashboardView(navController: NavController) {
                                         verticalArrangement = Arrangement.Top
                                     ) {
                                         val latestProcessing =
-                                            viewModel.latestProcessing.observeAsState().value
+                                            viewModel.processingRecord.observeAsState().value
                                         if (latestProcessing != null) {
                                             Text(
                                                 text = "Processed on:",
@@ -179,7 +179,8 @@ fun DailyProcessesDashboardView(navController: NavController) {
                                         contentColor = Primary,
                                         borderColor = Secondary,
                                     ) {
-                                        navController.navigate(ROUTE_LATEST_PROCESSING_DETAILS)
+                                        val revertible: Boolean = true
+                                        navController.navigate("$ROUTE_PROCESSING_DETAILS?revertable=$revertible")
                                     }
                                 }
 
