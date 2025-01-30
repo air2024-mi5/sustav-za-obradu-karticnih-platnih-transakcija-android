@@ -35,6 +35,7 @@ import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.viewmodels.ProcessingDetailsViewModel
+import foi.air.szokpt.views.ROUTE_PREVIOUS_PROCESSINGS
 import foi.air.szokpt.views.ROUTE_PROCESSING_DETAILS
 import foi.air.szokpt.views.ROUTE_TRANSACTIONS_CANDIDATES
 
@@ -110,6 +111,43 @@ fun DailyProcessesDashboardView(navController: NavController) {
                                 borderColor = Secondary,
                             ) {
                                 navController.navigate(ROUTE_TRANSACTIONS_CANDIDATES)
+                            }
+                        }
+                    }
+                }
+            }
+            item(span = { GridItemSpan(2) }) {
+                TileSegment(
+                    tileSizeMode = TileSizeMode.WRAP_CONTENT,
+                    innerPadding = 10.dp,
+                    outerMargin = 4.dp,
+                    minWidth = 250.dp,
+                    minHeight = 20.dp,
+                    color = BGLevelOne
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Previous Processings",
+                                color = TextWhite,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            OutlineBouncingButton(
+                                modifier = Modifier,
+                                inputText = "",
+                                inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
+                                contentColor = Primary,
+                                borderColor = Secondary,
+                            ) {
+                                navController.navigate(ROUTE_PREVIOUS_PROCESSINGS)
                             }
                         }
                     }
