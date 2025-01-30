@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.ui.theme.warning
@@ -67,11 +68,17 @@ fun ProcessingItem(
             Spacer(modifier = Modifier.padding(4.dp))
 
             processing.scheduledAt?.let {
-                Text(text = "Scheduled: ${formatDateTime(it)}")
+                Text(
+                    text = "Scheduled: ${formatDateTime(it)}",
+                    color = TextWhite
+                )
             }
 
             processing.processedAt?.let {
-                Text(text = "Processed: ${formatDateTime(it)}")
+                Text(
+                    text = "Processed: ${formatDateTime(it)}",
+                    color = TextWhite
+                )
             }
 
             Text(
