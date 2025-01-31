@@ -1,16 +1,19 @@
-package foi.air.szokpt.helpers
+package foi.air.szokpt.handlers
 
-import android.util.Log
-import hr.foi.air.szokpt.core.register.RegistrationBody
 import hr.foi.air.szokpt.core.network.ResponseListener
 import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
 import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
+import hr.foi.air.szokpt.core.register.RegistrationBody
 import hr.foi.air.szokpt.core.register.RegistrationOutcomeListener
 import hr.foi.air.szokpt.ws.models.RegistrationResponse
 import hr.foi.air.szokpt.ws.request_handlers.RegistrationRequestHandler
 
 class RegistrationHandler() {
-    fun register(jwtToken: String, registrationBody: RegistrationBody, registrationListener: RegistrationOutcomeListener) {
+    fun register(
+        jwtToken: String,
+        registrationBody: RegistrationBody,
+        registrationListener: RegistrationOutcomeListener
+    ) {
         val registrationRequestHandler = RegistrationRequestHandler(jwtToken, registrationBody)
         registrationRequestHandler.sendRequest(
             object : ResponseListener<RegistrationResponse> {
@@ -19,11 +22,15 @@ class RegistrationHandler() {
                 }
 
                 override fun onErrorResponse(response: ErrorResponseBody) {
-                    registrationListener.onFailedRegistration(response.message  ?: "Registration error occurred")
+                    registrationListener.onFailedRegistration(
+                        response.message ?: "Registration error occurred"
+                    )
                 }
 
                 override fun onNetworkFailure(t: Throwable) {
-                    registrationListener.onFailedRegistration(t.message ?: "An unknown network error occurred.")
+                    registrationListener.onFailedRegistration(
+                        t.message ?: "An unknown network error occurred."
+                    )
                 }
             }
         )

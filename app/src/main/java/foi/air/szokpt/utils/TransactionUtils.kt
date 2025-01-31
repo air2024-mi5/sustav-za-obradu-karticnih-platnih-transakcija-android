@@ -1,4 +1,4 @@
-package foi.air.szokpt.helpers
+package foi.air.szokpt.utils
 
 import androidx.compose.ui.graphics.Color
 import foi.air.szokpt.R

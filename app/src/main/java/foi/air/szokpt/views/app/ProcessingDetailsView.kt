@@ -21,13 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import foi.air.szokpt.helpers.DateFormatter
 import foi.air.szokpt.ui.components.clearing_file_generation.GenerationButtonsRow
 import foi.air.szokpt.ui.components.dialog_components.DialogComponent
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.danger
+import foi.air.szokpt.utils.DateFormatter
 import foi.air.szokpt.viewmodels.ProcessingDetailsViewModel
 import hr.foi.air.szokpt.core.file_generation.ClearingFileGenerator
 import hr.foi.air.szokpt.core.processing.ProcessingRecord

@@ -31,7 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import foi.air.szokpt.helpers.RegistrationHandler
+import foi.air.szokpt.handlers.RegistrationHandler
 import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dialog_components.DialogComponent

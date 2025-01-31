@@ -1,4 +1,4 @@
-package foi.air.szokpt.helpers
+package foi.air.szokpt.utils
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

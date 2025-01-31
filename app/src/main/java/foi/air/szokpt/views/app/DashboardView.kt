@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import foi.air.szokpt.helpers.TransactionUtils
 import foi.air.szokpt.ui.components.IconMessage
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dashboard_components.ChartWithLegend
@@ -41,6 +40,7 @@ import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.utils.CardBrandInformationList
+import foi.air.szokpt.utils.TransactionUtils
 import foi.air.szokpt.viewmodels.CardBrandsStatisticsViewModel
 import foi.air.szokpt.viewmodels.ReportsViewModel
 import foi.air.szokpt.viewmodels.TransactionsPerDayViewModel

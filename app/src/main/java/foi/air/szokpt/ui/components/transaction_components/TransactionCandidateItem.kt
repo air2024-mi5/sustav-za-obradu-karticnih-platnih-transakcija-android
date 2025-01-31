@@ -22,9 +22,9 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import foi.air.szokpt.helpers.TransactionUtils
 import foi.air.szokpt.ui.theme.BGLevelZeroHigh
 import foi.air.szokpt.ui.theme.Primary
+import foi.air.szokpt.utils.TransactionUtils
 import hr.foi.air.szokpt.ws.models.responses.Transaction
 
 @Composable

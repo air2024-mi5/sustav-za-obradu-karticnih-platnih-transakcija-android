@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import foi.air.szokpt.helpers.TransactionUtils
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.components.transaction_components.TransactionDetailRow
@@ -39,6 +38,7 @@ import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
+import foi.air.szokpt.utils.TransactionUtils
 import foi.air.szokpt.viewmodels.TransactionDetailsViewModel
 import foi.air.szokpt.views.ROUTE_EDIT_TRANSACTION
 import java.util.UUID

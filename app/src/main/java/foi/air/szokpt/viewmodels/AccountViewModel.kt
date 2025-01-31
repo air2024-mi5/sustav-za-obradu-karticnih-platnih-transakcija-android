@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.context.Auth
-import foi.air.szokpt.helpers.AccountUpdateHandler
+import foi.air.szokpt.handlers.AccountUpdateHandler
 import foi.air.szokpt.utils.UserDataValidator
 import hr.foi.air.szokpt.core.accounts.AccountUpdateOutcomeListener
 import hr.foi.air.szokpt.ws.models.responses.User

@@ -1,4 +1,4 @@
-package foi.air.szokpt.helpers
+package foi.air.szokpt.handlers
 
 import hr.foi.air.szokpt.core.network.ResponseListener
 import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
@@ -15,7 +15,8 @@ class TransactionDetailsHandler() {
         transactionGuid: UUID,
         transactionDetailsListener: TransactionDetailsOutcomeListener
     ) {
-        val transactionDetailsRequestHandler = TransactionDetailsRequestHandler(jwtToken, transactionGuid)
+        val transactionDetailsRequestHandler =
+            TransactionDetailsRequestHandler(jwtToken, transactionGuid)
 
         transactionDetailsRequestHandler.sendRequest(
             object : ResponseListener<Transaction> {

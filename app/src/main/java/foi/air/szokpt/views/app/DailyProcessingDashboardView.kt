@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.gson.Gson
-import foi.air.szokpt.helpers.DateFormatter
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
@@ -35,6 +34,7 @@ import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
+import foi.air.szokpt.utils.DateFormatter
 import foi.air.szokpt.viewmodels.ProcessingDetailsViewModel
 import foi.air.szokpt.views.ROUTE_PREVIOUS_PROCESSINGS
 import foi.air.szokpt.views.ROUTE_PROCESSING_DETAILS

@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import foi.air.szokpt.helpers.AccountUpdateHandler
+import foi.air.szokpt.handlers.AccountUpdateHandler
 import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.accounts_components.accountView.BlockAccountButton

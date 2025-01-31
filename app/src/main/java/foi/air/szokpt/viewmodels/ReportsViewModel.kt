@@ -3,7 +3,7 @@ package foi.air.szokpt.viewmodels
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.context.Auth
-import foi.air.szokpt.helpers.TransactionsSuccessHandler
+import foi.air.szokpt.handlers.TransactionsSuccessHandler
 import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
