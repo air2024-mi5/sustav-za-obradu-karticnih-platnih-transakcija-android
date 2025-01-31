@@ -122,43 +122,6 @@ fun DailyProcessesDashboardView(navController: NavController) {
             item(span = { GridItemSpan(2) }) {
                 TileSegment(
                     tileSizeMode = TileSizeMode.WRAP_CONTENT,
-                    innerPadding = 10.dp,
-                    outerMargin = 4.dp,
-                    minWidth = 250.dp,
-                    minHeight = 20.dp,
-                    color = BGLevelOne
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "Previous Processings",
-                                color = TextWhite,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                            OutlineBouncingButton(
-                                modifier = Modifier,
-                                inputText = "",
-                                inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
-                                contentColor = Primary,
-                                borderColor = Secondary,
-                            ) {
-                                navController.navigate(ROUTE_PREVIOUS_PROCESSINGS)
-                            }
-                        }
-                    }
-                }
-            }
-            item(span = { GridItemSpan(2) }) {
-                TileSegment(
-                    tileSizeMode = TileSizeMode.WRAP_CONTENT,
                     innerPadding = 15.dp,
                     outerMargin = 4.dp,
                     minWidth = 250.dp,
@@ -253,6 +216,41 @@ fun DailyProcessesDashboardView(navController: NavController) {
                 }
             }
             item(span = { GridItemSpan(2) }) {
+                TileSegment(
+                    tileSizeMode = TileSizeMode.WRAP_CONTENT,
+                    innerPadding = 10.dp,
+                    outerMargin = 4.dp,
+                    minWidth = 250.dp,
+                    minHeight = 20.dp,
+                    color = BGLevelOne
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Previous Processings",
+                                color = TextWhite,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            OutlineBouncingButton(
+                                modifier = Modifier,
+                                inputText = "",
+                                inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
+                                contentColor = Primary,
+                                borderColor = Secondary,
+                            ) {
+                                navController.navigate(ROUTE_PREVIOUS_PROCESSINGS)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
