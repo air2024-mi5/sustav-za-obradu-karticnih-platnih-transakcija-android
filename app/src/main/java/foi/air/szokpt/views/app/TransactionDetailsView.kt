@@ -41,6 +41,7 @@ import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.utils.TransactionUtils
 import foi.air.szokpt.viewmodels.TransactionDetailsViewModel
 import foi.air.szokpt.views.ROUTE_EDIT_TRANSACTION
+import java.math.RoundingMode
 import java.util.UUID
 
 @Composable
@@ -220,18 +221,24 @@ fun TransactionDetailsView(
                             )
                             if (transaction!!.installmentsNumber > 0) {
                                 val monthlyAmount =
-                                    transaction!!.amount / transaction!!.installmentsNumber
+                                    (transaction!!.amount / transaction!!.installmentsNumber).toBigDecimal()
+                                        .setScale(2, RoundingMode.HALF_UP)
+
                                 TransactionDetailRow(
                                     "Payment Method",
-                                    "Installments - ${transaction!!.installmentsNumber} months"
+                                    "Installments - ${transaction!!.installmentsNumber} mths."
                                 )
                                 TransactionDetailRow(
                                     "Monthly Amount",
-                                    "$monthlyAmount ${transaction!!.currency}"
+                                    "${TransactionUtils.getCurrencySymbol(transaction!!.currency)} $monthlyAmount"
                                 )
                                 TransactionDetailRow(
                                     "Total Amount",
-                                    "${transaction!!.amount} ${transaction!!.currency}"
+                                    "${
+                                        TransactionUtils.getCurrencySymbol(
+                                            transaction!!.currency
+                                        )
+                                    } ${transaction!!.amount}"
                                 )
                                 TransactionDetailRow("Creditor", transaction!!.installmentsCreditor)
                             } else {
