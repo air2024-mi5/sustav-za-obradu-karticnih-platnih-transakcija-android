@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import foi.air.szokpt.handlers.RegistrationHandler
 import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
@@ -51,7 +50,7 @@ import hr.foi.air.szokpt.core.register.Role
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationView(navController: NavController, userType: String) {
+fun RegistrationView(userType: String) {
 
     val viewModel: RegistrationViewModel = viewModel()
 

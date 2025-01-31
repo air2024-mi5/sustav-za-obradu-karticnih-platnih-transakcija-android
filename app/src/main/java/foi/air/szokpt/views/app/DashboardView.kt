@@ -28,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.IconMessage
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dashboard_components.ChartWithLegend
@@ -51,7 +50,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 @Composable
-fun DashboardView(navController: NavController) {
+fun DashboardView() {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
