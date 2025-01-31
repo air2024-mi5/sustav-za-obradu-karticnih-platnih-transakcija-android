@@ -11,6 +11,6 @@ class ProcessingsRequestHandler(
 ) : TemplateRequestHandler<ProcessingPageResponse>() {
     override fun getServiceCall(): Call<SuccessfulResponseBody<ProcessingPageResponse>> {
         val service = NetworkService.processingService
-        return service.getAllProcessings(page = page, jwtToken)
+        return service.getAllProcessings(page = page, "Bearer $jwtToken")
     }
 }
