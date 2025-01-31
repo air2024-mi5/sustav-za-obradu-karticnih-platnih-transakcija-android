@@ -189,12 +189,13 @@ fun DailyProcessesDashboardView(navController: NavController) {
                                 null -> {
                                     val latestProcessing =
                                         viewModel.processingRecord.observeAsState().value
-                                    Column(
-                                        modifier = Modifier
-                                            .padding(start = 15.dp),
-                                        verticalArrangement = Arrangement.Top
-                                    ) {
-                                        if (latestProcessing != null) {
+                                    if (latestProcessing != null) {
+                                        Column(
+                                            modifier = Modifier
+                                                .padding(start = 15.dp),
+                                            verticalArrangement = Arrangement.Top
+                                        ) {
+
                                             Text(
                                                 text = "Processed on:",
                                                 color = TextWhite,
@@ -211,24 +212,31 @@ fun DailyProcessesDashboardView(navController: NavController) {
                                                 color = TextWhite,
                                                 fontSize = 15.sp
                                             )
-                                        }
-                                    }
-                                    OutlineBouncingButton(
-                                        modifier = Modifier.width(100.dp),
-                                        inputText = "",
-                                        inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
-                                        contentColor = Primary,
-                                        borderColor = Secondary,
-                                    ) {
-                                        val revertible: Boolean = true
-                                        val gson = Gson()
-                                        val processingJson = gson.toJson(latestProcessing)
-                                        val encodedProcessingJson = URLEncoder.encode(
-                                            processingJson,
-                                            StandardCharsets.UTF_8.toString()
-                                        )
 
-                                        navController.navigate("$ROUTE_PROCESSING_DETAILS/$encodedProcessingJson?revertable=$revertible")
+                                        }
+                                        OutlineBouncingButton(
+                                            modifier = Modifier.width(100.dp),
+                                            inputText = "",
+                                            inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
+                                            contentColor = Primary,
+                                            borderColor = Secondary,
+                                        ) {
+                                            val revertible: Boolean = true
+                                            val gson = Gson()
+                                            val processingJson = gson.toJson(latestProcessing)
+                                            val encodedProcessingJson = URLEncoder.encode(
+                                                processingJson,
+                                                StandardCharsets.UTF_8.toString()
+                                            )
+
+                                            navController.navigate("$ROUTE_PROCESSING_DETAILS/$encodedProcessingJson?revertable=$revertible")
+                                        }
+                                    } else {
+                                        Text(
+                                            text = "No data about last processing.",
+                                            color = TextWhite,
+                                            fontSize = 15.sp
+                                        )
                                     }
                                 }
 
