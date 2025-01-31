@@ -19,8 +19,4 @@ object DateFormatter {
     fun format(localDateTime: LocalDateTime): String {
         return localDateTime.format(outputFormatter)
     }
-
-    fun parse(dateTime: String): LocalDateTime {
-        return LocalDateTime.parse(dateTime, inputFormatter)
-    }
 }
