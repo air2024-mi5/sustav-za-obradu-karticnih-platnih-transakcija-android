@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.google.gson.Gson
 import foi.air.szokpt.helpers.DateFormatter
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
@@ -38,6 +39,8 @@ import foi.air.szokpt.viewmodels.ProcessingDetailsViewModel
 import foi.air.szokpt.views.ROUTE_PREVIOUS_PROCESSINGS
 import foi.air.szokpt.views.ROUTE_PROCESSING_DETAILS
 import foi.air.szokpt.views.ROUTE_TRANSACTIONS_CANDIDATES
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun DailyProcessesDashboardView(navController: NavController) {
@@ -184,13 +187,13 @@ fun DailyProcessesDashboardView(navController: NavController) {
                             viewModel.fetchLatestProcessing()
                             when (errorMessage) {
                                 null -> {
+                                    val latestProcessing =
+                                        viewModel.processingRecord.observeAsState().value
                                     Column(
                                         modifier = Modifier
                                             .padding(start = 15.dp),
                                         verticalArrangement = Arrangement.Top
                                     ) {
-                                        val latestProcessing =
-                                            viewModel.processingRecord.observeAsState().value
                                         if (latestProcessing != null) {
                                             Text(
                                                 text = "Processed on:",
@@ -218,7 +221,14 @@ fun DailyProcessesDashboardView(navController: NavController) {
                                         borderColor = Secondary,
                                     ) {
                                         val revertible: Boolean = true
-                                        navController.navigate("$ROUTE_PROCESSING_DETAILS?revertable=$revertible")
+                                        val gson = Gson()
+                                        val processingJson = gson.toJson(latestProcessing)
+                                        val encodedProcessingJson = URLEncoder.encode(
+                                            processingJson,
+                                            StandardCharsets.UTF_8.toString()
+                                        )
+
+                                        navController.navigate("$ROUTE_PROCESSING_DETAILS/$encodedProcessingJson?revertable=$revertible")
                                     }
                                 }
 
