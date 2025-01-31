@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.google.gson.Gson
 import foi.air.szokpt.helpers.DateFormatter
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
@@ -38,6 +39,8 @@ import foi.air.szokpt.viewmodels.ProcessingDetailsViewModel
 import foi.air.szokpt.views.ROUTE_PREVIOUS_PROCESSINGS
 import foi.air.szokpt.views.ROUTE_PROCESSING_DETAILS
 import foi.air.szokpt.views.ROUTE_TRANSACTIONS_CANDIDATES
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun DailyProcessesDashboardView(navController: NavController) {
@@ -184,14 +187,15 @@ fun DailyProcessesDashboardView(navController: NavController) {
                             viewModel.fetchLatestProcessing()
                             when (errorMessage) {
                                 null -> {
-                                    Column(
-                                        modifier = Modifier
-                                            .padding(start = 15.dp),
-                                        verticalArrangement = Arrangement.Top
-                                    ) {
-                                        val latestProcessing =
-                                            viewModel.processingRecord.observeAsState().value
-                                        if (latestProcessing != null) {
+                                    val latestProcessing =
+                                        viewModel.processingRecord.observeAsState().value
+                                    if (latestProcessing != null) {
+                                        Column(
+                                            modifier = Modifier
+                                                .padding(start = 15.dp),
+                                            verticalArrangement = Arrangement.Top
+                                        ) {
+
                                             Text(
                                                 text = "Processed on:",
                                                 color = TextWhite,
@@ -208,17 +212,31 @@ fun DailyProcessesDashboardView(navController: NavController) {
                                                 color = TextWhite,
                                                 fontSize = 15.sp
                                             )
+
                                         }
-                                    }
-                                    OutlineBouncingButton(
-                                        modifier = Modifier.width(100.dp),
-                                        inputText = "",
-                                        inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
-                                        contentColor = Primary,
-                                        borderColor = Secondary,
-                                    ) {
-                                        val revertible: Boolean = true
-                                        navController.navigate("$ROUTE_PROCESSING_DETAILS?revertable=$revertible")
+                                        OutlineBouncingButton(
+                                            modifier = Modifier.width(100.dp),
+                                            inputText = "",
+                                            inputIcon = Icons.AutoMirrored.Rounded.ArrowForward,
+                                            contentColor = Primary,
+                                            borderColor = Secondary,
+                                        ) {
+                                            val revertible: Boolean = true
+                                            val gson = Gson()
+                                            val processingJson = gson.toJson(latestProcessing)
+                                            val encodedProcessingJson = URLEncoder.encode(
+                                                processingJson,
+                                                StandardCharsets.UTF_8.toString()
+                                            )
+
+                                            navController.navigate("$ROUTE_PROCESSING_DETAILS/$encodedProcessingJson?revertable=$revertible")
+                                        }
+                                    } else {
+                                        Text(
+                                            text = "No data about last processing.",
+                                            color = TextWhite,
+                                            fontSize = 15.sp
+                                        )
                                     }
                                 }
 
