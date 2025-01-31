@@ -35,6 +35,7 @@ import foi.air.szokpt.views.app.TransactionsCandidatesView
 import foi.air.szokpt.views.app.TransactionsView
 import hr.foi.air.szokpt.core.file_generation.FileSavingOutcomeListener
 import hr.foi.air.szokpt.core.file_generation.MediaStoreFileSaver
+import hr.foi.air.szokpt.core.processing.ProcessingRecord
 import hr.foi.air.szokpt.ws.models.responses.User
 import java.nio.charset.StandardCharsets
 import java.util.UUID
@@ -155,12 +156,27 @@ fun MainScreen() {
 
             composable(ROUTE_TRANSACTIONS_CANDIDATES) { TransactionsCandidatesView(navController) }
 
-            composable("$ROUTE_PROCESSING_DETAILS?revertable={revertable}") { backStackEntry ->
+            composable("$ROUTE_PROCESSING_DETAILS/{processingJson}?revertable={revertable}",
+                arguments = listOf(
+                    navArgument("processingJson") { type = NavType.StringType },
+                    navArgument("revertable") { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                val encodedProcessingJson = backStackEntry.arguments?.getString("processingJson")
                 val revertable =
                     backStackEntry.arguments?.getString("revertable")?.toBoolean() ?: false
+
+                val processingJson = encodedProcessingJson?.let {
+                    java.net.URLDecoder.decode(it, StandardCharsets.UTF_8.toString())
+                }
+
+                val gson = Gson()
+                val processing = gson.fromJson(processingJson, ProcessingRecord::class.java)
+
                 ProcessingDetailsView(
                     clearingFileGenerators = clearingFileGenerators,
-                    revertible = revertable
+                    revertible = revertable,
+                    processingRecord = processing
                 )
             }
 

@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.google.gson.Gson
 import foi.air.szokpt.ui.components.IconMessage
 import foi.air.szokpt.ui.components.pagination_components.Pagination
 import foi.air.szokpt.ui.components.processing_components.ProcessingItem
@@ -31,6 +32,8 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.viewmodels.ProcessingsViewModel
 import foi.air.szokpt.views.ROUTE_PROCESSING_DETAILS
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -39,6 +42,7 @@ fun PreviousProcessingsView(navController: NavController) {
     val processingPage by viewModel.processingPage.observeAsState()
     val currentPage by viewModel.currentPage.observeAsState()
     val totalPages by viewModel.totalPages.observeAsState()
+    val processingRecords by viewModel.processingRecords.observeAsState()
     val isLoading by viewModel.isLoading.observeAsState(true)
 
     val listState = rememberLazyListState()
@@ -90,15 +94,21 @@ fun PreviousProcessingsView(navController: NavController) {
                         )
                     }
                 }
-                processingPage?.processingList?.forEach { processing ->
+                processingRecords?.forEach { processing ->
                     item {
                         ProcessingItem(
                             processing = processing,
                             onClick = {
                                 val revertable = false
+                                val gson = Gson()
+                                val processingJson = gson.toJson(processing)
+                                val encodedProcessingJson = URLEncoder.encode(
+                                    processingJson,
+                                    StandardCharsets.UTF_8.toString()
+                                )
 
                                 navController.navigate(
-                                    "${ROUTE_PROCESSING_DETAILS}?revertable=$revertable"
+                                    "${ROUTE_PROCESSING_DETAILS}/$encodedProcessingJson?revertable=$revertable"
                                 )
                             }
                         )

@@ -33,13 +33,15 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.viewmodels.ProcessingDetailsViewModel
 import hr.foi.air.szokpt.core.file_generation.ClearingFileGenerator
+import hr.foi.air.szokpt.core.processing.ProcessingRecord
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
 fun ProcessingDetailsView(
     clearingFileGenerators: Map<String, ClearingFileGenerator>,
-    revertible: Boolean
+    revertible: Boolean,
+    processingRecord: ProcessingRecord
 ) {
     val viewModel: ProcessingDetailsViewModel = viewModel()
     val errorMessage by viewModel.errorMessage.observeAsState()
@@ -66,7 +68,6 @@ fun ProcessingDetailsView(
                 viewModel.fetchLatestProcessing()
                 when (errorMessage) {
                     null -> {
-                        val processingRecord = viewModel.processingRecord.observeAsState().value
                         if (processingRecord != null) {
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(4.dp),
