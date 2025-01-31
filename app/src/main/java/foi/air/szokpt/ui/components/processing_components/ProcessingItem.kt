@@ -22,13 +22,13 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.ui.theme.warning
-import hr.foi.air.szokpt.ws.models.ProcessingResponse
+import hr.foi.air.szokpt.core.processing.ProcessingRecord
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun ProcessingItem(
-    processing: ProcessingResponse,
+    processing: ProcessingRecord,
     onClick: () -> Unit
 ) {
     val statusColor = when (processing.status) {
