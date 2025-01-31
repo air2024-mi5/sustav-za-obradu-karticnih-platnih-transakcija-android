@@ -1,70 +1,70 @@
 package foi.air.szokpt.views.app
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import foi.air.szokpt.ui.components.IconMessage
+import foi.air.szokpt.ui.components.pagination_components.Pagination
+import foi.air.szokpt.ui.components.processing_components.ProcessingItem
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
-import foi.air.szokpt.ui.components.processing_components.ProcessingItem
+import foi.air.szokpt.viewmodels.ProcessingsViewModel
 import foi.air.szokpt.views.ROUTE_PROCESSING_DETAILS
-import hr.foi.air.szokpt.core.processing.ProcessingRecord
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun PreviousProcessingsView(navController: NavController) {
-    val mockProcessings = remember {
-        listOf(
-            ProcessingRecord(
-                status = "COMPLETED",
-                scheduledAt = LocalDateTime.now().minusDays(2).format(DateTimeFormatter.ISO_DATE_TIME),
-                processedAt = LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ISO_DATE_TIME),
-                batchRecords = emptyList(),
-                processedTransactionsCount = 42
-            ),
-            ProcessingRecord(
-                status = "COMPLETED",
-                scheduledAt = LocalDateTime.now().minusDays(5).format(DateTimeFormatter.ISO_DATE_TIME),
-                processedAt = LocalDateTime.now().minusDays(3).format(DateTimeFormatter.ISO_DATE_TIME),
-                batchRecords = emptyList(),
-                processedTransactionsCount = 38
-            ),
-            ProcessingRecord(
-                status = "REVERTED",
-                scheduledAt = LocalDateTime.now().minusDays(5).format(DateTimeFormatter.ISO_DATE_TIME),
-                processedAt = LocalDateTime.now().minusDays(4).format(DateTimeFormatter.ISO_DATE_TIME),
-                batchRecords = emptyList(),
-                processedTransactionsCount = 18
-            )
-        )
+    val viewModel: ProcessingsViewModel = viewModel()
+    val processingPage by viewModel.processingPage.observeAsState()
+    val currentPage by viewModel.currentPage.observeAsState()
+    val totalPages by viewModel.totalPages.observeAsState()
+    val isLoading by viewModel.isLoading.observeAsState(true)
+
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(currentPage) {
+        if (processingPage == null) {
+            viewModel.fetchProcessings(1)
+        }
+
+        coroutineScope.launch {
+            listState.scrollToItem(0)
+        }
     }
-    var isLoading by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier.fillMaxSize()
-            .padding(8.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
     ) {
         Text(
             text = "Previous Processings",
             color = TextWhite,
             fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(10.dp)
         )
 
         if (isLoading) {
@@ -76,23 +76,45 @@ fun PreviousProcessingsView(navController: NavController) {
             }
         } else {
             LazyColumn(
+                state = listState,
                 modifier = Modifier
                     .padding(horizontal = 0.dp)
                     .weight(1f)
             ) {
-                items(mockProcessings) { processing ->
-                    ProcessingItem(
-                        processing = processing,
-                        onClick = {
-                            val revertable = processing.status == "COMPLETED"
+                if (processingPage?.processingList.isNullOrEmpty()) {
+                    item {
+                        IconMessage(
+                            title = "No results found",
+                            description = "No processing data found.",
+                            icon = Icons.Rounded.Search
+                        )
+                    }
+                }
+                processingPage?.processingList?.forEach { processing ->
+                    item {
+                        ProcessingItem(
+                            processing = processing,
+                            onClick = {
+                                val revertable = false
 
-                            navController.navigate(
-                                "${ROUTE_PROCESSING_DETAILS}?revertable=$revertable"
-                            )
-                        }
-                    )
+                                navController.navigate(
+                                    "${ROUTE_PROCESSING_DETAILS}?revertable=$revertable"
+                                )
+                            }
+                        )
+                    }
                 }
             }
+            Pagination(
+                currentPage = currentPage,
+                totalPages = totalPages,
+                onPageSelected = { page ->
+                    viewModel.fetchProcessings(page)
+                    coroutineScope.launch {
+                        listState.scrollToItem(0)
+                    }
+                }
+            )
         }
     }
 }
