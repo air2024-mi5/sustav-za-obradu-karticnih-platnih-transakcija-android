@@ -55,14 +55,6 @@ fun TransactionDetailsView(
     viewModel.fetchTransactionDetails(transactionGuid = transactionGuid)
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Text(
-            modifier = Modifier.padding(16.dp),
-            text = "Transaction Details",
-            color = TextWhite,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
-        )
-
         if (transaction == null) {
             errorMessage?.let {
                 Box(

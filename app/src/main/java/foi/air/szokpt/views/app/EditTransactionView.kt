@@ -78,14 +78,6 @@ fun EditTransactionView(
     var selectedNewAmount by remember { mutableStateOf<Double?>(null) }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Text(
-            modifier = Modifier.padding(16.dp),
-            text = "Transaction Edit",
-            color = TextWhite,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
-        )
-
         if (currentTransaction == null) {
             errorMessage?.let {
                 Box(

@@ -2,19 +2,14 @@ package foi.air.szokpt.views.app
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.accounts_components.accountsSearchView.AccountsSearchPanel
 import foi.air.szokpt.ui.theme.BGLevelOne
-import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.viewmodels.AccountsViewModel
 
@@ -25,14 +20,6 @@ fun AccountSearchView(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Text(
-            modifier = Modifier
-                .padding(16.dp),
-            text = "Search All Accounts",
-            color = TextWhite,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-        )
         TileSegment(
             tileSizeMode = TileSizeMode.WRAP_CONTENT,
             innerPadding = 0.dp,

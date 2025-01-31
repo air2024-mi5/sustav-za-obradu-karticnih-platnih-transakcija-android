@@ -73,7 +73,7 @@ fun DailyProcessesDashboardView(navController: NavController) {
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Processing starts at 12 AM",
+                            text = "Processing starts at 1 AM",
                             style = MaterialTheme.typography.bodyLarge,
                             fontSize = 18.sp,
                             color = Color.White,

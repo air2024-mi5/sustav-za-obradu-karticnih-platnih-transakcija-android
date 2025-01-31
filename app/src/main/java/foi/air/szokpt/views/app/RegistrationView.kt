@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import foi.air.szokpt.helpers.RegistrationHandler
@@ -79,14 +78,6 @@ fun RegistrationView(navController: NavController, userType: String) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Text(
-            modifier = Modifier
-                .padding(16.dp),
-            text = "Registration",
-            color = Color.White,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-        )
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier

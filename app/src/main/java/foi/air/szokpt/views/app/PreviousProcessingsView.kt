@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -18,9 +17,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.gson.Gson
@@ -28,7 +25,6 @@ import foi.air.szokpt.ui.components.IconMessage
 import foi.air.szokpt.ui.components.pagination_components.Pagination
 import foi.air.szokpt.ui.components.processing_components.ProcessingItem
 import foi.air.szokpt.ui.theme.Primary
-import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.viewmodels.ProcessingsViewModel
 import foi.air.szokpt.views.ROUTE_PROCESSING_DETAILS
 import kotlinx.coroutines.launch
@@ -63,14 +59,6 @@ fun PreviousProcessingsView(navController: NavController) {
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        Text(
-            text = "Previous Processings",
-            color = TextWhite,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(10.dp)
-        )
-
         if (isLoading) {
             Box(modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(
