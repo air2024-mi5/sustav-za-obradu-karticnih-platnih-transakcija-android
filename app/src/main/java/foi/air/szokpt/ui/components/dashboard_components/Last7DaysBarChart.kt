@@ -1,14 +1,10 @@
 package foi.air.szokpt.ui.components.dashboard_components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,21 +44,13 @@ fun Last7DaysTransactionsBarChart(
                     fontSize = 12.sp
                 )
                 val barFraction = day.count.toFloat() / maxTransactions.toFloat()
-                val gradientBrush = Brush.verticalGradient(
-                    colors = listOf(barColor, barColor.copy(alpha = 0.66f))
-                )
-                Box(
-                    modifier = Modifier
-                        .padding(vertical = 4.dp)
-                        .width(15.dp)
-                        .height((maxBarHeight * barFraction).dp)
-                        .clip(
-                            RoundedCornerShape(
-                                topStart = 5.dp,
-                                topEnd = 5.dp
-                            )
-                        )
-                        .background(brush = gradientBrush)
+
+                GradientBarComponent(
+                    heightFraction = barFraction,
+                    maxHeight = maxBarHeight,
+                    colorStart = barColor,
+                    colorEnd = barColor.copy(alpha = 0.66f),
+                    cornerRadius = 5.dp
                 )
                 Text(
                     text = day.date.format(DateTimeFormatter.ofPattern("dd.MM")),
