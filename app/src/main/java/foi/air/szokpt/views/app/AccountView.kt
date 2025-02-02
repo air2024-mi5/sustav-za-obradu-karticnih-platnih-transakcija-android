@@ -15,6 +15,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Person
@@ -38,19 +42,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import foi.air.szokpt.helpers.AccountUpdateHandler
+import foi.air.szokpt.handlers.AccountUpdateHandler
 import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
-import foi.air.szokpt.ui.components.accounts_components.accountView.BlockAccountButton
-import foi.air.szokpt.ui.components.accounts_components.accountView.BlockAccountDialog
-import foi.air.szokpt.ui.components.accounts_components.accountView.DeactivateAccountButton
-import foi.air.szokpt.ui.components.accounts_components.accountView.DeactivateAccountDialog
-import foi.air.szokpt.ui.components.accounts_components.accountView.EditConfirmationDialog
+import foi.air.szokpt.ui.components.dialog_components.DialogComponent
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
+import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
+import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.ui.theme.warning
 import foi.air.szokpt.viewmodels.AccountViewModel
@@ -77,14 +79,6 @@ fun AccountView(
     val openDeactivateDialog = remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Text(
-            modifier = Modifier.padding(16.dp),
-            text = "Account Overview",
-            color = TextWhite,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
-        )
-
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -268,18 +262,30 @@ fun AccountView(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    DeactivateAccountButton(openDeactivateDialog)
+                    OutlineBouncingButton(
+                        onClick = { openDeactivateDialog.value = true },
+                        inputText = "Deactivate Acc.",
+                        contentColor = danger,
+                        borderColor = danger,
+                        inputIcon = Icons.Rounded.Delete
+                    )
+
                     currentUserAccountData?.let { user ->
-                        BlockAccountButton(openBlockDialog, user)
+                        val buttonText = if (user.blocked) "Unblock" else "Block"
+                        OutlineBouncingButton(
+                            onClick = { openBlockDialog.value = true },
+                            inputText = buttonText,
+                            contentColor = warning,
+                            borderColor = warning,
+                            inputIcon = Icons.Rounded.Clear
+                        )
                     }
                 }
             }
         }
         if (openEditDialog.value) {
-            EditConfirmationDialog(
-                openEditDialog = openEditDialog,
-                user = currentUserAccountData!!,
-                onConfirm = {
+            DialogComponent(
+                onConfirmation = {
                     val isValid = viewModel.validateData(currentUserAccountData!!)
                     if (isValid) {
                         viewModel.updateAccountData(
@@ -288,38 +294,69 @@ fun AccountView(
                         )
                         isEditTileVisible = false
                     }
+                    openEditDialog.value = false
                 },
-                onDismiss = {
+                onDismissRequest = {
                     viewModel.resetUserAccountData()
                     isEditTileVisible = false
-                }
+                    openEditDialog.value = false
+                },
+                dialogTitle = "Change user data?",
+                dialogText = "Are you sure you want to change ${currentUserAccountData!!.firstName}" +
+                        " ${currentUserAccountData!!.lastName}'s data?",
+                iconTop = Icons.Rounded.CheckCircle,
+                titleColor = TextWhite,
+                highlightColor = success,
+                containerColor = BGLevelTwo,
             )
         }
+
         if (openDeactivateDialog.value) {
-            DeactivateAccountDialog(
-                openDeactivateDialog = openDeactivateDialog,
-                user = storedUserAccountData!!,
-                onConfirm = {
+            DialogComponent(
+                onConfirmation = {
                     viewModel.setDeactivatedStatus(!storedUserAccountData!!.deactivated)
                     viewModel.updateAccountData(
                         accountUpdateHandler = AccountUpdateHandler(),
                         newUserData = storedUserAccountData!!
                     )
                     navController.navigate(ROUTE_ALL_ACCOUNT_SEARCH)
-                }
+                    openDeactivateDialog.value = false
+                },
+                onDismissRequest = { openDeactivateDialog.value = false },
+                dialogTitle = "Deactivate User Account",
+                dialogText = "Are you sure you want to PERMANENTLY DEACTIVATE " +
+                        "${storedUserAccountData!!.firstName} ${storedUserAccountData!!.lastName}, " +
+                        "${storedUserAccountData!!.username}? \n \nBe cautious!",
+                iconTop = Icons.Rounded.Delete,
+                highlightColor = danger,
+                containerColor = BGLevelTwo,
+                titleColor = TextWhite,
             )
         }
+
         if (openBlockDialog.value) {
-            BlockAccountDialog(
-                openBlockDialog = openBlockDialog,
-                user = storedUserAccountData!!,
-                onConfirm = {
+            val dialogTitle =
+                if (storedUserAccountData!!.blocked) "Unblock User Account" else "Block User Account"
+            val dialogTextBlockedStatus =
+                if (storedUserAccountData!!.blocked) "UNBLOCK" else "BLOCK"
+            DialogComponent(
+                onConfirmation = {
                     viewModel.setBlockedStatus(!storedUserAccountData!!.blocked)
                     viewModel.updateAccountData(
                         accountUpdateHandler = AccountUpdateHandler(),
                         newUserData = storedUserAccountData!!
                     )
-                }
+                    openBlockDialog.value = false
+                },
+                onDismissRequest = { openBlockDialog.value = false },
+                dialogTitle = dialogTitle,
+                dialogText = "Are you sure you want to $dialogTextBlockedStatus " +
+                        "${storedUserAccountData!!.firstName} ${storedUserAccountData!!.lastName}, " +
+                        "${storedUserAccountData!!.username}? \n",
+                iconTop = Icons.Rounded.Close,
+                highlightColor = warning,
+                containerColor = BGLevelTwo,
+                titleColor = TextWhite,
             )
         }
     }

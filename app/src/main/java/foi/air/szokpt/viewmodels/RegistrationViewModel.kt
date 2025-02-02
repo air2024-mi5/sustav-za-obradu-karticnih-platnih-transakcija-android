@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.context.Auth
-import foi.air.szokpt.helpers.RegistrationHandler
+import foi.air.szokpt.handlers.RegistrationHandler
 import hr.foi.air.szokpt.core.register.RegistrationBody
 import hr.foi.air.szokpt.core.register.RegistrationOutcomeListener
 import hr.foi.air.szokpt.core.register.Role

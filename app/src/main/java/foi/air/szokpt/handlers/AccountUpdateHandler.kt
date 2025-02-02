@@ -1,4 +1,4 @@
-package foi.air.szokpt.helpers
+package foi.air.szokpt.handlers
 
 import hr.foi.air.szokpt.core.accounts.AccountUpdateOutcomeListener
 import hr.foi.air.szokpt.core.network.ResponseListener

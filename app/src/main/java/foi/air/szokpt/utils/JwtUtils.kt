@@ -1,4 +1,4 @@
-package foi.air.szokpt.helpers
+package foi.air.szokpt.utils
 
 import android.util.Base64
 import com.google.gson.Gson

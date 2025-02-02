@@ -1,11 +1,10 @@
-package foi.air.szokpt.helpers
+package foi.air.szokpt.handlers
 
 import hr.foi.air.szokpt.core.network.ResponseListener
 import hr.foi.air.szokpt.core.network.models.ErrorResponseBody
 import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
 import hr.foi.air.szokpt.core.transactions.TransactionData
 import hr.foi.air.szokpt.core.transactions.TransactionUpdateOutcomeListener
-import hr.foi.air.szokpt.ws.models.responses.Transaction
 import hr.foi.air.szokpt.ws.request_handlers.TransactionUpdateRequestHandler
 
 class TransactionUpdateHandler {
@@ -14,7 +13,8 @@ class TransactionUpdateHandler {
         newTransactionData: TransactionData,
         transactionUpdateOutcomeListener: TransactionUpdateOutcomeListener
     ) {
-        val transactionUpdateRequestHandler = TransactionUpdateRequestHandler(jwtToken, newTransactionData)
+        val transactionUpdateRequestHandler =
+            TransactionUpdateRequestHandler(jwtToken, newTransactionData)
         transactionUpdateRequestHandler.sendRequest(
             object : ResponseListener<Unit> {
                 override fun onSuccessfulResponse(response: SuccessfulResponseBody<Unit>) {

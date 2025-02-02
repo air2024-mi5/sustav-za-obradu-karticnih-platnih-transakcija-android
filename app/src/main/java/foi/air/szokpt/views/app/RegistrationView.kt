@@ -29,10 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import foi.air.szokpt.helpers.RegistrationHandler
+import foi.air.szokpt.handlers.RegistrationHandler
 import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dialog_components.DialogComponent
@@ -52,7 +50,7 @@ import hr.foi.air.szokpt.core.register.Role
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationView(navController: NavController, userType: String) {
+fun RegistrationView(userType: String) {
 
     val viewModel: RegistrationViewModel = viewModel()
 
@@ -79,14 +77,6 @@ fun RegistrationView(navController: NavController, userType: String) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Text(
-            modifier = Modifier
-                .padding(16.dp),
-            text = "Registration",
-            color = Color.White,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-        )
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier

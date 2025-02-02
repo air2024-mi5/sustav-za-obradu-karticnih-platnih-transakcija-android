@@ -1,4 +1,4 @@
-package foi.air.szokpt.helpers
+package foi.air.szokpt.utils
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -18,9 +18,5 @@ object DateFormatter {
 
     fun format(localDateTime: LocalDateTime): String {
         return localDateTime.format(outputFormatter)
-    }
-
-    fun parse(dateTime: String): LocalDateTime {
-        return LocalDateTime.parse(dateTime, inputFormatter)
     }
 }

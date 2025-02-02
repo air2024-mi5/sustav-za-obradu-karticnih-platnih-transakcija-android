@@ -3,7 +3,7 @@ package foi.air.szokpt.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.context.Auth
-import foi.air.szokpt.helpers.CardBrandsStatisticsHandler
+import foi.air.szokpt.handlers.CardBrandsStatisticsHandler
 import hr.foi.air.szokpt.core.reports.CardBrandsStatisticsData
 import hr.foi.air.szokpt.core.reports.CardBrandsStatisticsOutcomeListener
 

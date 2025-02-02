@@ -22,8 +22,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import foi.air.szokpt.helpers.TransactionUtils
 import foi.air.szokpt.ui.theme.BGLevelZeroHigh
+import foi.air.szokpt.utils.TransactionUtils
 import hr.foi.air.szokpt.ws.models.responses.Transaction
 
 /**

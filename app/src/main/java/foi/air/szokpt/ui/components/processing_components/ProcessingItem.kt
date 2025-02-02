@@ -22,9 +22,8 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.ui.theme.warning
+import foi.air.szokpt.utils.DateFormatter
 import hr.foi.air.szokpt.core.processing.ProcessingRecord
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun ProcessingItem(
@@ -69,14 +68,14 @@ fun ProcessingItem(
 
             processing.scheduledAt?.let {
                 Text(
-                    text = "Scheduled: ${formatDateTime(it)}",
+                    text = "Scheduled: ${DateFormatter.format(it)}",
                     color = TextWhite
                 )
             }
 
             processing.processedAt?.let {
                 Text(
-                    text = "Processed: ${formatDateTime(it)}",
+                    text = "Processed: ${DateFormatter.format(it)}",
                     color = TextWhite
                 )
             }
@@ -87,14 +86,5 @@ fun ProcessingItem(
                 fontSize = 14.sp
             )
         }
-    }
-}
-
-private fun formatDateTime(isoString: String): String {
-    return try {
-        val dateTime = LocalDateTime.parse(isoString, DateTimeFormatter.ISO_DATE_TIME)
-        dateTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm"))
-    } catch (e: Exception) {
-        "Invalid date format"
     }
 }

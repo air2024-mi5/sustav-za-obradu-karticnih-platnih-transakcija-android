@@ -9,10 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import foi.air.szokpt.helpers.DateFormatter
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.Primary
 import foi.air.szokpt.ui.theme.Secondary
+import foi.air.szokpt.utils.DateFormatter
 import hr.foi.air.szokpt.core.file_generation.ClearingFileGenerator
 import hr.foi.air.szokpt.core.processing.ProcessingRecord
 

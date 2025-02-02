@@ -113,7 +113,7 @@ fun MainScreen() {
                     }
                 )
             }
-            composable(ROUTE_DASHBOARD) { DashboardView(navController) }
+            composable(ROUTE_DASHBOARD) { DashboardView() }
             composable(ROUTE_REPORTS) { TransactionsView(navController) }
             composable(ROUTE_DAILY_PROCESSING) { DailyProcessesDashboardView(navController) }
             composable(ROUTE_PREVIOUS_PROCESSINGS) { PreviousProcessingsView(navController) }
@@ -123,7 +123,7 @@ fun MainScreen() {
                 arguments = listOf(navArgument("userType") { type = NavType.StringType })
             ) { backStackEntry ->
                 val userType = backStackEntry.arguments?.getString("userType") ?: "Unknown"
-                RegistrationView(navController = navController, userType = userType)
+                RegistrationView(userType = userType)
             }
             composable(ROUTE_ALL_ACCOUNT_SEARCH) { AccountSearchView(navController) }
             composable(

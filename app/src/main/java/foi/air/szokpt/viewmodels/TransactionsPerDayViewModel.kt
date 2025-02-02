@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.context.Auth
-import foi.air.szokpt.helpers.TransactionsPerDayHandler
+import foi.air.szokpt.handlers.TransactionsPerDayHandler
 import hr.foi.air.szokpt.core.reports.TransactionsPerDayOutcomeListener
 import java.sql.Timestamp
 
