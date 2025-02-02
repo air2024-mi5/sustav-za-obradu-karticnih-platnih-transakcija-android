@@ -23,3 +23,5 @@ rootProject.name = "SZOKPT"
 include(":app")
 include(":core")
 include(":ws")
+include(":excel")
+include(":pdf")

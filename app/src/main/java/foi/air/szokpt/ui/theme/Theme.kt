@@ -1,7 +1,6 @@
 package foi.air.szokpt.ui.theme
 
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -37,14 +36,11 @@ private val LightColorScheme = lightColorScheme(
     onTertiary = Color.Black,
     onSurface = Color(0xFF1C1B1F),
 
-)
+    )
 
 @Composable
 fun SZOKPTTheme(
-    // Change the color mode here:
-    // darkTheme: Boolean = isSystemInDarkTheme(),
     darkTheme: Boolean = true,
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {

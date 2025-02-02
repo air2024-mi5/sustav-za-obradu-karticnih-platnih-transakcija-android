@@ -74,7 +74,7 @@ fun TextBouncingButton(
         TextButton(
             onClick = {
                 isPressed = true
-                onClick() // From the argument. Passed onClick to execute
+                onClick()
             },
             modifier = Modifier
                 .scale(scale)

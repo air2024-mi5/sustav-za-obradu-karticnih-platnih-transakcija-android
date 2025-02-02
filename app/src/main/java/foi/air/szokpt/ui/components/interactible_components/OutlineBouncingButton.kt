@@ -26,22 +26,12 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foi.air.szokpt.ui.theme.Primary
 
-
-/**
- * A custom bouncing outlined button component that provides animated effects for scaling
- * the button, icon, and border stroke when pressed.
- *
- * @param modifier Modifier to be applied to the outer Box container
- * @param inputText Text to display on the button
- * @param inputIcon Icon to display beside the button text
- * @param contentColor Color of the button's content (text and icon)
- * @param borderColor Color of the button's border
- * @param onClick Action to perform when the button is clicked
- */
 @Composable
 fun OutlineBouncingButton(
     modifier: Modifier = Modifier,
@@ -49,6 +39,10 @@ fun OutlineBouncingButton(
     inputIcon: ImageVector = Icons.Filled.FavoriteBorder,
     contentColor: Color = Primary,
     borderColor: Color = Primary,
+    fontSize: TextUnit = 16.sp,
+    iconSize: Dp = 24.dp,
+    padding: Dp = 8.dp,
+    spacer: Dp = 4.dp,
     onClick: () -> Unit
 ) {
     var isPressed by remember { mutableStateOf(false) }
@@ -82,11 +76,11 @@ fun OutlineBouncingButton(
         OutlinedButton(
             onClick = {
                 isPressed = true
-                onClick() // From the argument. Passed onClick to execute
+                onClick()
             },
             modifier = Modifier
                 .scale(scale)
-                .padding(8.dp),
+                .padding(padding),
             border = BorderStroke(strokeScale, borderColor)
         ) {
             Icon(
@@ -94,14 +88,14 @@ fun OutlineBouncingButton(
                 contentDescription = "Favorite Icon",
                 tint = contentColor,
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(iconSize)
                     .scale(iconScale)
             )
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(spacer))
             Text(
                 text = inputText,
                 color = contentColor,
-                fontSize = 16.sp,
+                fontSize = fontSize,
                 modifier = Modifier
             )
         }
@@ -110,6 +104,6 @@ fun OutlineBouncingButton(
 
 @Preview
 @Composable
-fun PreviewOutlineBoucingButton(){
-    OutlineBouncingButton {  }
+fun PreviewOutlineBoucingButton() {
+    OutlineBouncingButton { }
 }

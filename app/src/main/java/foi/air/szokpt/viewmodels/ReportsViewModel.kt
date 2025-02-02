@@ -2,11 +2,12 @@ package foi.air.szokpt.viewmodels
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import foi.air.szokpt.helpers.TransactionsSuccessHandler
+import foi.air.szokpt.context.Auth
+import foi.air.szokpt.handlers.TransactionsSuccessHandler
 import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.danger
 import foi.air.szokpt.ui.theme.success
-import hr.foi.air.core.transactions.TransactionsSuccessOutcomeListener
+import hr.foi.air.szokpt.core.transactions.TransactionsSuccessOutcomeListener
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -18,39 +19,54 @@ class ReportsViewModel : ViewModel() {
     val errorMessage: StateFlow<String?> get() = _errorMessage
 
     private val transactionsHandler = TransactionsSuccessHandler()
+    private val jwtToken = Auth.logedInUserData?.token
 
     fun fetchTransactionsSuccess() {
         _errorMessage.value = null
 
-        transactionsHandler.getTransactionsSuccess(object :
-            TransactionsSuccessOutcomeListener {
-            override fun onSuccessfulTransactionsSuccessFetch(
-                totalTransactions: Int,
-                successfulTransactions: Int,
-                rejectedTransactions: Int,
-                canceledTransactions: Int
-            ) {
-                val total = (successfulTransactions + canceledTransactions + rejectedTransactions).toFloat()
-                val data: List<PieChartModel> = if (total == 0f) {
-                    listOf(
-                        PieChartModel("Successful", 0, 0f, success),
-                        PieChartModel("Canceled", 0, 0f, danger),
-                        PieChartModel("Rejected", 0, 0f, TextGray)
-                    )
-                } else {
-                    listOf(
-                        PieChartModel("Successful", successfulTransactions, (successfulTransactions.toFloat() / total) * 100, success),
-                        PieChartModel("Canceled", canceledTransactions, (canceledTransactions.toFloat() / total) * 100, danger),
-                        PieChartModel("Rejected", rejectedTransactions, (rejectedTransactions.toFloat() / total) * 100, TextGray)
-                    )
+        if (jwtToken != null) {
+            transactionsHandler.getTransactionsSuccess(jwtToken, object :
+                TransactionsSuccessOutcomeListener {
+                override fun onSuccessfulTransactionsSuccessFetch(
+                    totalTransactions: Int,
+                    successfulTransactions: Int,
+                    rejectedTransactions: Int,
+                    canceledTransactions: Int
+                ) {
+                    if (totalTransactions == 0) {
+                        _errorMessage.value =
+                            "No transactions were made, so there are no statistical data."
+                    } else {
+                        _errorMessage.value = null
+                        val data: List<PieChartModel> = listOf(
+                            PieChartModel(
+                                "Successful",
+                                successfulTransactions,
+                                (successfulTransactions.toFloat() / totalTransactions.toFloat()) * 100,
+                                success
+                            ),
+                            PieChartModel(
+                                "Canceled",
+                                canceledTransactions,
+                                (canceledTransactions.toFloat() / totalTransactions.toFloat()) * 100,
+                                danger
+                            ),
+                            PieChartModel(
+                                "Rejected",
+                                rejectedTransactions,
+                                (rejectedTransactions.toFloat() / totalTransactions.toFloat()) * 100,
+                                TextGray
+                            )
+                        )
+                        _pieChartData.value = data
+                    }
                 }
-                _pieChartData.value = data
-            }
 
-            override fun onFailedTransactionsSuccessFetch(failureMessage: String) {
-                _errorMessage.value = failureMessage
-            }
-        })
+                override fun onFailedTransactionsSuccessFetch(failureMessage: String) {
+                    _errorMessage.value = failureMessage
+                }
+            })
+        }
     }
 }
 

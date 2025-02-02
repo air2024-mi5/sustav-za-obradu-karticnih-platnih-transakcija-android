@@ -1,6 +1,8 @@
 package foi.air.szokpt.views.app
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,191 +10,354 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import foi.air.szokpt.models.AccountListRole
-import foi.air.szokpt.models.ListedAccountInformation
+import foi.air.szokpt.handlers.AccountUpdateHandler
+import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
-import foi.air.szokpt.ui.components.interactible_components.FillBouncingButton
+import foi.air.szokpt.ui.components.dialog_components.DialogComponent
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
-import foi.air.szokpt.ui.components.list_components.AccountListItem
-import foi.air.szokpt.ui.theme.Alternative
-import foi.air.szokpt.ui.theme.AppBorderRadius
 import foi.air.szokpt.ui.theme.BGLevelOne
-import foi.air.szokpt.ui.theme.BGLevelZeroLow
+import foi.air.szokpt.ui.theme.BGLevelTwo
 import foi.air.szokpt.ui.theme.Primary
-import foi.air.szokpt.ui.theme.Secondary
-import foi.air.szokpt.ui.theme.TextGray
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
+import foi.air.szokpt.ui.theme.danger
+import foi.air.szokpt.ui.theme.success
+import foi.air.szokpt.ui.theme.warning
+import foi.air.szokpt.viewmodels.AccountViewModel
 import foi.air.szokpt.views.ROUTE_ALL_ACCOUNT_SEARCH
-import foi.air.szokpt.views.ROUTE_REGISTRATION
+import hr.foi.air.szokpt.ws.models.responses.User
 
 @Composable
-fun AccountView(navController: NavController){
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Text(
-            modifier = Modifier
-                .padding(16.dp),
-            text = "Account",
-            color = Color.White,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-        )
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ){
-            item(span = { GridItemSpan(2) }) {
-                RegisterNewAccount(navController)
-            }
-            item(span = { GridItemSpan(2) }) {
-                AccountList(navController)
-            }
-        }
+fun AccountView(
+    navController: NavController,
+    providedAccount: User,
+    viewModel: AccountViewModel = viewModel()
+) {
+    LaunchedEffect(Unit) {
+        viewModel.initializeUserAccountData(providedAccount)
     }
-}
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun RegisterNewAccount(navController: NavController) {
-    TileSegment(
-        tileSizeMode = TileSizeMode.WRAP_CONTENT,
-        innerPadding = 12.dp,
-        outerMargin = 4.dp,
-        minWidth = 250.dp,
-        minHeight = 20.dp,
-        color = BGLevelOne
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.SpaceBetween,
+
+    val currentUserAccountData by viewModel.currentUserAccountData.observeAsState()
+    val storedUserAccountData by viewModel.storedUserAccountData.observeAsState()
+    val message by viewModel.message.observeAsState("")
+
+    var isEditTileVisible by remember { mutableStateOf(false) }
+    val openEditDialog = remember { mutableStateOf(false) }
+    val openBlockDialog = remember { mutableStateOf(false) }
+    val openDeactivateDialog = remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Text(
-                text = "New Account",
-                color = TextWhite,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Spacer(modifier = Modifier.height(8.dp))
-
-                var selectedIndex by remember { mutableStateOf(0) }
-                val options = listOf("User", "Admin")
-                SingleChoiceSegmentedButtonRow {
-                    options.forEachIndexed { index, label ->
-                        val isSelected = index == selectedIndex
-                        SegmentedButton(
-                            shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size),
-                            onClick = { selectedIndex = index },
-                            selected = isSelected,
-                            modifier = Modifier,
-                            colors = SegmentedButtonDefaults.colors(
-                                activeContainerColor = Secondary,
-                                activeContentColor = TextWhite,
-                                activeBorderColor = Primary,
-                                inactiveContainerColor = BGLevelZeroLow,
-                                inactiveContentColor = TextGray,
-                                inactiveBorderColor = TextGray,
+            item {
+                TileSegment(
+                    tileSizeMode = TileSizeMode.WRAP_CONTENT,
+                    innerPadding = 8.dp,
+                    outerMargin = 0.dp,
+                    minWidth = 250.dp,
+                    minHeight = 90.dp,
+                    color = Color.Transparent
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(30.dp))
+                            .background(
+                                Brush.verticalGradient(
+                                    colors = listOf(BGLevelOne, Primary),
+                                    startY = 0f,
+                                    endY = 1600f
+                                )
                             )
+                            .fillMaxSize()
+                            .padding(16.dp)
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(
-                                label,
-                                color = if (isSelected) Color.White else Color.Gray,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    imageVector = if (storedUserAccountData?.role?.name == "admin")
+                                        Icons.Rounded.AccountCircle else Icons.Rounded.Person,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(68.dp)
+                                )
+                            }
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            color = BGLevelOne,
+                                            shape = RoundedCornerShape(30.dp)
+                                        )
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                ) {
+                                    storedUserAccountData?.let {
+                                        Text(
+                                            text = it.username,
+                                            color = Primary,
+                                            fontWeight = FontWeight.SemiBold,
+                                            fontSize = 18.sp
+                                        )
+                                    }
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "${storedUserAccountData?.firstName} ${storedUserAccountData?.lastName}",
+                                        color = TextWhite,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 20.sp,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    OutlineBouncingButton(
+                                        onClick = {
+                                            if (isEditTileVisible) {
+                                                openEditDialog.value = true
+                                            } else {
+                                                viewModel.clearMessage()
+                                                isEditTileVisible = true
+                                            }
+                                        },
+                                        contentColor = if (isEditTileVisible) success else TextWhite,
+                                        borderColor = if (isEditTileVisible) success else TextWhite,
+                                        inputIcon = if (isEditTileVisible) Icons.Rounded.Refresh else Icons.Rounded.Edit,
+                                        inputText = if (isEditTileVisible) "Save" else "",
+                                        modifier = Modifier
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = message,
+                        color = Color.Red,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+
+            item {
+                if (isEditTileVisible) {
+                    TileSegment(
+                        tileSizeMode = TileSizeMode.FILL_MAX_WIDTH,
+                        innerPadding = 8.dp,
+                        outerMargin = 8.dp,
+                        minWidth = 250.dp,
+                        color = BGLevelOne
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(modifier = Modifier.height(12.dp))
+                            StyledTextField(
+                                label = "Username",
+                                value = currentUserAccountData?.username ?: "",
+                                onValueChange = { viewModel.setUsername(it) },
+                                isPasswordField = false
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            StyledTextField(
+                                label = "E-mail",
+                                value = currentUserAccountData?.email ?: "",
+                                onValueChange = { viewModel.setEmail(it) },
+                                isPasswordField = false
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            StyledTextField(
+                                label = "First Name",
+                                value = currentUserAccountData?.firstName ?: "",
+                                onValueChange = { viewModel.setFirstName(it) },
+                                isPasswordField = false
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            StyledTextField(
+                                label = "Last Name",
+                                value = currentUserAccountData?.lastName ?: "",
+                                onValueChange = { viewModel.setLastName(it) },
+                                isPasswordField = false
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            StyledTextField(
+                                label = "Password",
+                                value = currentUserAccountData?.password ?: "",
+                                onValueChange = { viewModel.setPassword(it) },
+                                isPasswordField = true
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            OutlineBouncingButton(
+                                onClick = {
+                                    isEditTileVisible = false
+                                    viewModel.clearMessage()
+                                    viewModel.resetUserAccountData()
+                                },
+                                contentColor = warning,
+                                borderColor = warning,
+                                inputIcon = Icons.Rounded.KeyboardArrowUp,
+                                inputText = "Close",
+                                modifier = Modifier
                             )
                         }
                     }
                 }
-                FillBouncingButton(
-                    modifier = Modifier,
-                    inputText = "Register new ${options[selectedIndex]}",
-                    inputIcon = Icons.Rounded.Add,
-                    buttonColor = Primary,
-                    contentColor = TextWhite,
-                    useSpacerAnimation = true,
-                    useIconAnimation = true
+            }
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    navController.navigate(ROUTE_REGISTRATION + "/${options[selectedIndex]}")
+                    OutlineBouncingButton(
+                        onClick = { openDeactivateDialog.value = true },
+                        inputText = "Deactivate Acc.",
+                        contentColor = danger,
+                        borderColor = danger,
+                        inputIcon = Icons.Rounded.Delete
+                    )
+
+                    currentUserAccountData?.let { user ->
+                        val buttonText = if (user.blocked) "Unblock" else "Block"
+                        OutlineBouncingButton(
+                            onClick = { openBlockDialog.value = true },
+                            inputText = buttonText,
+                            contentColor = warning,
+                            borderColor = warning,
+                            inputIcon = Icons.Rounded.Clear
+                        )
+                    }
                 }
             }
         }
-    }
-}
+        if (openEditDialog.value) {
+            DialogComponent(
+                onConfirmation = {
+                    val isValid = viewModel.validateData(currentUserAccountData!!)
+                    if (isValid) {
+                        viewModel.updateAccountData(
+                            accountUpdateHandler = AccountUpdateHandler(),
+                            newUserData = currentUserAccountData!!
+                        )
+                        isEditTileVisible = false
+                    }
+                    openEditDialog.value = false
+                },
+                onDismissRequest = {
+                    viewModel.resetUserAccountData()
+                    isEditTileVisible = false
+                    openEditDialog.value = false
+                },
+                dialogTitle = "Change user data?",
+                dialogText = "Are you sure you want to change ${currentUserAccountData!!.firstName}" +
+                        " ${currentUserAccountData!!.lastName}'s data?",
+                iconTop = Icons.Rounded.CheckCircle,
+                titleColor = TextWhite,
+                highlightColor = success,
+                containerColor = BGLevelTwo,
+            )
+        }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AccountList(navController: NavController) {
-    TileSegment(
-        tileSizeMode = TileSizeMode.WRAP_CONTENT,
-        innerPadding = 10.dp,
-        outerMargin = 4.dp,
-        minWidth = 250.dp,
-        minHeight = 20.dp,
-        color = BGLevelOne
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "All Accounts",
-                    color = TextWhite,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                // TODO: Implement a route to just show a newly created singular account list view
-                //       Called AcccountListView. Where i can only view and search all accounts.
-                OutlineBouncingButton(
-                    modifier = Modifier,
-                    inputText = "",
-                    inputIcon = Icons.Rounded.Search,
-                    contentColor = Primary,
-                    borderColor = Secondary,
-                ) {
+        if (openDeactivateDialog.value) {
+            DialogComponent(
+                onConfirmation = {
+                    viewModel.setDeactivatedStatus(!storedUserAccountData!!.deactivated)
+                    viewModel.updateAccountData(
+                        accountUpdateHandler = AccountUpdateHandler(),
+                        newUserData = storedUserAccountData!!
+                    )
                     navController.navigate(ROUTE_ALL_ACCOUNT_SEARCH)
-                }
-            }
+                    openDeactivateDialog.value = false
+                },
+                onDismissRequest = { openDeactivateDialog.value = false },
+                dialogTitle = "Deactivate User Account",
+                dialogText = "Are you sure you want to PERMANENTLY DEACTIVATE " +
+                        "${storedUserAccountData!!.firstName} ${storedUserAccountData!!.lastName}, " +
+                        "${storedUserAccountData!!.username}? \n \nBe cautious!",
+                iconTop = Icons.Rounded.Delete,
+                highlightColor = danger,
+                containerColor = BGLevelTwo,
+                titleColor = TextWhite,
+            )
+        }
+
+        if (openBlockDialog.value) {
+            val dialogTitle =
+                if (storedUserAccountData!!.blocked) "Unblock User Account" else "Block User Account"
+            val dialogTextBlockedStatus =
+                if (storedUserAccountData!!.blocked) "UNBLOCK" else "BLOCK"
+            DialogComponent(
+                onConfirmation = {
+                    viewModel.setBlockedStatus(!storedUserAccountData!!.blocked)
+                    viewModel.updateAccountData(
+                        accountUpdateHandler = AccountUpdateHandler(),
+                        newUserData = storedUserAccountData!!
+                    )
+                    openBlockDialog.value = false
+                },
+                onDismissRequest = { openBlockDialog.value = false },
+                dialogTitle = dialogTitle,
+                dialogText = "Are you sure you want to $dialogTextBlockedStatus " +
+                        "${storedUserAccountData!!.firstName} ${storedUserAccountData!!.lastName}, " +
+                        "${storedUserAccountData!!.username}? \n",
+                iconTop = Icons.Rounded.Close,
+                highlightColor = warning,
+                containerColor = BGLevelTwo,
+                titleColor = TextWhite,
+            )
         }
     }
 }
-

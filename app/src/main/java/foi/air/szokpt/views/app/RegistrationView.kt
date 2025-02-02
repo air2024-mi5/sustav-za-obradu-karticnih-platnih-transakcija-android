@@ -29,11 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import foi.air.szokpt.helpers.RegistrationHandler
-import foi.air.szokpt.ui.components.LoginTextField
+import foi.air.szokpt.handlers.RegistrationHandler
+import foi.air.szokpt.ui.components.StyledTextField
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.dialog_components.DialogComponent
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
@@ -47,12 +45,12 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.ui.theme.success
 import foi.air.szokpt.viewmodels.RegistrationViewModel
-import hr.foi.air.core.register.RegistrationBody
-import hr.foi.air.core.register.Role
+import hr.foi.air.szokpt.core.register.RegistrationBody
+import hr.foi.air.szokpt.core.register.Role
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationView(navController: NavController, userType: String) {
+fun RegistrationView(userType: String) {
 
     val viewModel: RegistrationViewModel = viewModel()
 
@@ -61,7 +59,6 @@ fun RegistrationView(navController: NavController, userType: String) {
     val name = viewModel.firstName.observeAsState().value ?: ""
     val lastName = viewModel.lastName.observeAsState().value ?: ""
     val email = viewModel.email.observeAsState().value ?: ""
-    val role = viewModel.role.observeAsState().value ?: ""
     val message by viewModel.message.observeAsState("")
     var showMessage by remember { mutableStateOf(false) }
 
@@ -76,28 +73,10 @@ fun RegistrationView(navController: NavController, userType: String) {
         }
     }
 
-    fun validateInput(): String {
-        return if (username.isBlank() || password.isBlank() || name.isBlank() || lastName.isBlank() || email.isBlank()) {
-            "All fields must be filled!"
-        } else if (password.length < 3) {
-            "Password must contain at least 3 characters."
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            "The email must be in the correct format."
-        } else ""
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Text(
-            modifier = Modifier
-                .padding(16.dp),
-            text = "Registration",
-            color = Color.White,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-        )
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier
@@ -158,35 +137,35 @@ fun RegistrationView(navController: NavController, userType: String) {
 
                         val spacerHeight = 12.dp
                         Spacer(modifier = Modifier.height(spacerHeight))
-                        LoginTextField(
+                        StyledTextField(
                             label = "Username",
                             value = username,
                             onValueChange = { viewModel.username.value = it },
                             isPasswordField = false,
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
-                        LoginTextField(
+                        StyledTextField(
                             label = "Password",
                             value = password,
                             onValueChange = { viewModel.password.value = it },
                             isPasswordField = true,
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
-                        LoginTextField(
+                        StyledTextField(
                             label = "Name",
                             value = name,
                             onValueChange = { viewModel.firstName.value = it },
                             isPasswordField = false,
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
-                        LoginTextField(
+                        StyledTextField(
                             label = "Last Name",
                             value = lastName,
                             onValueChange = { viewModel.lastName.value = it },
                             isPasswordField = false,
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
-                        LoginTextField(
+                        StyledTextField(
                             label = "E-mail",
                             value = email,
                             onValueChange = { viewModel.email.value = it },
@@ -194,7 +173,6 @@ fun RegistrationView(navController: NavController, userType: String) {
                         )
                         Spacer(modifier = Modifier.height(spacerHeight))
 
-                        // Register user
                         OutlineBouncingButton(
                             modifier = Modifier,
                             inputText = "Register new ${options[selectedIndex]}",
@@ -202,11 +180,12 @@ fun RegistrationView(navController: NavController, userType: String) {
                             contentColor = success,
                             borderColor = success
                         ) {
-                            if (validateInput() == "")
+                            val validationMessage = viewModel.validateInput()
+                            if (validationMessage.isEmpty())
                                 openDialog.value = true
                             else {
                                 openDialog.value = false
-                                viewModel.message.value = validateInput()
+                                viewModel.message.value = validationMessage
                             }
                         }
                         if (openDialog.value) {
@@ -243,8 +222,6 @@ fun RegistrationView(navController: NavController, userType: String) {
                                                 openDialog.value = false
                                             }
                                         )
-                                        println("Registered new ${options[selectedIndex]}")
-                                        // Here goes the registration to the next layer, frontend done.
                                     } catch (e: Exception) {
                                         Log.e(
                                             "RegistrationError",
@@ -261,7 +238,8 @@ fun RegistrationView(navController: NavController, userType: String) {
                                         "",
                                 iconTop = Icons.Rounded.CheckCircle,
                                 highlightColor = success,
-                                containerColor = BGLevelTwo
+                                containerColor = BGLevelTwo,
+                                titleColor = Color.White
                             )
                         }
                         if (showMessage) {

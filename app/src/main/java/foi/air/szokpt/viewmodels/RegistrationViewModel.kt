@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import foi.air.szokpt.context.Auth
-import foi.air.szokpt.helpers.RegistrationHandler
-import hr.foi.air.core.register.RegistrationBody
-import hr.foi.air.core.register.RegistrationOutcomeListener
-import hr.foi.air.core.register.Role
+import foi.air.szokpt.handlers.RegistrationHandler
+import hr.foi.air.szokpt.core.register.RegistrationBody
+import hr.foi.air.szokpt.core.register.RegistrationOutcomeListener
+import hr.foi.air.szokpt.core.register.Role
 
 class RegistrationViewModel() : ViewModel() {
     val username: MutableLiveData<String> = MutableLiveData("")
@@ -24,8 +24,8 @@ class RegistrationViewModel() : ViewModel() {
     fun register(
         registrationHandler: RegistrationHandler,
         registrationBody: RegistrationBody,
-        onSuccessfulRegistration:() -> Unit,
-        onFailedRegistration:() -> Unit
+        onSuccessfulRegistration: () -> Unit,
+        onFailedRegistration: () -> Unit
     ) {
         try {
             val jwtToken = Auth.logedInUserData?.token
@@ -52,5 +52,15 @@ class RegistrationViewModel() : ViewModel() {
             _message.value = "Error occurred during registration."
             onFailedRegistration()
         }
+    }
+
+    fun validateInput(): String {
+        return if (username.value!!.isBlank() || password.value!!.isBlank() || firstName.value!!.isBlank() || lastName.value!!.isBlank() || email.value!!.isBlank()) {
+            "All fields must be filled!"
+        } else if (password.value!!.length < 3) {
+            "Password must contain at least 3 characters."
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email.value!!).matches()) {
+            "The email must be in the correct format."
+        } else ""
     }
 }

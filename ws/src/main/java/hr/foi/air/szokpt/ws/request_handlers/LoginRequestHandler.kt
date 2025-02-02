@@ -1,7 +1,7 @@
 package hr.foi.air.szokpt.ws.request_handlers
 
-import hr.foi.air.core.network.models.SuccessfulResponseBody
-import hr.foi.air.core.login.LoginBody
+import hr.foi.air.szokpt.core.network.models.SuccessfulResponseBody
+import hr.foi.air.szokpt.core.login.LoginBody
 import hr.foi.air.szokpt.ws.models.LoginResponse
 import retrofit2.Call
 
