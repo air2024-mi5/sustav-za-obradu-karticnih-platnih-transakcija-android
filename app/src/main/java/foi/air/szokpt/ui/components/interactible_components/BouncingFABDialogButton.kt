@@ -57,7 +57,7 @@ fun BouncingFABDialogButton(
         finishedListener = { isPressed = false }
     )
     val elevation by animateDpAsState(
-        targetValue = if (isPressed) 12.dp else 6.dp, // Increase elevation on press (Shadows)
+        targetValue = if (isPressed) 12.dp else 6.dp,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessMediumLow

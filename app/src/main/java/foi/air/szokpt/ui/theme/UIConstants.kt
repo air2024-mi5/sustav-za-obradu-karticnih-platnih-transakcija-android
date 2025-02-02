@@ -6,13 +6,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 enum class TileElevation(val color: Any) {
-    ZERO(Color(0xFF202020)),                        // Level Zero
-    ONE(Color(0xFF303030)),                         // Level One
-    TWO(Color(0xFF393939)),                         // Level Two
-    THREE(Color(0xFF454545))                        // Level Three
+    ZERO(Color(0xFF202020)),
+    ONE(Color(0xFF303030)),
+    TWO(Color(0xFF393939)),
+    THREE(Color(0xFF454545))
 }
 
-// SizeMode indicates the sizing fill of the Tile in a container
 enum class TileSizeMode {
     FILL_MAX_WIDTH,
     FILL_MAX_HEIGHT,
@@ -20,26 +19,15 @@ enum class TileSizeMode {
     WRAP_CONTENT
 }
 
-enum class TileSize(val rows: Float) {
-    ONE_ROW(1.0f),
-    ONE_AND_HALF(1.5f),
-    TWO_ROWS(2.0f),
-    THREE_ROW(3.0f)
-}
-
-// Background gradient of the app
-val BackgroundColor = Brush.horizontalGradient(           // Lowest Level - Gradient
+val BackgroundColor = Brush.horizontalGradient(
     colors = listOf(
         BGLevelZeroLow,
         BGLevelZeroHigh
     )
 )
 
-// Border radius of everything
-val AppBorderRadius: Dp = 30.dp                           // Default radius across the app
+val AppBorderRadius: Dp = 30.dp
 
-// Drop shadow constants
 val ShadowSpotColor: Color = Color.Black
-val ShadowAmbientColor: Color = Color.LightGray
 val ShadowTileElevation: Dp = 15.dp
 

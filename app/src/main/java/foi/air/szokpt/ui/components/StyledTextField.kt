@@ -53,7 +53,7 @@ fun StyledTextField(
         visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None,
         trailingIcon = {
             if (value.isNotEmpty()) {
-                IconButton(onClick = { onValueChange("") }) {  // Correctly call onValueChange
+                IconButton(onClick = { onValueChange("") }) {
                     Icon(
                         imageVector = Icons.Default.Clear,
                         contentDescription = "Clear input",

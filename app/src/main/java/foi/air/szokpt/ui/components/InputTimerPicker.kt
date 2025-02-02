@@ -46,7 +46,7 @@ fun InputTimePicker(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .wrapContentSize(Alignment.Center) // Center for the entire dialog...
+                .wrapContentSize(Alignment.Center)
         ) {
             TileSegment(
                 tileSizeMode = TileSizeMode.WRAP_CONTENT,

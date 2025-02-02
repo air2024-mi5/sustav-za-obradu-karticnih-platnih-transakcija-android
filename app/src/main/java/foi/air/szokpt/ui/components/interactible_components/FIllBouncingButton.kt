@@ -79,7 +79,7 @@ fun FillBouncingButton(
         Button(
             onClick = {
                 isPressed = true
-                onClick() // From the argument. Passed onClick to execute
+                onClick()
             },
             colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
             modifier = Modifier
