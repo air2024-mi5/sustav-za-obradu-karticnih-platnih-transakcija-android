@@ -11,10 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import foi.air.szokpt.R
 import foi.air.szokpt.ui.components.TileSegment
 import foi.air.szokpt.ui.components.interactible_components.OutlineBouncingButton
 import foi.air.szokpt.ui.theme.BGLevelOne
@@ -24,8 +27,6 @@ import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.ui.theme.TileSizeMode
 import foi.air.szokpt.views.ROUTE_ALL_ACCOUNT_SEARCH
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountsSearchTile(navController: NavController) {
     TileSegment(
@@ -51,12 +52,10 @@ fun AccountsSearchTile(navController: NavController) {
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-                // TODO: Implement a route to just show a newly created singular account list view
-                //       Called AcccountListView. Where i can only view and search all accounts.
                 OutlineBouncingButton(
                     modifier = Modifier,
                     inputText = "",
-                    inputIcon = Icons.Rounded.Search,
+                    inputIcon = ImageVector.vectorResource(id = R.drawable.member_search),
                     contentColor = Primary,
                     borderColor = Secondary,
                 ) {

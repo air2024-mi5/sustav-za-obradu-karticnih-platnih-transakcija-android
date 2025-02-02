@@ -27,14 +27,14 @@ fun AnimatedNavigationBarItem(
     isSelected: Boolean
 ): Pair<@Composable () -> Unit, @Composable () -> Unit> {
     val iconScale by animateFloatAsState(
-        targetValue = if (isSelected) 1.5f else 1.0f,
+        targetValue = if (isSelected) 1.3f else 1.0f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioHighBouncy,
             stiffness = 300f
         )
     )
     val labelScale by animateFloatAsState(
-        targetValue = if (isSelected) 1.2f else 0f,
+        targetValue = if (isSelected) 1.25f else 0f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioLowBouncy,
             stiffness = 250f
