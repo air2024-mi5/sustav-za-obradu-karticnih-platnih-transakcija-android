@@ -28,11 +28,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.gson.Gson
+import foi.air.szokpt.R
+import foi.air.szokpt.ui.components.IconMessage
 import foi.air.szokpt.ui.theme.AppBorderRadius
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.BGLevelTwo
@@ -144,11 +148,10 @@ fun AccountsSearchPanel(navController: NavController, viewModel: AccountsViewMod
                             )
                         }
                     } else {
-                        Text(
-                            text = "No results found :(",
-                            color = TextGray,
-                            fontSize = 14.sp,
-                            modifier = Modifier.padding(8.dp)
+                        IconMessage(
+                            title = "No accounts found",
+                            description = "Try changing the search query.",
+                            icon = ImageVector.vectorResource(id = R.drawable.member_search)
                         )
                     }
                 }
