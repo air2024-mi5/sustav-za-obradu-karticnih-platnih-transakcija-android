@@ -84,10 +84,6 @@ class TransactionViewModel() : ViewModel() {
         _storedTransactionData.value = _currentTransactionData.value
     }
 
-    fun resetTransactionData() {
-        _currentTransactionData.value = _storedTransactionData.value
-    }
-
     fun updateAmount(amount: Double) {
         _currentTransactionData.value = _currentTransactionData.value?.copy(amount = amount)
     }
@@ -100,9 +96,4 @@ class TransactionViewModel() : ViewModel() {
     fun setMessage(message: String) {
         _message.value = message
     }
-
-    fun clearMessage() {
-        _message.value = ""
-    }
-
 }

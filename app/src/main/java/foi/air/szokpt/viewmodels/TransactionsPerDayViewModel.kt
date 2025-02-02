@@ -13,7 +13,6 @@ class TransactionsPerDayViewModel : ViewModel() {
     val errorMessage: LiveData<String?> get() = _errorMessage
 
     private val _totalTransactions = MutableLiveData(0)
-    val totalTransactions: LiveData<Int?> get() = _totalTransactions
 
     private val _transactionsPerDay = MutableLiveData<Map<Timestamp, Int>?>(emptyMap())
     val transactionsPerDay: MutableLiveData<Map<Timestamp, Int>?> get() = _transactionsPerDay

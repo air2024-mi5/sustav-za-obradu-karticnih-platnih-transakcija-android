@@ -68,7 +68,6 @@ fun DatePickerField(
 
         setOnShowListener {
             try {
-                val datePicker = this.datePicker
                 this.getButton(android.app.DatePickerDialog.BUTTON_POSITIVE)?.setTextColor(
                     android.graphics.Color.rgb(33, 150, 243)
                 )
