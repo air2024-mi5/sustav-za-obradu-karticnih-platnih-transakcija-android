@@ -10,12 +10,14 @@ import retrofit2.http.Header
 
 interface ReportsService {
     @GET("/reports/successful-transactions")
-    fun getTransactionsSuccess(@Header("Authorization") authHeader: String): Call<SuccessfulResponseBody<TransactionsSuccessResponse>>
+    fun getTransactionsSuccess(@Header("Authorization") authHeader: String):
+            Call<SuccessfulResponseBody<TransactionsSuccessResponse>>
 
     @GET("/reports/card-brands")
-    fun getCardBrandsStatistics(@Header("Authorization") authHeader: String): Call<SuccessfulResponseBody<CardBrandsStatisticsResponse>>
+    fun getCardBrandsStatistics(@Header("Authorization") authHeader: String):
+            Call<SuccessfulResponseBody<CardBrandsStatisticsResponse>>
 
     @GET("/reports/transactions-per-day")
-    fun getTransactionsPerDay(@Header("Authorization") authHeader: String): Call<SuccessfulResponseBody<TransactionsPerDayResponse>>
-
+    fun getTransactionsPerDay(@Header("Authorization") authHeader: String):
+            Call<SuccessfulResponseBody<TransactionsPerDayResponse>>
 }
