@@ -24,9 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import foi.air.szokpt.R
 import foi.air.szokpt.context.Auth
 import foi.air.szokpt.ui.theme.BGLevelOne
 import foi.air.szokpt.ui.theme.BGLevelThree
@@ -67,7 +70,7 @@ fun AnimatedNavigationBar(
             modifier = Modifier.padding(bottom = 8.dp)
         ) {
             val (homeIconContent, homeLabelContent) = AnimatedNavigationBarItem(
-                icon = Icons.Rounded.Home,
+                icon = ImageVector.vectorResource(id = R.drawable.dashboard_panel),
                 label = "Dashboard",
                 isSelected = currentDestination == ROUTE_DASHBOARD
             )
@@ -84,7 +87,7 @@ fun AnimatedNavigationBar(
             )
 
             val (reportsIconContent, reportsLabelContent) = AnimatedNavigationBarItem(
-                icon = Icons.Rounded.Email,
+                icon = ImageVector.vectorResource(id = R.drawable.task_checklist),
                 label = "Transactions",
                 isSelected = currentDestination == ROUTE_REPORTS
             )
@@ -101,7 +104,7 @@ fun AnimatedNavigationBar(
             )
 
             val (dailyProcessIconContent, dailyProcessLabelContent) = AnimatedNavigationBarItem(
-                icon = Icons.AutoMirrored.Rounded.ExitToApp,
+                icon = ImageVector.vectorResource(id = R.drawable.file_recycle),
                 label = "Processing",
                 isSelected = currentDestination == ROUTE_DAILY_PROCESSING
             )
@@ -118,7 +121,7 @@ fun AnimatedNavigationBar(
             )
             if (Auth.logedInUserData!!.role == "admin") {
                 val (accountIconContent, accountLableContent) = AnimatedNavigationBarItem(
-                    icon = Icons.Rounded.AccountCircle,
+                    icon = ImageVector.vectorResource(id = R.drawable.member_list),
                     label = "Accounts",
                     isSelected = currentDestination == ROUTE_ACCOUNT
                 )
