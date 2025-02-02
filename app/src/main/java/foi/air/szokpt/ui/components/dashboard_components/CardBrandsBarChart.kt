@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import foi.air.szokpt.models.CardBrandInformation
+import foi.air.szokpt.ui.components.dashboard_components.GradientBarComponent
 import foi.air.szokpt.ui.theme.TextWhite
 import foi.air.szokpt.utils.TransactionUtils
 
@@ -53,16 +54,12 @@ fun CardBrandsBarChart(
                 )
 
                 val barFraction = stat.count.toFloat() / maxCount.toFloat()
-                val gradientBrush = Brush.verticalGradient(
-                    colors = listOf(stat.color, stat.color.copy(alpha = 0.7f))
-                )
-
-                Box(
-                    modifier = Modifier
-                        .width(24.dp)
-                        .height((100 * barFraction).dp)
-                        .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
-                        .background(brush = gradientBrush)
+                GradientBarComponent(
+                    heightFraction = barFraction,
+                    maxHeight = 100,
+                    colorStart = stat.color,
+                    colorEnd = stat.color.copy(alpha = 0.7f),
+                    cornerRadius = 5.dp
                 )
 
                 Image(

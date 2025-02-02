@@ -18,7 +18,7 @@ import foi.air.szokpt.ui.theme.Secondary
 /**
  * A customizable gradient bar component used for visualizing data in a bar chart.
  * @param modifier Modifier to be applied to the bar component
- * @param heightFraction Fractional height of the bar, relative to maxHeight (0.0 to 1.0)
+ * @param heightFraction Fractional height of the bar, relative to maxHeight (0.0 to 1.0). Example: stat.count.toFloat() / maxCount.toFloat()
  * @param maxHeight The maximum height of the bar in dp
  * @param colorStart The starting color of the vertical gradient
  * @param colorEnd The ending color of the vertical gradient
